@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.7</java.version>
 		<hibarnate.version>4.3.7.Final</hibarnate.version>
+		<snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
 	</properties>
 
 	<dependencies>
@@ -42,6 +43,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.2.2.RELEASE</version>
+		</dependency>
+
+
 
 		<!-- Hibernate dependencies -->
 		<dependency>
@@ -100,7 +108,27 @@
 			<artifactId>hibernate-validator-cdi</artifactId>
 			<version>5.2.1.Final</version>
 		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.restdocs</groupId>
+			<artifactId>spring-restdocs-mockmvc</artifactId>
+			<version>1.0.0.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jsondoc</groupId>
+			<artifactId>spring-boot-starter-jsondoc</artifactId>
+			<version>1.2.9</version>
+		</dependency>
+
 	</dependencies>
+
 	
 	<build>
 		<plugins>
@@ -108,8 +136,55 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>com.qmino</groupId>
+				<artifactId>miredot-plugin</artifactId>
+				<version>1.6.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>restdoc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<license>
+						UHJvamVjdHxtZC50b3AtcGhhcm0ucmVzdC1zZXJ2aWNlfDIwMTYtMTAtMjF8dHJ1ZSNNQzBDRkZKaGFXTzlhYjJQdkZJVTBLc0wvbzY0REV6MEFoVUFnQnVaVFhIOXp3Z0oxU2pmdXdGOE5Ud2dhWmc9
+					</license>
+                    <restModel>
+                       <restFramework>
+                          <name>spring-mvc</name>
+                       </restFramework>
+                    </restModel>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jsondoc</groupId>
+				<artifactId>jsondoc-maven-plugin</artifactId>
+				<version>1.2.9</version>
+				<configuration>
+					<version>1.1</version>
+					<basePath>http://localhost:8080/api</basePath>
+					<packages>
+						<package>org.jsondoc.sample.controller</package>
+						<package>org.jsondoc.sample.pojo</package>
+						<package>com.sample</package>
+					</packages>
+					<outputFile>/tmp/jsondoc.json</outputFile>
+					<scanner>org.jsondoc.core.scanner.DefaultJSONDocScanner</scanner>
+					<playgroundEnabled>true</playgroundEnabled> <!-- optional -->
+					<displayMethodAs>URI</displayMethodAs> <!-- optional -->
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-	
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>miredot</id>
+			<name>MireDot Releases</name>
+			<url>http://nexus.qmino.com/content/repositories/miredot</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>

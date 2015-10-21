@@ -17,6 +17,7 @@ class StatelessAuthenticationFilter extends GenericFilterBean {
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+		chain.doFilter(req, res);
 		final HttpServletRequest httpRequest = (HttpServletRequest) req;
 		String uri = StringUtils.stripFront(StringUtils.stripBack(httpRequest.getRequestURI(),'/'),'/');
 		if(isAccessiblePage(uri)){

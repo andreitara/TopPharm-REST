@@ -1,6 +1,8 @@
 package md;
 
+import md.pharm.external.email.EmailUtil;
 import md.pharm.restservice.service.util.HibernateUtil;
+import org.jsondoc.spring.boot.starter.EnableJSONDoc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -13,12 +15,14 @@ import javax.servlet.Filter;
 
 @Configuration
 @SpringBootApplication
+@EnableJSONDoc
 public class TopPharmResTfulServiceApplication extends WebMvcConfigurationSupport {
 
     public static void main(String[] args) {
-        HibernateUtil.buildROSessionFactory();
-        HibernateUtil.buildMDSessionFactory();
-        HibernateUtil.createDefaultAdminsIfUsersNotExist();
+        //EmailUtil.sendEmail();
+        //HibernateUtil.buildROSessionFactory();
+        //HibernateUtil.buildMDSessionFactory();
+        //HibernateUtil.createDefaultAdminsIfUsersNotExist();
         SpringApplication.run(TopPharmResTfulServiceApplication.class, args);
     }
 
