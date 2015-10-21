@@ -27,8 +27,8 @@ import java.util.Set;
 public class InstitutionAddressController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<?> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("institutionID") Integer institutionID){
-        Response response = new Response();
+    public ResponseEntity<Response<Address>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("institutionID") Integer institutionID){
+        Response response = new Response<Address>();
         ManageInstitution manageInstitution = new ManageInstitution(country);
         Institution institution = manageInstitution.getInstitutionByID(institutionID);
         if(institution!=null){
@@ -37,22 +37,21 @@ public class InstitutionAddressController {
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
                 response.setObject(address);
-                //response.addMapItem("address", address);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response<Address>>(response, HttpStatus.OK);
             }else{
                 response.setResponseCode(ErrorCodes.ResourceNotExists.name);
                 response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response<Address>>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - institutionID not exists");
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Address>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<?> create(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("institutionID") Integer institutionID, @RequestBody Address address) {
+    public ResponseEntity<Response<Integer>> create(@RequestBody Address address, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("institutionID") Integer institutionID) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Address>().getViolations(address);
         if(violations.size()==0) {
@@ -67,32 +66,32 @@ public class InstitutionAddressController {
                         response.setResponseCode(ErrorCodes.Created.name);
                         response.setResponseMessage(ErrorCodes.Created.userMessage);
                         response.setObject(id);
-                        return new ResponseEntity<Object>(response, HttpStatus.CREATED);
+                        return new ResponseEntity<Response<Integer>>(response, HttpStatus.CREATED);
                     } else {
                         response.setResponseCode(ErrorCodes.InternalError.name);
                         response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                     }
                 } else {
                     response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                     response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - address exists");
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                 response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - institutionID not exists");
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
             }
         }else {
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - institutionID not exists");
             response.setViolations(violations);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<?> update(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("institutionID") Integer institutionID, @RequestBody Address address) {
+    public ResponseEntity<Response> update(@RequestBody Address address, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("institutionID") Integer institutionID) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Address>().getViolations(address);
         if(violations.size()==0) {
@@ -107,28 +106,27 @@ public class InstitutionAddressController {
                     if (manageInstitution.updateAddress(address)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);
-                        response.addMapItem("address", address);
-                        return new ResponseEntity<Object>(response, HttpStatus.CREATED);
+                        return new ResponseEntity<Response>(response, HttpStatus.CREATED);
                     } else {
                         response.setResponseCode(ErrorCodes.InternalError.name);
                         response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response>(response, HttpStatus.OK);
                     }
                 } else {
                     response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                     response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - address not exists");
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                 response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - institutionID not exists");
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - institutionID not exists");
             response.setViolations(violations);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 }

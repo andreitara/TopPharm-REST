@@ -23,7 +23,7 @@ import java.util.Set;
 public class InstitutionController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+    public ResponseEntity<Response<List<Institution>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response();
         ManageInstitution manageInstitution = new ManageInstitution(country);
         List<Institution> list = manageInstitution.getInstitutions();
@@ -32,16 +32,16 @@ public class InstitutionController {
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
             //response.addMapItem("institutions", list);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<?> create(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @RequestBody Institution institution) {
+    public ResponseEntity<Response<Integer>> create(@RequestBody Institution institution, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Institution>().getViolations(institution);
         if(violations.size()==0) {
@@ -57,27 +57,27 @@ public class InstitutionController {
                     response.setResponseMessage(ErrorCodes.Created.userMessage);
                     response.setObject(institution.getId());
                     //response.addMapItem("institution", institution);
-                    return new ResponseEntity<Object>(response, HttpStatus.CREATED);
+                    return new ResponseEntity<Response<Integer>>(response, HttpStatus.CREATED);
                 } else {
                     response.setResponseCode(ErrorCodes.InternalError.name);
                     response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.AccountAlreadyExists.name);
                 response.setResponseMessage(ErrorCodes.AccountAlreadyExists.userMessage);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.AccountAlreadyExists.name);
             response.setResponseMessage(ErrorCodes.AccountAlreadyExists.userMessage);
             response.setViolations(violations);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<?> createUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @RequestBody Institution institution) {
+    public ResponseEntity<Response> createUser(@RequestBody Institution institution, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Institution>().getViolations(institution);
         if(violations.size()==0) {
@@ -103,33 +103,32 @@ public class InstitutionController {
                     if (manage.updateInstitution(institution)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);
-                        response.addMapItem("institution", institution);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response>(response, HttpStatus.OK);
                     } else {
                         response.setResponseCode(ErrorCodes.InternalError.name);
                         response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response>(response, HttpStatus.OK);
                     }
                 } else {
                     response.setResponseCode(ErrorCodes.ResourceNotExists.name);
                     response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                 response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
             response.setViolations(violations);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "id") int id) {
+    public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "id") int id) {
         Response response = new Response();
         ManageInstitution manageInstitution = new ManageInstitution(country);
         Institution institution = manageInstitution.getInstitutionByID(id);
@@ -137,21 +136,21 @@ public class InstitutionController {
             if (manageInstitution.deleteInstitution(institution)) {
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             } else {
                 response.setResponseCode(ErrorCodes.InternalError.name);
                 response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
         } else {
             response.setResponseCode(ErrorCodes.ResourceNotExists.name);
             response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "id") int id) {
+    public ResponseEntity<Response<Institution>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "id") int id) {
         Response response = new Response();
         ManageInstitution manageInstitution = new ManageInstitution(country);
         Institution institution = manageInstitution.getInstitutionByID(id);
@@ -162,18 +161,18 @@ public class InstitutionController {
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
             response.setObject(institution);
             //response.addMapItem("institution", institution);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Institution>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.ResourceNotExists.name);
             response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Institution>>(response, HttpStatus.OK);
         }
     }
 
 
     //GET INSTITUTIONS
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllByName(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<Institution>>> getAllByName(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                           @PathVariable(value = "name") String name) {
         Response response = new Response();
         ManageInstitution manageInstitution = new ManageInstitution(country);
@@ -182,16 +181,16 @@ public class InstitutionController {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/city/{city}", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllByCity(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<Institution>>> getAllByCity(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                           @PathVariable(value = "city") String cityName) {
         Response response = new Response();
         ManageInstitution manageInstitution = new ManageInstitution(country);
@@ -200,16 +199,16 @@ public class InstitutionController {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/city/{city}/district/{district}", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllByCityAndDistrict(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country
+    public ResponseEntity<Response<List<Institution>>> getAllByCityAndDistrict(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country
                                                     ,@PathVariable(value = "city") String city
                                                     ,@PathVariable(value = "district") String district) {
         Response response = new Response();
@@ -219,16 +218,16 @@ public class InstitutionController {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/state/{state}", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllByState(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<Institution>>> getAllByState(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                            @PathVariable(value = "state") String state) {
         Response response = new Response();
         ManageInstitution manageInstitution = new ManageInstitution(country);
@@ -237,11 +236,11 @@ public class InstitutionController {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         }
     }
 

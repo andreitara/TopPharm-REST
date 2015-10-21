@@ -23,7 +23,7 @@ import java.util.Date;
 public class TaskUserController {
 
     @RequestMapping(value = "/from/{fromDate}/to/{toDate}",method = RequestMethod.GET)
-    public ResponseEntity<?> getTasksByDates(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<Task>>> getTasksByDates(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                      @PathVariable(value = "userID") Integer userID,
                                      @PathVariable(value = "fromDate") @DateTimeFormat(pattern="yyyyMMdd") Date fromDate,
                                      @PathVariable(value = "toDate")   @DateTimeFormat(pattern="yyyyMMdd") Date toDate){
@@ -33,11 +33,11 @@ public class TaskUserController {
         response.setResponseCode(ErrorCodes.OK.name);
         response.setResponseMessage(ErrorCodes.OK.userMessage);
         response.setObject(list);
-        return  new ResponseEntity<Object>(response, HttpStatus.OK);
+        return  new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/status/{status}",method = RequestMethod.GET)
-    public ResponseEntity<?> getTasksByStatus(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<Task>>> getTasksByStatus(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                              @PathVariable(value = "userID") Integer userID,
                                              @PathVariable(value = "status") String status){
         Response response = new Response();
@@ -46,11 +46,11 @@ public class TaskUserController {
         response.setResponseCode(ErrorCodes.OK.name);
         response.setResponseMessage(ErrorCodes.OK.userMessage);
         response.setObject(list);
-        return  new ResponseEntity<Object>(response, HttpStatus.OK);
+        return  new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/type/{type}",method = RequestMethod.GET)
-    public ResponseEntity<?> getTasksByType(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<Task>>> getTasksByType(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                               @PathVariable(value = "userID") Integer userID,
                                               @PathVariable(value = "type") String type){
         Response response = new Response();
@@ -59,6 +59,6 @@ public class TaskUserController {
         response.setResponseCode(ErrorCodes.OK.name);
         response.setResponseMessage(ErrorCodes.OK.userMessage);
         response.setObject(list);
-        return  new ResponseEntity<Object>(response, HttpStatus.OK);
+        return  new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
     }
 }

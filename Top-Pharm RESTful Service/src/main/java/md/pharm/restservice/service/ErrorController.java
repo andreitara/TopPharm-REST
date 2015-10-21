@@ -18,18 +18,18 @@ import java.util.List;
 public class ErrorController {
 
     @RequestMapping("/InsufficientAccountPermissions")
-    public ResponseEntity<?> insufficientAccountPermissions() {
+    public ResponseEntity<Response> insufficientAccountPermissions() {
         Response response = new Response();
         response.setResponseCode(ErrorCodes.InsufficientAccountPermissions.name);
         response.setResponseMessage(ErrorCodes.InsufficientAccountPermissions.userMessage);
-        return new ResponseEntity<Object>(response, HttpStatus.OK);
+        return new ResponseEntity<Response>(response, HttpStatus.OK);
     }
 
     @RequestMapping("/InvalidAuthenticationInfo")
-    public ResponseEntity<?> invalidAuthenticationInfo() {
+    public ResponseEntity<Response> invalidAuthenticationInfo() {
         Response response = new Response();
         response.setResponseCode(ErrorCodes.InvalidAuthenticationInfo.name);
         response.setResponseMessage(ErrorCodes.InvalidAuthenticationInfo.userMessage);
-        return new ResponseEntity<Object>(response, HttpStatus.OK);
+        return new ResponseEntity<Response>(response, HttpStatus.OK);
     }
 }

@@ -26,7 +26,7 @@ import java.util.Set;
 public class DoctorTaskController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<Set<Doctor>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                     @PathVariable(value = "taskID") int taskID){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
@@ -37,16 +37,16 @@ public class DoctorTaskController {
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(doctors);
             //response.addMapItem("doctors", list);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Set<Doctor>>>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Set<Doctor>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/add/{doctorID}", method = RequestMethod.POST)
-    public ResponseEntity<?> add(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response> add(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                  @PathVariable(value = "taskID") int taskID,
                                  @PathVariable(value = "doctorID") int doctorID){
         Response response = new Response();
@@ -61,21 +61,21 @@ public class DoctorTaskController {
                 manageTask.updateTask(task);
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }else{
                 response.setResponseCode(ErrorCodes.InternalError.name);
                 response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/delete/{doctorID}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                     @PathVariable(value = "taskID") int taskID,
                                     @PathVariable(value = "doctorID") int doctorID){
         Response response = new Response();
@@ -88,21 +88,21 @@ public class DoctorTaskController {
                 if(manageTask.deleteDoctorTask(taskID,doctorID)) {
                     response.setResponseCode(ErrorCodes.OK.name);
                     response.setResponseMessage(ErrorCodes.OK.userMessage);
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
                 }else{
                     response.setResponseCode(ErrorCodes.InternalError.name);
                     response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
                 }
             }else{
                 response.setResponseCode(ErrorCodes.InternalError.name);
                 response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 

@@ -25,24 +25,24 @@ import java.util.Set;
 public class ProductObjectiveController {
 
     @RequestMapping("/all")
-    public ResponseEntity<?> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") int productID){
+    public ResponseEntity<Response<Set<Objective>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") int productID){
         Response response = new Response();
         ManageProduct manageProduct = new ManageProduct(country);
         Set<Objective> list = manageProduct.getObjectivesByProductID(productID);
         if(list!=null){
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.addMapItem("objectives", list);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            response.setObject(list);
+            return new ResponseEntity<Response<Set<Objective>>>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.ResourceNotFound.name);
             response.setResponseMessage(ErrorCodes.ResourceNotFound.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Set<Objective>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<?> create(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") int productID, @RequestBody Objective objective){
+    public ResponseEntity<Response<Integer>> create(@RequestBody Objective objective, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") int productID){
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Objective>().getViolations(objective);
         if(violations.size()==0) {
@@ -56,34 +56,33 @@ public class ProductObjectiveController {
                     if (id != null) {
                         response.setResponseCode(ErrorCodes.Created.name);
                         response.setResponseMessage(ErrorCodes.Created.userMessage);
-                        product.setId(id);
-                        response.addMapItem("objective", objective);
-                        return new ResponseEntity<Object>(response, HttpStatus.CREATED);
+                        response.setObject(id);
+                        return new ResponseEntity<Response<Integer>>(response, HttpStatus.CREATED);
                     } else {
                         response.setResponseCode(ErrorCodes.InternalError.name);
                         response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                     }
                 } else {
                     response.setResponseCode(ErrorCodes.AccountAlreadyExists.name);
                     response.setResponseMessage(ErrorCodes.AccountAlreadyExists.userMessage);
-                    return new ResponseEntity<>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                 response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
             }
         } else {
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
             response.setViolations(violations);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<?> update(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") Integer productID, @RequestBody Objective objective) {
+    public ResponseEntity<Response> update(@RequestBody Objective objective, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") Integer productID) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Objective>().getViolations(objective);
         if(violations.size()==0) {
@@ -105,32 +104,32 @@ public class ProductObjectiveController {
                     if (manage.updateObjective(objective)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response>(response, HttpStatus.OK);
                     } else {
                         response.setResponseCode(ErrorCodes.InternalError.name);
                         response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response>(response, HttpStatus.OK);
                     }
                 } else {
                     response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                     response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                 response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
             response.setViolations(violations);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") Integer productID, @PathVariable(value = "id") int id){
+    public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") Integer productID, @PathVariable(value = "id") int id){
         Response response = new Response();
         ManageProduct manage = new ManageProduct(country);
         Product product = manage.getProductByID(productID);
@@ -148,21 +147,21 @@ public class ProductObjectiveController {
             if(manage.deleteObjective(objective)){
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }else{
                 response.setResponseCode(ErrorCodes.InternalError.name);
                 response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.ResourceNotExists.name);
             response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping("/{id}")
-    public ResponseEntity<?> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") Integer productID, @PathVariable(value = "id") int id){
+    public ResponseEntity<Response<Objective>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "productID") Integer productID, @PathVariable(value = "id") int id){
         Response response = new Response();
         ManageProduct manageProduct = new ManageProduct(country);
         Product product = manageProduct.getProductByID(productID);
@@ -179,12 +178,11 @@ public class ProductObjectiveController {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(objective);
-            //response.addMapItem("objective", objective);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Objective>>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.ResourceNotExists.name);
             response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Objective>>(response, HttpStatus.OK);
         }
     }
 }

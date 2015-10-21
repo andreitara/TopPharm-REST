@@ -5,7 +5,7 @@
 
 	<groupId>md.top-pharm</groupId>
 	<artifactId>rest-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>Top-Pharm RESTful Service</name>
@@ -43,13 +43,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-			<version>4.2.2.RELEASE</version>
-		</dependency>
-
-
 
 		<!-- Hibernate dependencies -->
 		<dependency>
@@ -82,11 +75,11 @@
 			<artifactId>hibernate-tools</artifactId>
 			<version>4.3.1.Final</version>
 		</dependency-->
-		<!--dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.5</version>
-		</dependency-->
+		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.jtds</groupId>
 			<artifactId>jtds</artifactId>
@@ -109,26 +102,7 @@
 			<version>5.2.1.Final</version>
 		</dependency>
 
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.7</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.restdocs</groupId>
-			<artifactId>spring-restdocs-mockmvc</artifactId>
-			<version>1.0.0.RELEASE</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jsondoc</groupId>
-			<artifactId>spring-boot-starter-jsondoc</artifactId>
-			<version>1.2.9</version>
-		</dependency>
-
 	</dependencies>
-
 	
 	<build>
 		<plugins>
@@ -151,29 +125,16 @@
 					<license>
 						UHJvamVjdHxtZC50b3AtcGhhcm0ucmVzdC1zZXJ2aWNlfDIwMTYtMTAtMjF8dHJ1ZSNNQzBDRkZKaGFXTzlhYjJQdkZJVTBLc0wvbzY0REV6MEFoVUFnQnVaVFhIOXp3Z0oxU2pmdXdGOE5Ud2dhWmc9
 					</license>
-                    <restModel>
-                       <restFramework>
-                          <name>spring-mvc</name>
-                       </restFramework>
-                    </restModel>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.jsondoc</groupId>
-				<artifactId>jsondoc-maven-plugin</artifactId>
-				<version>1.2.9</version>
-				<configuration>
-					<version>1.1</version>
-					<basePath>http://localhost:8080/api</basePath>
-					<packages>
-						<package>org.jsondoc.sample.controller</package>
-						<package>org.jsondoc.sample.pojo</package>
-						<package>com.sample</package>
-					</packages>
-					<outputFile>/tmp/jsondoc.json</outputFile>
-					<scanner>org.jsondoc.core.scanner.DefaultJSONDocScanner</scanner>
-					<playgroundEnabled>true</playgroundEnabled> <!-- optional -->
-					<displayMethodAs>URI</displayMethodAs> <!-- optional -->
+					<restModel>
+						<restFramework>
+							<name>spring-mvc</name>
+						</restFramework>
+					</restModel>
+					<output>
+						<html>
+							<baseUrl>http://api.toppharm.md:81/</baseUrl>
+						</html>
+					</output>
 				</configuration>
 			</plugin>
 		</plugins>

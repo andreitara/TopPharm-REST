@@ -1,6 +1,6 @@
 package md.pharm.hibernate.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import md.pharm.hibernate.connection.Connection;
 import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.hibernate.message.Message;

@@ -25,24 +25,24 @@ import java.util.Set;
 public class DoctorWorkOfficeController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID) {
+    public ResponseEntity<Response<Set<Office>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
         Doctor doctor = manageDoctor.getDoctorByID(doctorID);
         if (doctor != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.addMapItem("workOffices", doctor.getOffices());
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            response.setObject(doctor.getOffices());
+            return new ResponseEntity<Response<Set<Office>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Set<Office>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/create/institution/{institutionID}", method = RequestMethod.POST)
-    public ResponseEntity<?> create(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID, @PathVariable("institutionID") Integer institutionID, @RequestBody Office office) {
+    public ResponseEntity<Response<Integer>> create(@RequestBody Office office, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID, @PathVariable("institutionID") Integer institutionID) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Office>().getViolations(office);
         if(violations.size()==0) {
@@ -63,44 +63,43 @@ public class DoctorWorkOfficeController {
                             if (id != null) {
                                 response.setResponseCode(ErrorCodes.Created.name);
                                 response.setResponseMessage(ErrorCodes.Created.userMessage);
-                                office.setId(id);
-                                response.addMapItem("office", office);
-                                return new ResponseEntity<Object>(response, HttpStatus.CREATED);
+                                response.setObject(id);
+                                return new ResponseEntity<Response<Integer>>(response, HttpStatus.CREATED);
                             } else {
                                 response.setResponseCode(ErrorCodes.InternalError.name);
                                 response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                                return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                             }
                         } else {
                             response.setResponseCode(ErrorCodes.AccountAlreadyExists.name);
                             response.setResponseMessage(ErrorCodes.AccountAlreadyExists.userMessage);
-                            return new ResponseEntity<>(response, HttpStatus.OK);
+                            return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                         }
                     } else {
                         response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                         response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                     }
                 } else {
                     response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                     response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - institution ID not exists");
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                 response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - doctorID not exists");
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - doctorID not exists");
             response.setViolations(violations);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/update/institution/{institutionID}", method = RequestMethod.POST)
-    public ResponseEntity<?> update(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID, @PathVariable("institutionID") Integer institutionID, @RequestBody Office office) {
+    public ResponseEntity<Response> update(@RequestBody Office office, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID, @PathVariable("institutionID") Integer institutionID) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Office>().getViolations(office);
         if(violations.size()==0) {
@@ -128,47 +127,47 @@ public class DoctorWorkOfficeController {
                                 if (manageOffice.updateOffice(office)) {
                                     response.setResponseCode(ErrorCodes.OK.name);
                                     response.setResponseMessage(ErrorCodes.OK.userMessage);
-                                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                                    return new ResponseEntity<Response>(response, HttpStatus.OK);
                                 } else {
                                     response.setResponseCode(ErrorCodes.InternalError.name);
                                     response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                                    return new ResponseEntity<Response>(response, HttpStatus.OK);
                                 }
                             } else {
                                 response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                                 response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-                                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                                return new ResponseEntity<Response>(response, HttpStatus.OK);
                             }
                         } else {
                             response.setResponseCode(ErrorCodes.ResourceNotExists.name);
                             response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-                            return new ResponseEntity<Object>(response, HttpStatus.OK);
+                            return new ResponseEntity<Response>(response, HttpStatus.OK);
                         }
                     } else {
                         response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                         response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response>(response, HttpStatus.OK);
                     }
                 } else {
                     response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                     response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - institution ID not exists");
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                 response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - doctorID not exists");
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - doctorID not exists");
             response.setViolations(violations);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID, @PathVariable(value = "id") int id) {
+    public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID, @PathVariable(value = "id") int id) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
         Doctor doctor = manageDoctor.getDoctorByID(doctorID);
@@ -180,32 +179,32 @@ public class DoctorWorkOfficeController {
                     if (manageOffice.deleteOffice(office)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response>(response, HttpStatus.OK);
                     } else {
                         response.setResponseCode(ErrorCodes.InternalError.name);
                         response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                        return new ResponseEntity<Object>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response>(response, HttpStatus.OK);
                     }
                 } else {
                     response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                     response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - Doctor does not contain office with this OfficeID");
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.ResourceNotExists.name);
                 response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
 
         } else {
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - doctorID not exists");
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID, @PathVariable(value = "id") int id) {
+    public ResponseEntity<Response<Office>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable("doctorID") Integer doctorID, @PathVariable(value = "id") int id) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
         Doctor doctor = manageDoctor.getDoctorByID(doctorID);
@@ -216,22 +215,22 @@ public class DoctorWorkOfficeController {
                 if (office.getDoctor().getId() == doctorID) {
                     response.setResponseCode(ErrorCodes.OK.name);
                     response.setResponseMessage(ErrorCodes.OK.userMessage);
-                    response.addMapItem("office", office);
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    response.setObject(office);
+                    return new ResponseEntity<Response<Office>>(response, HttpStatus.OK);
                 } else {
                     response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                     response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - Doctor does not contain office with this OfficeID");
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response<Office>>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.ResourceNotExists.name);
                 response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response<Office>>(response, HttpStatus.OK);
             }
         } else {
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage + " - doctorID not exists");
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Office>>(response, HttpStatus.OK);
         }
     }
 }

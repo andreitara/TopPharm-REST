@@ -30,10 +30,10 @@ import java.util.Set;
 public class MessageController {
 
     @RequestMapping(value = "from/{fromID}/to/{toID}/add", method = RequestMethod.POST)
-    public ResponseEntity<?> create(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                    @PathVariable(value = "fromID") Integer fromID,
-                                    @PathVariable(value = "toID") Integer toID,
-                                    @RequestBody Message message) {
+    public ResponseEntity<Response<Integer>> create(@RequestBody Message message,
+                                                    @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                    @PathVariable(value = "fromID") Integer fromID,
+                                                    @PathVariable(value = "toID") Integer toID) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Message>().getViolations(message);
         if (violations.size() == 0) {
@@ -52,37 +52,37 @@ public class MessageController {
                             response.setResponseCode(ErrorCodes.Created.name);
                             response.setResponseMessage(ErrorCodes.Created.userMessage);
                             response.setObject(id);
-                            return new ResponseEntity<Object>(response, HttpStatus.CREATED);
+                            return new ResponseEntity<Response<Integer>>(response, HttpStatus.CREATED);
                         } else {
                             response.setResponseCode(ErrorCodes.InternalError.name);
                             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                            return new ResponseEntity<Object>(response, HttpStatus.OK);
+                            return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                         }
                     } else {
                         response.setResponseCode(ErrorCodes.AccountAlreadyExists.name);
                         response.setResponseMessage(ErrorCodes.AccountAlreadyExists.userMessage);
-                        return new ResponseEntity<>(response, HttpStatus.OK);
+                        return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                     }
                 } else {
                     response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                     response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                 }
             } else {
                 response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
                 response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
             }
         } else {
             response.setResponseCode(ErrorCodes.ResourceNotExists.name);
             response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
             response.setViolations(violations);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "from/{fromID}/to/{toID}/start/{start}/end/{end}", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllFromStartToEnd(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<Message>>> getAllFromStartToEnd(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                   @PathVariable(value = "fromID") Integer fromID,
                                                   @PathVariable(value = "toID") Integer toID,
                                                   @PathVariable(value = "start") @DateTimeFormat(pattern="yyyyMMdd") Date start,
@@ -94,16 +94,16 @@ public class MessageController {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(messages);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Message>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Message>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "user/{user1ID}/user/{user2ID}/start/{start}/end/{end}", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllBidirectionalFromStartToEnd(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<Message>>> getAllBidirectionalFromStartToEnd(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                @PathVariable(value = "user1ID") Integer user1ID,
                                                                @PathVariable(value = "user2ID") Integer user2ID,
                                                                @PathVariable(value = "start") @DateTimeFormat(pattern="yyyyMMdd") Date start,
@@ -115,11 +115,11 @@ public class MessageController {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(messages);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Message>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Message>>>(response, HttpStatus.OK);
         }
     }
 }

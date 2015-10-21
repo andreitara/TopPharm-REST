@@ -24,7 +24,7 @@ import java.util.Map;
 public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createUser(@RequestBody UserLogin user){
+    public ResponseEntity<Response<String>> createUser(@RequestBody UserLogin user){
         Response response = new Response();
         if(user!=null) {
             ManageUser manageUser = new ManageUser("MD");
@@ -44,26 +44,26 @@ public class LoginController {
                     response.setObject(connection.getConnectionKey());
                     response.setResponseCode(ErrorCodes.ValidAuthenticationInfo.name);
                     response.setResponseMessage(ErrorCodes.ValidAuthenticationInfo.userMessage);
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
                 } else {
                     response.setResponseCode(ErrorCodes.InvalidAuthenticationInfo.name);
                     response.setResponseMessage(ErrorCodes.InvalidAuthenticationInfo.userMessage + ". Password is incorect");
-                    return new ResponseEntity<Object>(response, HttpStatus.OK);
+                    return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
                 }
             }else{
                 response.setResponseCode(ErrorCodes.InvalidAuthenticationInfo.name);
                 response.setResponseMessage(ErrorCodes.InvalidAuthenticationInfo.userMessage + ". User do not exists");
-                return new ResponseEntity<Object>(response, HttpStatus.OK);
+                return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
             }
         }else{
             response.setResponseCode(ErrorCodes.InvalidAuthenticationInfo.name);
             response.setResponseMessage(ErrorCodes.InvalidAuthenticationInfo.userMessage + ". Send user is null");
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @RequestHeader(StaticStrings.HEADER_USERNAME) String username){
+    public ResponseEntity<Response> getUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @RequestHeader(StaticStrings.HEADER_USERNAME) String username){
         Response response = new Response();
         User user = new ManageUser(country).getUserByUsername(username);
         if(user!=null) {
@@ -71,15 +71,15 @@ public class LoginController {
             if (connection != null && new ManageConnection(country).deleteConnection(connection) == false) {
                 response.setResponseCode(ErrorCodes.InternalError.name);
                 response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                return new ResponseEntity<Object>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Object>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

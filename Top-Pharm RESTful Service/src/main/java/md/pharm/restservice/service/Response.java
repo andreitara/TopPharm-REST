@@ -18,21 +18,14 @@ public class Response<T>{
     private String responseCode;
     private String responseMessage;
     private Set<Violation> violations;
-    private Object object;
-    @JsonIgnore
-    private Map<String, Object> map;
+    private T object;
 
     public Response(){
-        map = new HashMap<String, Object>();
     }
 
     public Response(String responseCode, String responseMessage) {
         this.responseCode = responseCode;
         this.responseMessage = responseMessage;
-    }
-
-    public void addMapItem(String name, Object object){
-        map.put(name, object);
     }
 
     public String getResponseCode() {
@@ -59,20 +52,12 @@ public class Response<T>{
         this.violations = violations;
     }
 
-    public Object getObject() {
+    public T getObject() {
         return object;
     }
 
-    public void setObject(Object object) {
+    public void setObject(T object) {
         this.object = object;
-    }
-
-    public Map<String, Object> getMap() {
-        return map;
-    }
-
-    public void setMap(Map<String, Object> map) {
-        this.map = map;
     }
 
     @Override
