@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 
@@ -19,6 +20,9 @@ import java.util.List;
 public class BackupUtil {
 
     private Session session;
+
+    private static String WINDOWS_PATH = "D:\\TopPharm/";
+    private static String LINUX_PATH = "/home/TopPharm/";
 
     Country md = Country.valueOf("MD");
     String mdDataBaseName = "TopPharmMD";
@@ -39,7 +43,11 @@ public class BackupUtil {
             int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             int minute = Calendar.getInstance().get(Calendar.MINUTE);
             String date = "" + year + month + day + "_" + hour + minute;
-            session.createSQLQuery("BACKUP DATABASE TO /home/toppharm/backup/md/" + year + "/" + month + "/" + "TopPharmMD_bak_" + date + ".txt").executeUpdate();
+            String folder = WINDOWS_PATH + "md/" + year + "/" + month + "/";
+            File file = new File(folder);
+            if(!file.exists())
+                file.mkdirs();
+            session.createSQLQuery("BACKUP DATABASE TopPharmMD TO DISK = '"+ folder + "TopPharmMD_bak_" + date + ".txt'").executeUpdate();
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();
@@ -59,7 +67,11 @@ public class BackupUtil {
             int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             int minute = Calendar.getInstance().get(Calendar.MINUTE);
             String date = "" + year + month + day + "_" + hour + minute;
-            session.createSQLQuery("BACKUP DATABASE TO /home/toppharm/backup/ro/" + year + "/" + month + "/" + "TopPharmRO_bak_" + date + ".txt").executeUpdate();
+            String folder = WINDOWS_PATH + "ro/" + year + "/" + month + "/";
+            File file = new File(folder);
+            if(!file.exists())
+                file.mkdirs();
+            session.createSQLQuery("BACKUP DATABASE TopPharmRO TO DISK = '"+ folder + "TopPharmRO_bak_" + date + ".txt'").executeUpdate();
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();
