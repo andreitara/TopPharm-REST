@@ -21,7 +21,7 @@ import java.util.Set;
  * Created by Andrei on 10/5/2015.
  */
 @RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/medical/doctor/{doctorID}/office")
+@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/medical/doctor/{doctorID}/office")
 public class DoctorWorkOfficeController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)

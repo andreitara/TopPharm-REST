@@ -19,7 +19,7 @@ import java.util.Set;
  * Created by Andrei on 10/17/2015.
  */
 @RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/user/{userID}/doctor/")
+@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/user/{userID}/doctor/")
 public class DoctorUserController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)

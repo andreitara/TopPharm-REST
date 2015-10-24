@@ -1,5 +1,8 @@
 package md.pharm.external.email;
 
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.MailException;
@@ -39,6 +42,13 @@ public class EmailUtil {
         }
         catch (MailException ex) {
             System.err.println(ex.getMessage());
+        }
+    }
+
+    private class EmailTrigger implements Job{
+        @Override
+        public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+
         }
     }
 

@@ -19,7 +19,7 @@ import java.util.Set;
  * Created by c-andrtara on 10/5/2015.
  */
 @RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/medical/institution")
+@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/institution")
 public class InstitutionController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)

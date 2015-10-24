@@ -21,7 +21,7 @@ import java.util.Set;
  */
 
 @RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/medical/product/{productID}/objective")
+@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/medical/product/{productID}/objective")
 public class ProductObjectiveController {
 
     @RequestMapping("/all")

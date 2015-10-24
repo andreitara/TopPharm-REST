@@ -20,7 +20,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/user")
+@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/user")
 public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -37,6 +37,10 @@ public class LoginController {
             }
             if(userFromDB!=null) {
                 if (userFromDB.getPassword().equals(user.getPassword())) {
+                    Connection connectionFromDB = userFromDB.getConnection();
+                    if(connectionFromDB!=null){
+                        new ManageConnection(userFromDB.getCountry()).deleteConnection(connectionFromDB);
+                    }
                     Connection connection = new Connection();
                     userFromDB.setConnection(connection);
                     connection.setUser(userFromDB);

@@ -19,7 +19,7 @@ import java.util.Date;
  */
 
 @RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/user/{userID}/task/")
+@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/user/{userID}/task/")
 public class TaskUserController {
 
     @RequestMapping(value = "/from/{fromDate}/to/{toDate}",method = RequestMethod.GET)

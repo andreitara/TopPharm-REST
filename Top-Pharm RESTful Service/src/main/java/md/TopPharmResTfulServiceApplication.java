@@ -17,11 +17,8 @@ import javax.servlet.Filter;
 public class TopPharmResTfulServiceApplication extends WebMvcConfigurationSupport {
 
     public static void main(String[] args) {
-        HibernateUtil.buildROSessionFactory();
-        HibernateUtil.buildMDSessionFactory();
-        HibernateUtil.createDefaultAdminsIfUsersNotExist();
-        new BackupUtil().createMDBackup();
-        new BackupUtil().createROBackup();
+        HibernateUtil.initiateHibernate();
+        BackupUtil.startTrigger("0 0 6 * * ?");
         SpringApplication.run(TopPharmResTfulServiceApplication.class, args);
     }
 

@@ -7,8 +7,8 @@ import java.util.List;
  * Created by Andrei on 9/26/2015.
  */
 public class StaticStrings {
-    final public static String PATH_FOR_ALL_CONTROLLERS = ":81/";
-    final public static String PORT_FOR_ALL_CONTROLLERS = "/:81/";
+    final public static String PATH_FOR_ALL_CONTROLLERS = "";//":81/";
+    final public static String PORT_FOR_ALL_CONTROLLERS = "";//"/:81/";
 
     final public static String HEADER_SECURITY_TOKEN = "auth-token";
     final public static String HEADER_USERNAME = "toppharm-username";

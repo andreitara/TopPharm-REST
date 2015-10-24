@@ -22,19 +22,18 @@ import java.util.Set;
  */
 
 @RestController
-@RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/medical/doctor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/doctor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class DoctorController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<List<Doctor>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
-        Response response = new Response<Doctor>();
+        Response response = new Response<List<Doctor>>();
         ManageDoctor manageDoctor = new ManageDoctor(country);
         List<Doctor> list = manageDoctor.getDoctors();
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            //response.addMapItem("doctors", list);
             return new ResponseEntity(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
@@ -44,7 +43,8 @@ public class DoctorController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<Integer>> create(@RequestBody Doctor doctor, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+    public ResponseEntity<Response<Integer>> create(@RequestBody Doctor doctor,
+                                                    @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response<Integer>();
         Set<Violation> violations = new ValidatorUtil<Doctor>().getViolations(doctor);
         if (violations.size() == 0) {
@@ -84,7 +84,8 @@ public class DoctorController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Response> update(@RequestBody Doctor doctor, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+    public ResponseEntity<Response> update(@RequestBody Doctor doctor,
+                                           @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Doctor>().getViolations(doctor);
         if (violations.size() == 0) {
@@ -120,7 +121,8 @@ public class DoctorController {
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "id") int id) {
+    public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                           @PathVariable(value = "id") int id) {
         Response response = new Response();
         ManageDoctor manage = new ManageDoctor(country);
         Doctor doctor = manage.getDoctorByID(id);
@@ -142,7 +144,8 @@ public class DoctorController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Response<Doctor>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "id") int id) {
+    public ResponseEntity<Response<Doctor>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                @PathVariable(value = "id") int id) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
         Doctor doctor = manageDoctor.getDoctorByID(id);
@@ -162,7 +165,7 @@ public class DoctorController {
     //GET DOCTORS
     @RequestMapping(value = "/speciality/{speciality}", method = RequestMethod.GET)
     public ResponseEntity<Response<List<Doctor>>> getAllBySpeciality(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                @PathVariable(value = "speciality") String speciality) {
+                                                                     @PathVariable(value = "speciality") String speciality) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
         List<Doctor> list = manageDoctor.getDoctorsBySpeciality(speciality);
@@ -180,7 +183,7 @@ public class DoctorController {
 
     @RequestMapping(value = "/institution/{institutionID}", method = RequestMethod.GET)
     public ResponseEntity<Response<List<Doctor>>> getAllBynstitutionID(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                  @PathVariable(value = "institutionID") Integer institutionID) {
+                                                                       @PathVariable(value = "institutionID") Integer institutionID) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
         List<Doctor> list = manageDoctor.getDoctorsByInstitutionID(institutionID);
@@ -198,7 +201,7 @@ public class DoctorController {
 
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
     public ResponseEntity<Response<List<Doctor>>> getAllPartOfName(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                              @PathVariable(value = "name") String name) {
+                                                                   @PathVariable(value = "name") String name) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
         List<Doctor> list = null;

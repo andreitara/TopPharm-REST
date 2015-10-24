@@ -19,6 +19,12 @@ public class HibernateUtil {
     private static SessionFactory mdFactory;
     private static SessionFactory roFactory;
 
+    public static void initiateHibernate(){
+        buildMDSessionFactory();
+        buildROSessionFactory();
+        createDefaultAdminsIfUsersNotExist();
+    }
+
     public static void buildMDSessionFactory() {
         try {
             org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();

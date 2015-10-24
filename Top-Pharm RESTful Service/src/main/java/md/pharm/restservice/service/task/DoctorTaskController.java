@@ -22,7 +22,7 @@ import java.util.Set;
  */
 
 @RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/task/{taskID}/doctor/")
+@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/task/{taskID}/doctor/")
 public class DoctorTaskController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
