@@ -33,7 +33,7 @@ public class Main {
 
         //InstitutionsControllerTest.createInstitutionByAdmin();
         //InstitutionsControllerTest.getInstitutionsByAdmin(4);
-        InstitutionsControllerTest.getAllInstitutionsByAdmin();
+        //InstitutionsControllerTest.getAllInstitutionsByAdmin();
         //InstitutionsControllerTest.updateInstitutionByAdmin(4);
         //InstitutionsControllerTest.deleteInstitutionByAdmin(3);
         //InstitutionsControllerTest.getAllInstitutionsByCity("city1");
