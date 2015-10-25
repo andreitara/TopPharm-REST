@@ -1,3 +1,4 @@
+import Entities.CreateUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import md.pharm.hibernate.user.User;
@@ -14,7 +15,7 @@ import java.util.*;
 
 public class UserControllerTest {
 
-    static User user = new User("user","user","user","user", Calendar.getInstance().getTime(),"user2","useruseruser1","user@email.com","+698574","126345987",null);
+    static CreateUser user = new CreateUser("user","user","user","user", Calendar.getInstance().getTime(),"user3","useruseruser1","user@email.com","+698574","126345987",null);
 
     public static void createUserByAdmin() throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();

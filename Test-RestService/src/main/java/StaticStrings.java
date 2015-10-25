@@ -8,8 +8,8 @@ public class StaticStrings {
     public static int ADMIN_ID = 1;
     public static int USER_ID = 2;
 
-    public static String ADMIN_AUTH_TOKEN = "4ebc9b62-f878-459c-8839-68a311e923e3";
-    public static String USER_AUTH_TOKEN =  "5d9cf22b-4688-4754-8a37-ca6d63f97f8f";
+    public static String ADMIN_AUTH_TOKEN = "13be860a-071e-4225-adb7-8b1359ec5591";//3257db79-a632-4ad2-a7e4-ff5404315679
+    public static String USER_AUTH_TOKEN =  "13be860a-071e-4225-adb7-8b1359ec5591";
 
     public static String LOGIN_URI =  REST_IP_PORT + "/toppharm/v1/user/login";
     public static String LOGOUT_URI = REST_IP_PORT + "/toppharm/v1/user/logout";
@@ -78,6 +78,11 @@ public class StaticStrings {
     public static String CREATE_TASK_URI =   REST_IP_PORT + "/toppharm/v1/task/create";
     public static String UPDATE_TASK_URI =   REST_IP_PORT + "/toppharm/v1/task/update";
     public static String DELETE_TASK_URI =   REST_IP_PORT + "/toppharm/v1/task/delete/{id}";
+    public static String CLOSE_TASK_URI =    REST_IP_PORT + "/toppharm/v1/task/close/{id}";
+    public static String EXECUTE_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/execute/{id}";
+    public static String ADD_TASK_COMMENT_URI =  REST_IP_PORT + "/toppharm/v1/task/{id}/comment/add";
+    public static String GET_TASK_COMMENT_URI =  REST_IP_PORT + "/toppharm/v1/task/{id}/comment/all";
+    public static String GET_TASK_HISTORY_URI =  REST_IP_PORT + "/toppharm/v1/task/{id}/history/all";
 
     public static String ADD_INSTITUTION_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/institution/add/{institutionID}";
     public static String UPDATE_INSTITUTION_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/institution/update/{institutionID}";

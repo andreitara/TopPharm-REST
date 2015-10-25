@@ -36,9 +36,9 @@ public class LoginControllerTest {
     }
 
     public static void loginUser() throws JsonProcessingException {
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword("user");
+        UserLogin user = new UserLogin();
+        user.setUsername("user1");
+        user.setPassword("useruseruser1");
         RestTemplate restTemplate = new RestTemplate();
         Response response = restTemplate.postForObject(StaticStrings.LOGIN_URI, user, Response.class);
         ObjectMapper mapper = new ObjectMapper();

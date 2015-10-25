@@ -1,5 +1,6 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import md.pharm.hibernate.institution.Institution;
+import md.pharm.hibernate.task.Task;
 import md.pharm.hibernate.user.permission.Permission;
 import md.pharm.restservice.service.task.DoctorTaskController;
 
@@ -74,6 +75,11 @@ public class Main {
         //TaskControllerTest.getAllTasksByAdmin();
         //TaskControllerTest.getTaskByAdmin(1);
         //TaskControllerTest.deleteTaskByAdmin(2);
+        //TaskControllerTest.closeTaskByAdmin(1);
+        //TaskControllerTest.executeTaskByAdmin(1);
+        //TaskControllerTest.addTaskCommentByAdmin(1);
+        //TaskControllerTest.getTaskCommentByAdmin(1);
+        TaskControllerTest.getTaskHistoryByAdmin(1);
 
         //DoctorTaskControllerTest.addDoctorToTask(1,3);
         //DoctorTaskControllerTest.deleteDoctorToTask(2,3);

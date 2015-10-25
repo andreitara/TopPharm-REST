@@ -26,7 +26,7 @@
         <dependency>
             <groupId>md.top-pharm</groupId>
             <artifactId>rest-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>

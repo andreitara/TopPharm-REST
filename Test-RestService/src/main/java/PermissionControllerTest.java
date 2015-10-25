@@ -8,6 +8,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,9 +17,16 @@ import java.util.Map;
  * Created by Andrei on 10/3/2015.
  */
 public class PermissionControllerTest {
+    public static Calendar calendar ;
+    public static Date date;
+    static{
+        calendar = Calendar.getInstance();
+        calendar.set(2015,9,25,21,0,0);
+        date = calendar.getTime();
+    }
 
     public static Permission fullPermissions = new Permission(null,true,true,true,true,true,true,true);
-    public static Permission defaultPermissions = new Permission(null,true,false,true,false,true,false,false);
+    public static Permission defaultPermissions = new Permission(null,true,false,true,false,true,true,false);
 
     public static void getAdminUserPermission(Integer userID) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
@@ -44,6 +53,7 @@ public class PermissionControllerTest {
     public static void updatePermissionsByAdmin(int userID) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
+        defaultPermissions.setSpecialWriteDate(date);
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
         HttpEntity entity = new HttpEntity(defaultPermissions, headers);
         Map<String,String> params = new HashMap<String, String>();
