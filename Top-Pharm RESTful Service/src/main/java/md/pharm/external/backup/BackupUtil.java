@@ -1,14 +1,10 @@
 package md.pharm.external.backup;
 
-import md.pharm.hibernate.doctor.Doctor;
-import md.pharm.hibernate.product.Objective;
-import md.pharm.restservice.service.util.Country;
-import md.pharm.restservice.service.util.HibernateUtil;
-import org.hibernate.Criteria;
+import md.pharm.util.Country;
+import md.pharm.util.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -16,7 +12,6 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created by c-andrtara on 10/21/2015.

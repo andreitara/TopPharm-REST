@@ -1,5 +1,7 @@
 package md.pharm.hibernate.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -18,6 +20,7 @@ public class TaskHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "taskID")
+    @JsonIgnore
     private Task task;
 
     @Column(name = "date")

@@ -1,7 +1,7 @@
 package md;
 
 import md.pharm.external.backup.BackupUtil;
-import md.pharm.restservice.service.util.HibernateUtil;
+import md.pharm.util.HibernateUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
 package md.pharm.hibernate.connection;
 
-import md.pharm.restservice.service.util.Country;
-import md.pharm.restservice.service.util.HibernateUtil;
+import md.pharm.util.Country;
+import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
 

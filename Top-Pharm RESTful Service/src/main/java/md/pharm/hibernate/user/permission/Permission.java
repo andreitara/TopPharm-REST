@@ -5,7 +5,7 @@ import md.pharm.hibernate.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.Date;
 
 /**
  * Created by Andrei on 9/28/2015.
@@ -49,13 +49,15 @@ public class Permission{
     @NotNull
     private boolean writeTasks;
 
-    @Column(name = "specialWriteTask")
-    @NotNull
-    private boolean specialWriteTask;
+    @Column(name = "adminPermission")
+    private boolean adminPermission;
+
+    @Column(name = "specialWriteDate")
+    private Date specialWriteDate;
 
     public Permission(){}
 
-    public Permission(User user, boolean readUsers, boolean writeUsers, boolean readMedicalEntity, boolean writeMedicalEntity, boolean readTasks, boolean writeTasks, boolean specialWriteTask) {
+    public Permission(User user, boolean readUsers, boolean writeUsers, boolean readMedicalEntity, boolean writeMedicalEntity, boolean readTasks, boolean writeTasks, boolean adminPermission) {
         this.user = user;
         this.readUsers = readUsers;
         this.writeUsers = writeUsers;
@@ -63,7 +65,7 @@ public class Permission{
         this.writeMedicalEntity = writeMedicalEntity;
         this.readTasks = readTasks;
         this.writeTasks = writeTasks;
-        this.specialWriteTask = specialWriteTask;
+        this.adminPermission = adminPermission;
     }
 
     public int getId() {
@@ -130,12 +132,20 @@ public class Permission{
         this.writeTasks = writeTasks;
     }
 
-    public boolean isSpecialWriteTask() {
-        return specialWriteTask;
+    public Date getSpecialWriteDate() {
+        return specialWriteDate;
     }
 
-    public void setSpecialWriteTask(boolean specialWriteTask) {
-        this.specialWriteTask = specialWriteTask;
+    public void setSpecialWriteDate(Date specialWriteDate) {
+        this.specialWriteDate = specialWriteDate;
+    }
+
+    public boolean isAdminPermission() {
+        return adminPermission;
+    }
+
+    public void setAdminPermission(boolean adminPermission) {
+        this.adminPermission = adminPermission;
     }
 
     @Override

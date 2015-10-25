@@ -1,14 +1,10 @@
 package md.pharm.restservice.service;
 
-import md.pharm.hibernate.user.ManageUser;
-import md.pharm.hibernate.user.User;
-import md.pharm.restservice.util.ErrorCodes;
+import md.pharm.util.ErrorCodes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * Created by Andrei on 10/4/2015.

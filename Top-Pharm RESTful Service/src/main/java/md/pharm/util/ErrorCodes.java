@@ -1,4 +1,4 @@
-package md.pharm.restservice.util;
+package md.pharm.util;
 
 /**
  * Created by Andrei on 9/26/2015.
@@ -81,7 +81,7 @@ public class ErrorCodes {
     public static ErrorCode ResourceNotExists = new ErrorCode("ResourceNotExists", "Conflict", 409, "The specified resource not exists");
     public static ErrorCode ResourceTypeMismatch = new ErrorCode("ResourceTypeMismatch", "Conflict", 409, "The specified resource type does not match the type of the existing resource");
     public static ErrorCode MissingContentLengthHeader = new ErrorCode("MissingContentLengthHeader", "Length Required", 411, "The Content-Length header was not specified");
-    public static ErrorCode WriteConditionNotMet = new ErrorCode("WriteConditionNotMet", "Precondition Failed", 412, "The condition specified in the conditional header(s) was not met for a write operation");
+    public static ErrorCode WriteConditionNotMet = new ErrorCode("WriteConditionNotMet", "Precondition Failed", 412, "The condition specified in the conditional header(s) was not met for a write operation.");
     public static ErrorCode RequestBodyTooLarge = new ErrorCode("RequestBodyTooLarge", "Request Entity Too Large", 413, "The size of the request body exceeds the maximum size permitted");
     public static ErrorCode InvalidRange = new ErrorCode("InvalidRange", "Requested Range Not Satisfiable", 416, "The range specified is invalid for the current size of the resource");
     public static ErrorCode InternalError = new ErrorCode("InternalError", "Internal Server Error", 500, "The server encountered an internal error. Please retry the request");

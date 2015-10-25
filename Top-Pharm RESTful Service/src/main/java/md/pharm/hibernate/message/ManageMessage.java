@@ -1,7 +1,7 @@
 package md.pharm.hibernate.message;
 
-import md.pharm.restservice.service.util.Country;
-import md.pharm.restservice.service.util.HibernateUtil;
+import md.pharm.util.Country;
+import md.pharm.util.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

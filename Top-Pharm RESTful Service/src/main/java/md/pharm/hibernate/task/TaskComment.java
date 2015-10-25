@@ -1,6 +1,10 @@
 package md.pharm.hibernate.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
@@ -21,9 +25,12 @@ public class TaskComment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "taskID")
+    @JsonIgnore
     private Task task;
 
     @Column(name = "comment")
+    @NotNull
+    @Size(max = 512)
     private String comment;
 
     public TaskComment(){}

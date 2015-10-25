@@ -1,4 +1,4 @@
-package md.pharm.restservice.service.util;
+package md.pharm.util;
 
 /**
  * Created by Andrei on 10/18/2015.

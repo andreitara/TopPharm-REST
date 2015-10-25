@@ -6,14 +6,11 @@ import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.user.login.UserLogin;
 import md.pharm.restservice.service.Response;
-import md.pharm.restservice.util.ErrorCodes;
-import md.pharm.restservice.util.StaticStrings;
+import md.pharm.util.ErrorCodes;
+import md.pharm.util.StaticStrings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Andrei on 9/24/2015.

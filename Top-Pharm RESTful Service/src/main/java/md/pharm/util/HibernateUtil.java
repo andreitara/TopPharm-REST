@@ -1,4 +1,4 @@
-package md.pharm.restservice.service.util;
+package md.pharm.util;
 
 import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;

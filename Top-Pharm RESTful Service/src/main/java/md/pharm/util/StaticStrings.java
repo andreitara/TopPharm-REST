@@ -1,4 +1,4 @@
-package md.pharm.restservice.util;
+package md.pharm.util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,13 +14,13 @@ public class StaticStrings {
     final public static String HEADER_USERNAME = "toppharm-username";
     final public static String HEADER_COUNTRY = "toppharm-country";
 
-    final public static List<String> ACCESSIBLE_PAGES = Arrays.asList(PATH_FOR_ALL_CONTROLLERS + "toppharm/user/login");
+    final public static List<String> ACCESSIBLE_PAGES = Arrays.asList(PATH_FOR_ALL_CONTROLLERS + "toppharm/v1/user/login");
 
     final public static String ERROR_PAGES = "toppharm/error";
 
-    final public static String USER_PAGES = PATH_FOR_ALL_CONTROLLERS + "toppharm/user";
-    final public static String MEDICAL_ENTITY_PAGES = PATH_FOR_ALL_CONTROLLERS + "toppharm/medical";
-    final public static String TASK_PAGES = PATH_FOR_ALL_CONTROLLERS + "toppharm/task";
-    final public static String MESSAGES_PAGES = PATH_FOR_ALL_CONTROLLERS + "toppharm/message";
+    final public static String USER_PAGES = PATH_FOR_ALL_CONTROLLERS + "toppharm/v1/user";
+    final public static String MEDICAL_ENTITY_PAGES = PATH_FOR_ALL_CONTROLLERS + "toppharm/v1/medical";
+    final public static String TASK_PAGES = PATH_FOR_ALL_CONTROLLERS + "toppharm/v1/task";
+    final public static String MESSAGES_PAGES = PATH_FOR_ALL_CONTROLLERS + "toppharm/v1/message";
 
 }

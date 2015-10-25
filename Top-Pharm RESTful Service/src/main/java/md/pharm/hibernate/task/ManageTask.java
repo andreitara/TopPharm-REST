@@ -1,15 +1,12 @@
 package md.pharm.hibernate.task;
 
-import md.TopPharmResTfulServiceApplication;
-import md.pharm.hibernate.doctor.Doctor;
-import md.pharm.restservice.service.util.Country;
-import md.pharm.restservice.service.util.HibernateUtil;
+import md.pharm.util.Country;
+import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Andrei on 9/5/2015.
@@ -55,6 +52,38 @@ public class ManageTask {
         return taskID;
     }
 
+    public Integer addTaskHistory(TaskHistory taskHistory){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        Integer taskID = null;
+        try{
+            tx = session.beginTransaction();
+            taskID = (Integer) session.save(taskHistory);
+            tx.commit();
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return taskID;
+    }
+
+    public Integer addTaskComment(TaskComment taskComment){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        Integer taskID = null;
+        try{
+            tx = session.beginTransaction();
+            taskID = (Integer) session.save(taskComment);
+            tx.commit();
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return taskID;
+    }
+
     public boolean updateTask(Task task){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
@@ -88,6 +117,42 @@ public class ManageTask {
         }finally {
         }
         return task;
+    }
+
+    public List<TaskComment> getTaskCommentByTaskID(int id){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<TaskComment> taskComments = null;
+        try{
+            tx = session.beginTransaction();
+            taskComments = (List<TaskComment>) session.createCriteria(TaskComment.class)
+                    .createCriteria("task")
+                    .add(Restrictions.eq("id",id)).list();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return taskComments;
+    }
+
+    public List<TaskHistory> getTaskHistoryByTaskID(int id){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<TaskHistory> taskHistories = null;
+        try{
+            tx = session.beginTransaction();
+            taskHistories = (List<TaskHistory>) session.createCriteria(TaskHistory.class)
+                    .createCriteria("task")
+                    .add(Restrictions.eq("id",id)).list();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return taskHistories;
     }
 
     public boolean deleteTask(Task task){

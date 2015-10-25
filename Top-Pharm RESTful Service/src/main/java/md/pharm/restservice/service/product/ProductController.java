@@ -1,14 +1,12 @@
 package md.pharm.restservice.service.product;
 
-import md.pharm.hibernate.doctor.Doctor;
-import md.pharm.hibernate.doctor.ManageDoctor;
 import md.pharm.hibernate.product.ManageProduct;
 import md.pharm.hibernate.product.Product;
 import md.pharm.hibernate.validator.ValidatorUtil;
 import md.pharm.hibernate.validator.Violation;
 import md.pharm.restservice.service.Response;
-import md.pharm.restservice.util.ErrorCodes;
-import md.pharm.restservice.util.StaticStrings;
+import md.pharm.util.ErrorCodes;
+import md.pharm.util.StaticStrings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

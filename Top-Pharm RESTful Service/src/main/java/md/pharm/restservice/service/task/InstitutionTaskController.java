@@ -2,18 +2,14 @@ package md.pharm.restservice.service.task;
 
 import md.pharm.hibernate.institution.Institution;
 import md.pharm.hibernate.institution.ManageInstitution;
-import md.pharm.hibernate.product.ManageProduct;
-import md.pharm.hibernate.product.Product;
 import md.pharm.hibernate.task.ManageTask;
 import md.pharm.hibernate.task.Task;
 import md.pharm.restservice.service.Response;
-import md.pharm.restservice.util.ErrorCodes;
-import md.pharm.restservice.util.StaticStrings;
+import md.pharm.util.ErrorCodes;
+import md.pharm.util.StaticStrings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 /**
  * Created by Andrei on 10/10/2015.

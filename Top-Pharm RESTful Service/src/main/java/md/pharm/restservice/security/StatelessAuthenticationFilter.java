@@ -4,8 +4,8 @@ import antlr.StringUtils;
 import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.user.permission.Permission;
-import md.pharm.restservice.util.ErrorCodes;
-import md.pharm.restservice.util.StaticStrings;
+import md.pharm.util.ErrorCodes;
+import md.pharm.util.StaticStrings;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.*;

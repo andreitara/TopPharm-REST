@@ -2,15 +2,13 @@ package md.pharm.restservice.service.message;
 
 import md.pharm.hibernate.message.ManageMessage;
 import md.pharm.hibernate.message.Message;
-import md.pharm.hibernate.product.ManageProduct;
-import md.pharm.hibernate.product.Product;
 import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.validator.ValidatorUtil;
 import md.pharm.hibernate.validator.Violation;
 import md.pharm.restservice.service.Response;
-import md.pharm.restservice.util.ErrorCodes;
-import md.pharm.restservice.util.StaticStrings;
+import md.pharm.util.ErrorCodes;
+import md.pharm.util.StaticStrings;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,8 +83,8 @@ public class MessageController {
     public ResponseEntity<Response<List<Message>>> getAllFromStartToEnd(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                   @PathVariable(value = "fromID") Integer fromID,
                                                   @PathVariable(value = "toID") Integer toID,
-                                                  @PathVariable(value = "start") @DateTimeFormat(pattern="yyyyMMdd") Date start,
-                                                  @PathVariable(value = "end") @DateTimeFormat(pattern="yyyyMMdd") Date end) {
+                                                  @PathVariable(value = "start") @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss") Date start,
+                                                  @PathVariable(value = "end") @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss") Date end) {
         Response response = new Response();
         ManageMessage manageMessage = new ManageMessage(country);
         List<Message> messages = manageMessage.getMessagesFromDateToDate(fromID, toID, start, end);
@@ -106,8 +104,8 @@ public class MessageController {
     public ResponseEntity<Response<List<Message>>> getAllBidirectionalFromStartToEnd(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                @PathVariable(value = "user1ID") Integer user1ID,
                                                                @PathVariable(value = "user2ID") Integer user2ID,
-                                                               @PathVariable(value = "start") @DateTimeFormat(pattern="yyyyMMdd") Date start,
-                                                               @PathVariable(value = "end") @DateTimeFormat(pattern="yyyyMMdd") Date end) {
+                                                               @PathVariable(value = "start") @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss") Date start,
+                                                               @PathVariable(value = "end") @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss") Date end) {
         Response response = new Response();
         ManageMessage manageMessage = new ManageMessage(country);
         List<Message> messages = manageMessage.getMessagesFromDateToDateBidirectional(user1ID, user2ID, start, end);

@@ -1,14 +1,9 @@
 package md.pharm.hibernate.doctor;
 
-import md.TopPharmResTfulServiceApplication;
-import md.pharm.hibernate.institution.Institution;
-import md.pharm.restservice.service.util.Country;
-import md.pharm.restservice.service.util.HibernateUtil;
+import md.pharm.util.Country;
+import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.service.ServiceRegistry;
 
 import java.util.List;
 

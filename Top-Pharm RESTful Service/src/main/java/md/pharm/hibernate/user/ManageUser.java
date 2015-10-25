@@ -3,12 +3,13 @@ package md.pharm.hibernate.user;
 import md.pharm.hibernate.connection.Connection;
 import md.pharm.hibernate.connection.ManageConnection;
 import md.pharm.hibernate.task.Task;
-import md.pharm.restservice.service.util.Country;
-import md.pharm.restservice.service.util.HibernateUtil;
+import md.pharm.hibernate.user.permission.Permission;
+import md.pharm.util.Country;
+import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
-import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
 
@@ -182,6 +183,27 @@ public class ManageUser {
         }finally {
         }
         return user;
+    }
+
+    public boolean hasSpecialPermission(String username){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        User user = null;
+        try{
+            tx = session.beginTransaction();
+            Criteria criteria = session.createCriteria(User.class);
+            user = (User) criteria.add(Restrictions.eq("username",username)).uniqueResult();
+            Permission permission = user.getPermission();
+            tx.commit();
+            if(permission.getSpecialWriteDate()!=null)
+                return permission.getSpecialWriteDate().after(Calendar.getInstance().getTime());
+            else return false;
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return false;
     }
 
     public User getUserByConnectionKey(String connectionKey){

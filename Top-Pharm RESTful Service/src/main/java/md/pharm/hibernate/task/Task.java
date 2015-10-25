@@ -93,10 +93,9 @@ public class Task {
 
     public Task(){}
 
-    public Task(String name, String type, String status, int visitNumbers, Date startDate, Date endDate, String description) {
+    public Task(String name, String type, int visitNumbers, Date startDate, Date endDate, String description) {
         this.name = name;
         this.type = type;
-        this.status = status;
         this.visitNumbers = visitNumbers;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -131,6 +130,7 @@ public class Task {
         return status;
     }
 
+    //@JsonIgnore
     public void setStatus(String status) {
         this.status = status;
     }

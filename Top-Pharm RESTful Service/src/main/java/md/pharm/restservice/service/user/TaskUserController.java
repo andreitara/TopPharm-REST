@@ -2,10 +2,9 @@ package md.pharm.restservice.service.user;
 
 import md.pharm.hibernate.task.Task;
 import md.pharm.hibernate.user.ManageUser;
-import md.pharm.hibernate.user.User;
 import md.pharm.restservice.service.Response;
-import md.pharm.restservice.util.ErrorCodes;
-import md.pharm.restservice.util.StaticStrings;
+import md.pharm.util.ErrorCodes;
+import md.pharm.util.StaticStrings;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +24,8 @@ public class TaskUserController {
     @RequestMapping(value = "/from/{fromDate}/to/{toDate}",method = RequestMethod.GET)
     public ResponseEntity<Response<List<Task>>> getTasksByDates(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                      @PathVariable(value = "userID") Integer userID,
-                                     @PathVariable(value = "fromDate") @DateTimeFormat(pattern="yyyyMMdd") Date fromDate,
-                                     @PathVariable(value = "toDate")   @DateTimeFormat(pattern="yyyyMMdd") Date toDate){
+                                     @PathVariable(value = "fromDate") @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss") Date fromDate,
+                                     @PathVariable(value = "toDate")   @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss") Date toDate){
         Response response = new Response();
         ManageUser manageUser = new ManageUser(country);
         List<Task> list = manageUser.getTasksFromDateToDate(userID, fromDate, toDate);
