@@ -8,11 +8,12 @@ public class StaticStrings {
     public static int ADMIN_ID = 1;
     public static int USER_ID = 2;
 
-    public static String ADMIN_AUTH_TOKEN = "13be860a-071e-4225-adb7-8b1359ec5591";//3257db79-a632-4ad2-a7e4-ff5404315679
+    public static String ADMIN_AUTH_TOKEN = "ad94cff8-2984-4c27-85da-9feaabf1f0fc";//3257db79-a632-4ad2-a7e4-ff5404315679
     public static String USER_AUTH_TOKEN =  "13be860a-071e-4225-adb7-8b1359ec5591";
 
     public static String LOGIN_URI =  REST_IP_PORT + "/toppharm/v1/user/login";
     public static String LOGOUT_URI = REST_IP_PORT + "/toppharm/v1/user/logout";
+    public static String CHANGE_PASSWORD_URI = REST_IP_PORT + "/toppharm/v1/user/password";
 
     public static String GET_USER_PERMISSION_URI = REST_IP_PORT + "/toppharm/v1/user/permission/{userID}";
     public static String GET_MY_PERMISSION_URI =   REST_IP_PORT + "/toppharm/v1/user/permission/my";

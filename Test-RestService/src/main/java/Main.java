@@ -16,6 +16,7 @@ public class Main {
         //LoginControllerTest.logoutAdmin();
         //LoginControllerTest.loginUser();
         //LoginControllerTest.logoutUser();
+        //LoginControllerTest.changePasswordAdmin();
 
         //PermissionControllerTest.getAdminUserPermission(3);
         //PermissionControllerTest.getAdminMyPermission();
@@ -79,7 +80,7 @@ public class Main {
         //TaskControllerTest.executeTaskByAdmin(1);
         //TaskControllerTest.addTaskCommentByAdmin(1);
         //TaskControllerTest.getTaskCommentByAdmin(1);
-        TaskControllerTest.getTaskHistoryByAdmin(1);
+        //TaskControllerTest.getTaskHistoryByAdmin(1);
 
         //DoctorTaskControllerTest.addDoctorToTask(1,3);
         //DoctorTaskControllerTest.deleteDoctorToTask(2,3);
