@@ -4,6 +4,7 @@ import md.pharm.hibernate.connection.Connection;
 import md.pharm.hibernate.connection.ManageConnection;
 import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
+import md.pharm.hibernate.user.login.UserChangePassword;
 import md.pharm.hibernate.user.login.UserLogin;
 import md.pharm.restservice.service.Response;
 import md.pharm.util.ErrorCodes;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<Response<String>> createUser(@RequestBody UserLogin user){
+    public ResponseEntity<Response<String>> login(@RequestBody UserLogin user){
         Response response = new Response();
         if(user!=null) {
             ManageUser manageUser = new ManageUser("MD");
@@ -64,7 +65,8 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseEntity<Response> getUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @RequestHeader(StaticStrings.HEADER_USERNAME) String username){
+    public ResponseEntity<Response> logout(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                           @RequestHeader(StaticStrings.HEADER_USERNAME) String username){
         Response response = new Response();
         User user = new ManageUser(country).getUserByUsername(username);
         if(user!=null) {
@@ -81,6 +83,46 @@ public class LoginController {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/password", method = RequestMethod.POST)
+    public ResponseEntity<Response<String>> changePassword(@RequestBody UserChangePassword user,
+                                                           @RequestHeader(value = StaticStrings.HEADER_SECURITY_TOKEN) String token){
+        Response response = new Response();
+        if(user!=null) {
+            ManageUser manageUser = new ManageUser("MD");
+            User userFromDB = manageUser.getUserByConnectionKey(token);
+            if(userFromDB == null){
+                manageUser = new ManageUser("RO");
+                userFromDB = manageUser.getUserByConnectionKey(token);
+            }
+            if(userFromDB!=null) {
+                if (userFromDB.getPassword().equals(user.getPassword())) {
+                    userFromDB.setPassword(user.getNewPassword());
+                    if(manageUser.updateUser(userFromDB)) {
+                        response.setResponseCode(ErrorCodes.ValidAuthenticationInfo.name);
+                        response.setResponseMessage(ErrorCodes.ValidAuthenticationInfo.userMessage);
+                        return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
+                    }else{
+                        response.setResponseCode(ErrorCodes.InternalError.name);
+                        response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+                        return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
+                    }
+                } else {
+                    response.setResponseCode(ErrorCodes.InvalidAuthenticationInfo.name);
+                    response.setResponseMessage(ErrorCodes.InvalidAuthenticationInfo.userMessage + ". Password is incorect");
+                    return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
+                }
+            }else{
+                response.setResponseCode(ErrorCodes.InvalidAuthenticationInfo.name);
+                response.setResponseMessage(ErrorCodes.InvalidAuthenticationInfo.userMessage + ". User do not exists");
+                return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
+            }
+        }else{
+            response.setResponseCode(ErrorCodes.InvalidAuthenticationInfo.name);
+            response.setResponseMessage(ErrorCodes.InvalidAuthenticationInfo.userMessage + ". Send user is null");
+            return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
         }
     }
 }

@@ -14,7 +14,7 @@ public class StaticStrings {
     final public static String HEADER_USERNAME = "toppharm-username";
     final public static String HEADER_COUNTRY = "toppharm-country";
 
-    final public static List<String> ACCESSIBLE_PAGES = Arrays.asList(PATH_FOR_ALL_CONTROLLERS + "toppharm/v1/user/login");
+    final public static List<String> ACCESSIBLE_PAGES = Arrays.asList(PATH_FOR_ALL_CONTROLLERS + "toppharm/v1/user/login", PATH_FOR_ALL_CONTROLLERS + "toppharm/v1/user/password");
 
     final public static String ERROR_PAGES = "toppharm/error";
 
