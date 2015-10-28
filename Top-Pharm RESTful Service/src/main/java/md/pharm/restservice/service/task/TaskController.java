@@ -8,7 +8,7 @@ import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.validator.ValidatorUtil;
 import md.pharm.hibernate.validator.Violation;
-import md.pharm.restservice.service.Response;
+import md.pharm.util.Response;
 import md.pharm.util.DateUtil;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.StaticStrings;

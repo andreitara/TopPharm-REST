@@ -1,5 +1,6 @@
-package md.pharm.restservice.service;
+package md.pharm.restservice.service.error;
 
+import md.pharm.util.Response;
 import md.pharm.util.ErrorCodes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

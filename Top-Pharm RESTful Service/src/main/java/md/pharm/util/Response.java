@@ -1,14 +1,7 @@
-package md.pharm.restservice.service;
+package md.pharm.util;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import md.pharm.hibernate.product.Objective;
-import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.validator.Violation;
 
-import javax.validation.ConstraintViolation;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**

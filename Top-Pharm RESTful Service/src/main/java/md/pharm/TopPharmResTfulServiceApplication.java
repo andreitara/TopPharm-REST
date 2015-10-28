@@ -1,4 +1,4 @@
-package md;
+package md.pharm;
 
 import md.pharm.external.backup.BackupUtil;
 import md.pharm.external.email.EmailTrigger;
@@ -19,10 +19,10 @@ import javax.servlet.Filter;
 public class TopPharmResTfulServiceApplication extends WebMvcConfigurationSupport {
 
     public static void main(String[] args) {
-        //HibernateUtil.initiateHibernate();
-        //BackupUtil.startTrigger("0 0 6 * * ?");
+        HibernateUtil.initiateHibernate();
+        BackupUtil.startTrigger("0 0 6 * * ?");
         EmailUtil.startTrigger();
-        //SpringApplication.run(TopPharmResTfulServiceApplication.class, args);
+        SpringApplication.run(TopPharmResTfulServiceApplication.class, args);
     }
 
     @Bean

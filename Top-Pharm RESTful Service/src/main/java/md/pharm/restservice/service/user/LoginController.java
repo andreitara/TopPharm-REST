@@ -6,7 +6,7 @@ import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.user.login.UserChangePassword;
 import md.pharm.hibernate.user.login.UserLogin;
-import md.pharm.restservice.service.Response;
+import md.pharm.util.Response;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.StaticStrings;
 import org.springframework.http.HttpStatus;
