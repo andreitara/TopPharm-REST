@@ -5,6 +5,7 @@ import md.pharm.hibernate.doctor.Doctor;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * Created by Andrei on 10/4/2015.
@@ -42,6 +43,14 @@ public class Office {
     @JoinColumn(name = "doctorID")
     @Valid
     private Doctor doctor;
+
+    @Column(name = "scheduleDescription")
+    @Size(max = 512)
+    private String scheduleDescription;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name="OfficeScheduleDay", joinColumns=@JoinColumn(name="officeID"), inverseJoinColumns=@JoinColumn(name="scheduleDayID"))
+    private Set<ScheduleDay> scheduleDays;
 
     public Office(){}
 
@@ -106,6 +115,22 @@ public class Office {
 
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    public String getScheduleDescription() {
+        return scheduleDescription;
+    }
+
+    public void setScheduleDescription(String scheduleDescription) {
+        this.scheduleDescription = scheduleDescription;
+    }
+
+    public Set<ScheduleDay> getScheduleDays() {
+        return scheduleDays;
+    }
+
+    public void setScheduleDays(Set<ScheduleDay> scheduleDays) {
+        this.scheduleDays = scheduleDays;
     }
 
     @Override
