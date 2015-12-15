@@ -21,7 +21,7 @@ public class BackupUtil {
     private Session session;
 
     private static String WINDOWS_PATH = "D:\\TopPharm/";
-    private static String LINUX_PATH = "/home/TopPharm/";
+    private static String LINUX_PATH = "/home/toppharm/";
 
     Country md = Country.valueOf("MD");
     String mdDataBaseName = "TopPharmMD";
@@ -59,7 +59,7 @@ public class BackupUtil {
             int month = Calendar.getInstance().get(Calendar.MONTH);
             DateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
             String reportDate = df.format(Calendar.getInstance().getTime());
-            String folder = WINDOWS_PATH + "md/" + year + "/" + month + "/";
+            String folder = LINUX_PATH + "md/" + year + "/" + month + "/";
             File file = new File(folder);
             if(!file.exists())
                 file.mkdirs();
@@ -82,7 +82,7 @@ public class BackupUtil {
             int month = Calendar.getInstance().get(Calendar.MONTH);
             DateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
             String reportDate = df.format(Calendar.getInstance().getTime());
-            String folder = WINDOWS_PATH + "ro/" + year + "/" + month + "/";
+            String folder = LINUX_PATH + "ro/" + year + "/" + month + "/";
             File file = new File(folder);
             if(!file.exists())
                 file.mkdirs();
