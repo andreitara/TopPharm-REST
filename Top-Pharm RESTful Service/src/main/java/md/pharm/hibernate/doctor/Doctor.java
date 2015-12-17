@@ -95,6 +95,10 @@ public class Doctor {
     @JsonIgnore
     private Set<Task> tasks;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @JsonIgnore
+    private Task task;
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy="doctors", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<User> users;

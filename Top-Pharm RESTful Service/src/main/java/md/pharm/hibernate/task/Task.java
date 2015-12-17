@@ -84,7 +84,11 @@ public class Task {
     @JoinTable(name="DoctorTask", joinColumns=@JoinColumn(name="taskID"), inverseJoinColumns=@JoinColumn(name="doctorID"))
     private Set<Doctor> doctors;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "taskID")
+    private Doctor customer;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "institutionID")
     private Institution institution;
 
@@ -246,7 +250,75 @@ public class Task {
         this.taskHistories = taskHistories;
     }
 
-   // public Set<Training> getTrainings() {
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(String repeat) {
+        this.repeat = repeat;
+    }
+
+    public boolean isSubmitted() {
+        return isSubmitted;
+    }
+
+    public boolean isCapital() {
+        return isCapital;
+    }
+
+    public void setIsCapital(boolean isCapital) {
+        this.isCapital = isCapital;
+    }
+
+    public Doctor getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Doctor customer) {
+        this.customer = customer;
+    }
+
+    public Set<Memo> getMemos() {
+        return memos;
+    }
+
+    public void setMemos(Set<Memo> memos) {
+        this.memos = memos;
+    }
+
+    public Set<PromoItem> getPromoItems() {
+        return promoItems;
+    }
+
+    public void setPromoItems(Set<PromoItem> promoItems) {
+        this.promoItems = promoItems;
+    }
+
+    public Set<Sample> getSamples() {
+        return samples;
+    }
+
+    public void setSamples(Set<Sample> samples) {
+        this.samples = samples;
+    }
+
+    public Set<Objective> getObjectives() {
+        return objectives;
+    }
+
+    public void setObjectives(Set<Objective> objectives) {
+        this.objectives = objectives;
+    }
+
+    // public Set<Training> getTrainings() {
    //     return trainings;
    // }
 
@@ -276,7 +348,6 @@ public class Task {
         if (startDate != null ? !startDate.equals(task.startDate) : task.startDate != null) return false;
         if (endDate != null ? !endDate.equals(task.endDate) : task.endDate != null) return false;
         return !(description != null ? !description.equals(task.description) : task.description != null);
-
     }
 
     @Override

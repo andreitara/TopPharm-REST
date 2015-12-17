@@ -57,7 +57,6 @@ public class TaskController {
             if (task.getId() == null) {
                 if (true) {//TODO condition if not exists this task in DB
                     if (manageUser.hasSpecialPermission(username) || (DateUtil.isAfterCurrentWeek(task.getStartDate()) && task.getStartDate().before(task.getEndDate()))) {
-                        task.setStatus("In Progress");
                         Integer id = manage.addTask(task);
                         if (id != null) {
                             task.setId(id);
@@ -114,7 +113,6 @@ public class TaskController {
                         task.setInstitution(taskFromDB.getInstitution());
                         task.setProducts(taskFromDB.getProducts());
                         task.setUsers(taskFromDB.getUsers());
-                        task.setStatus("In Progress");
                         if (manage.updateTask(task)) {
                             TaskHistory taskHistory = new TaskHistory(task, Calendar.getInstance().getTime(), "Task was updated by " + user.getFirstName() + " " + user.getLastName());
                             manage.addTaskHistory(taskHistory);
@@ -149,7 +147,7 @@ public class TaskController {
         }
     }
 
-    @RequestMapping(value = "/close/{id}", method = RequestMethod.POST)
+    //@RequestMapping(value = "/close/{id}", method = RequestMethod.POST)
     public ResponseEntity<Response> close(@RequestBody TaskComment taskComment,
                                           @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                           @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username,
@@ -165,7 +163,7 @@ public class TaskController {
                     taskComment.setDate(Calendar.getInstance().getTime());
                     taskComment.setTask(taskFromDB);
                     manage.addTaskComment(taskComment);
-                    taskFromDB.setStatus("Closed");
+                    taskFromDB.setIsSubmitted(true);
                     if (manage.updateTask(taskFromDB)) {
                         TaskHistory taskHistory = new TaskHistory(taskFromDB, Calendar.getInstance().getTime(), "Task was mark as Closed by " + user.getFirstName() + " " + user.getLastName());
                         manage.addTaskHistory(taskHistory);
@@ -194,7 +192,7 @@ public class TaskController {
         }
     }
 
-    @RequestMapping(value = "/execute/{id}", method = RequestMethod.POST)
+    //@RequestMapping(value = "/execute/{id}", method = RequestMethod.POST)
     public ResponseEntity<Response> execute(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                             @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username,
                                             @PathVariable(value = "id") Integer id) {
@@ -205,7 +203,7 @@ public class TaskController {
         Task taskFromDB = manage.getTaskByID(id);
         if (taskFromDB != null) {
             if (user.getPermission().isAdminPermission() || DateUtil.isInCurrentWeek(taskFromDB.getStartDate())) {
-                taskFromDB.setStatus("Executed");
+                taskFromDB.setIsSubmitted(true);
                 if (manage.updateTask(taskFromDB)) {
                     TaskHistory taskHistory = new TaskHistory(taskFromDB, Calendar.getInstance().getTime(), "Task was mark Executed by " + user.getFirstName() + " " + user.getLastName());
                     manage.addTaskHistory(taskHistory);
