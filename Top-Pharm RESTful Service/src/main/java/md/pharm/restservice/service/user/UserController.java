@@ -96,6 +96,42 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/me",method = RequestMethod.GET)
+    public ResponseEntity<Response<User>> getMyUser(@RequestHeader(StaticStrings.HEADER_COUNTRY) String country,
+                                                    @RequestHeader(StaticStrings.HEADER_USERNAME) String username){
+        Response response = new Response();
+        ManageUser manageUser = new ManageUser(country);
+        User user = manageUser.getUserByUsername(username);
+        if(user!=null) {
+            response.setResponseCode(ErrorCodes.OK.name);
+            response.setResponseMessage(ErrorCodes.OK.userMessage);
+            response.setObject(user);
+            return new ResponseEntity<Response<User>>(response, HttpStatus.OK);
+        }else{
+            response.setResponseCode(ErrorCodes.ResourceNotFound.name);
+            response.setResponseMessage(ErrorCodes.ResourceNotFound.userMessage);
+            return new ResponseEntity<Response<User>>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/username/{username}",method = RequestMethod.GET)
+    public ResponseEntity<Response<User>> getUserByUserName(@RequestHeader(StaticStrings.HEADER_COUNTRY) String country,
+                                                            @PathVariable(value = "username") String username){
+        Response response = new Response();
+        ManageUser manageUser = new ManageUser(country);
+        User user = manageUser.getUserByUsername(username);
+        if(user!=null) {
+            response.setResponseCode(ErrorCodes.OK.name);
+            response.setResponseMessage(ErrorCodes.OK.userMessage);
+            response.setObject(user);
+            return new ResponseEntity<Response<User>>(response, HttpStatus.OK);
+        }else{
+            response.setResponseCode(ErrorCodes.ResourceNotFound.name);
+            response.setResponseMessage(ErrorCodes.ResourceNotFound.userMessage);
+            return new ResponseEntity<Response<User>>(response, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Response> deleteUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "id") Integer id) {
         Response response = new Response();

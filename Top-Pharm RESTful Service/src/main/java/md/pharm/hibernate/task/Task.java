@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.hibernate.institution.Institution;
 import md.pharm.hibernate.product.Product;
+import md.pharm.hibernate.task.attributes.Memo;
+import md.pharm.hibernate.task.attributes.Objective;
+import md.pharm.hibernate.task.attributes.PromoItem;
+import md.pharm.hibernate.task.attributes.Sample;
 import md.pharm.hibernate.user.User;
-//import org.hibernate.annotations.Cascade;
-//import org.hibernate.annotations.CascadeType;
 
 
 import javax.persistence.*;
@@ -32,13 +34,23 @@ public class Task {
     @Size(max = 256)
     private String name;
 
+    @Column(name = "category")
+    @Size(max = 50)
+    private String category;
+
     @Column(name = "type")
     @Size(max = 50)
     private String type;
 
+    @Column(name = "repeat")
+    @Size(max = 100)
+    private String repeat;
+
     @Column(name = "status")
-    @Size(max = 20)
-    private String status;
+    private boolean isSubmitted;
+
+    @Column(name = "status")
+    private boolean isCapital;
 
     @Column(name = "visitNumbers")
     private int visitNumbers;
@@ -91,6 +103,18 @@ public class Task {
     @JoinTable(name="ProductTask", joinColumns=@JoinColumn(name="taskID"), inverseJoinColumns=@JoinColumn(name="productID"))
     private Set<Product> products;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Set<Memo> memos;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Set<PromoItem> promoItems;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Set<Sample> samples;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Set<Objective> objectives;
+
     public Task(){}
 
     public Task(String name, String type, int visitNumbers, Date startDate, Date endDate, String description) {
@@ -126,13 +150,12 @@ public class Task {
         this.type = type;
     }
 
-    public String getStatus() {
-        return status;
+    public boolean getIsSubmitted() {
+        return isSubmitted;
     }
 
-    //@JsonIgnore
-    public void setStatus(String status) {
-        this.status = status;
+    public void setIsSubmitted(boolean isSubmitted) {
+        this.isSubmitted = isSubmitted;
     }
 
     public int getVisitNumbers() {
@@ -250,7 +273,6 @@ public class Task {
         if (id != null ? !id.equals(task.id) : task.id != null) return false;
         if (name != null ? !name.equals(task.name) : task.name != null) return false;
         if (type != null ? !type.equals(task.type) : task.type != null) return false;
-        if (status != null ? !status.equals(task.status) : task.status != null) return false;
         if (startDate != null ? !startDate.equals(task.startDate) : task.startDate != null) return false;
         if (endDate != null ? !endDate.equals(task.endDate) : task.endDate != null) return false;
         return !(description != null ? !description.equals(task.description) : task.description != null);
@@ -262,7 +284,6 @@ public class Task {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + visitNumbers;
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);

@@ -1,6 +1,8 @@
 package md.pharm.hibernate.doctor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import md.pharm.hibernate.doctor.attributes.Habit;
+import md.pharm.hibernate.doctor.attributes.PersonalInfo;
 import md.pharm.hibernate.institution.Office;
 import md.pharm.hibernate.task.Task;
 import md.pharm.hibernate.user.User;
@@ -96,6 +98,14 @@ public class Doctor {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy="doctors", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<User> users;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Habit> habits;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<PersonalInfo> personalInfos ;
 
     public Doctor(){}
 
