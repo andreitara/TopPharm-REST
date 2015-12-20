@@ -28,7 +28,7 @@ public class HibernateUtil {
     public static void buildMDSessionFactory() {
         try {
             org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
-            configuration.configure("md.hibernate.cfg.xml");
+            configuration.configure("sqlserver/md.hibernate.cfg.xml");
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
             mdFactory = configuration.buildSessionFactory(serviceRegistry);
         } catch (Throwable ex) {
@@ -40,7 +40,7 @@ public class HibernateUtil {
     public static void buildROSessionFactory() {
         try {
             org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
-            configuration.configure("ro.hibernate.cfg.xml");
+            configuration.configure("sqlserver/ro.hibernate.cfg.xml");
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
             roFactory = configuration.buildSessionFactory(serviceRegistry);
         } catch (Throwable ex) {

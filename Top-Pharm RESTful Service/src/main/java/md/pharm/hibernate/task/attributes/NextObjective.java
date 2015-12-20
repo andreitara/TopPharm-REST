@@ -1,6 +1,7 @@
-package md.pharm.hibernate.doctor.attributes;
+package md.pharm.hibernate.task.attributes;
 
-import md.pharm.hibernate.doctor.Doctor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import md.pharm.hibernate.task.Task;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,8 +12,8 @@ import javax.validation.constraints.Size;
  */
 
 @Entity
-@Table(name="PersonalInfo")
-public class PersonalInfo {
+@Table(name="NextObjective")
+public class NextObjective {
 
     @Id
     @GeneratedValue
@@ -25,8 +26,15 @@ public class PersonalInfo {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctorID")
-    private Doctor doctor;
+    @JoinColumn(name = "taskID")
+    @JsonIgnore
+    private Task task;
+
+    public NextObjective(){}
+
+    public NextObjective(String name) {
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;
@@ -44,12 +52,12 @@ public class PersonalInfo {
         this.name = name;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
+    public Task getTask() {
+        return task;
     }
 
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     @Override
@@ -57,7 +65,7 @@ public class PersonalInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PersonalInfo that = (PersonalInfo) o;
+        NextObjective that = (NextObjective) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         return !(name != null ? !name.equals(that.name) : that.name != null);

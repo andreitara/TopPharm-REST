@@ -20,8 +20,8 @@ public class TopPharmResTfulServiceApplication extends WebMvcConfigurationSuppor
 
     public static void main(String[] args) {
         HibernateUtil.initiateHibernate();
-        BackupUtil.startTrigger("0 0 6 * * ?");
-        EmailUtil.startTrigger();
+        //BackupUtil.startTrigger("0 0 6 * * ?");
+        //EmailUtil.startTrigger();
         SpringApplication.run(TopPharmResTfulServiceApplication.class, args);
     }
 

@@ -24,5 +24,5 @@ public class Speciality {
     @Size(max = 100)
     private String name;
 
-    private Doctor doctor;
+    //private Doctor doctor;
 }

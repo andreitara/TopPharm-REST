@@ -25,5 +25,5 @@ public class GeneralType {
     private String name;
 
 
-    private Doctor doctor;
+    //private Doctor doctor;
 }

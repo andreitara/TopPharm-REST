@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
  */
 
 @Entity
-@Table(name="Objective")
+@Table(name="NextObjective")
 public class Objective {
 
     @Id

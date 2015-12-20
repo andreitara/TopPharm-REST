@@ -29,4 +29,53 @@ public class PromoItem {
     @JoinColumn(name = "taskID")
     @JsonIgnore
     private Task task;
+
+    public PromoItem(){}
+
+    public PromoItem(String name) {
+        this.name = name;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PromoItem promoItem = (PromoItem) o;
+
+        if (id != null ? !id.equals(promoItem.id) : promoItem.id != null) return false;
+        return !(name != null ? !name.equals(promoItem.name) : promoItem.name != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
 }

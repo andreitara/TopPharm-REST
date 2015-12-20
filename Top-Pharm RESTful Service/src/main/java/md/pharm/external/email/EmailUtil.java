@@ -1,17 +1,11 @@
 package md.pharm.external.email;
 
-import md.pharm.external.backup.BackupTrigger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.MailSender;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
@@ -30,7 +24,7 @@ public class EmailUtil {
     static {
         Properties emailProperties = new Properties();
         try {
-            emailProperties.load(new FileInputStream("email.properties"));
+            emailProperties.load(new FileInputStream("settings.properties"));
 
             String email = emailProperties.getProperty("emails");
             emails = email.split(",");

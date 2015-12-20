@@ -93,11 +93,11 @@ public class Doctor {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy="doctors", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Task> tasks;
+    private Set<Task> tasksAsAttendees;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private Task task;
+    private Set<Task> tasksAsCustomers;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy="doctors", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -257,13 +257,6 @@ public class Doctor {
         this.doctorHistories = doctorHistories;
     }
 
-    public Set<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
-    }
 
     public Set<User> getUsers() {
         return users;
@@ -271,6 +264,38 @@ public class Doctor {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    public Set<Task> getTasksAsAttendees() {
+        return tasksAsAttendees;
+    }
+
+    public void setTasksAsAttendees(Set<Task> tasksAsAttendees) {
+        this.tasksAsAttendees = tasksAsAttendees;
+    }
+
+    public Set<Task> getTasksAsCustomers() {
+        return tasksAsCustomers;
+    }
+
+    public void setTasksAsCustomers(Set<Task> tasksAsCustomers) {
+        this.tasksAsCustomers = tasksAsCustomers;
+    }
+
+    public Set<Habit> getHabits() {
+        return habits;
+    }
+
+    public void setHabits(Set<Habit> habits) {
+        this.habits = habits;
+    }
+
+    public Set<PersonalInfo> getPersonalInfos() {
+        return personalInfos;
+    }
+
+    public void setPersonalInfos(Set<PersonalInfo> personalInfos) {
+        this.personalInfos = personalInfos;
     }
 
     @Override
