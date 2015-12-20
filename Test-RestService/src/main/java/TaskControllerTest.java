@@ -2,7 +2,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import md.pharm.hibernate.task.Task;
 import md.pharm.hibernate.task.TaskComment;
-import md.pharm.restservice.service.Response;
+import md.pharm.util.Response;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,13 +24,13 @@ public class TaskControllerTest {
 
     static{
         calendar = Calendar.getInstance();
-        calendar.set(2015,9,23,13,0,0);
+        calendar.set(2015,12,23,13,0,0);
         startDate = calendar.getTime();
-        calendar.set(2015,9,23,14,0,0);
+        calendar.set(2015,12,23,14,0,0);
         endDate = calendar.getTime();
     }
 
-    public static Task task = new Task("task 5","simple",2, startDate, endDate,"description");
+    public static Task task = new Task("name", "category", "type", "repeat", false, false, 3, startDate, endDate,"description");
     public static TaskComment taskComment = new TaskComment(Calendar.getInstance().getTime(),null, "Eu asa vreu si gata");
 
     public static void createTaskByAdmin() throws JsonProcessingException {
@@ -88,7 +88,7 @@ public class TaskControllerTest {
         HttpEntity entity = new HttpEntity(null, headers);
         Map<String,String> params = new HashMap<>();
         params.put("id",String.valueOf(taskID));
-        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.DELETE_TASK_URI, HttpMethod.GET, entity, Response.class, params);
+        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.DELETE_TASK_URI, HttpMethod.DELETE, entity, Response.class, params);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }

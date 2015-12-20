@@ -3,7 +3,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.user.login.UserChangePassword;
 import md.pharm.hibernate.user.login.UserLogin;
-import md.pharm.restservice.service.Response;
+import md.pharm.util.Response;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

@@ -1,8 +1,7 @@
 import Entities.CreateUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import md.pharm.hibernate.user.User;
-import md.pharm.restservice.service.Response;
+import md.pharm.util.Response;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;

@@ -3,12 +3,13 @@
  */
 public class StaticStrings {
 
-    public static String REST_IP_PORT = "http://localhost:81";//"http://api.toppharm.md/:81";
+    public static String REST_IP_PORT = "http://localhost:81";
+    //public static String REST_IP_PORT ="http://api.toppharm.md";
 
     public static int ADMIN_ID = 1;
     public static int USER_ID = 2;
 
-    public static String ADMIN_AUTH_TOKEN = "ad94cff8-2984-4c27-85da-9feaabf1f0fc";//3257db79-a632-4ad2-a7e4-ff5404315679
+    public static String ADMIN_AUTH_TOKEN = "88d64b22-d9cd-4c54-9308-7970c6e4051a";
     public static String USER_AUTH_TOKEN =  "13be860a-071e-4225-adb7-8b1359ec5591";
 
     public static String LOGIN_URI =  REST_IP_PORT + "/toppharm/v1/user/login";
@@ -106,4 +107,19 @@ public class StaticStrings {
     public static String GET_MESSAGES_FROM_TO =   REST_IP_PORT + "/toppharm/v1/message/from/{fromID}/to/{toID}/start/{start}/end/{end}";
     public static String GET_MESSAGES_USER_USER = REST_IP_PORT + "/toppharm/v1/message/user/{user1ID}/user/{user2ID}/start/{start}/end/{end}";
 
+    public static String ADD_MEMO_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/memo/add";
+    public static String DELETE_MEMO_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/memo/delete/{memoID}";
+    public static String GET_MEMOS_TASK_URI =    REST_IP_PORT + "/toppharm/v1/task/{taskID}/memo/all";
+
+    public static String ADD_SAMPLE_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/sample/add";
+    public static String DELETE_SAMPLE_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/sample/delete/{sampleID}";
+    public static String GET_SAMPLES_TASK_URI =    REST_IP_PORT + "/toppharm/v1/task/{taskID}/sample/all";
+
+    public static String ADD_OBJECTIVE_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/objective/add";
+    public static String DELETE_OBJECTIVE_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/objective/delete/{objectiveID}";
+    public static String GET_OBJECTIVES_TASK_URI =    REST_IP_PORT + "/toppharm/v1/task/{taskID}/objective/all";
+
+    public static String ADD_PROMO_ITEM_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/promoitem/add";
+    public static String DELETE_PROMO_ITEM_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/promoitem/delete/{itemID}";
+    public static String GET_PROMO_ITEMS_TASK_URI =    REST_IP_PORT + "/toppharm/v1/task/{taskID}/promoitem/all";
 }

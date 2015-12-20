@@ -71,16 +71,34 @@ public class Main {
         //DoctorOfficeControllerTest.updateDoctorOfficesByAdmin(4,4);
         //DoctorOfficeControllerTest.deleteDoctorOfficeByAdmin(4,1);
 
+
         //TaskControllerTest.createTaskByAdmin();
         //TaskControllerTest.updateTaskByAdmin(1);
         //TaskControllerTest.getAllTasksByAdmin();
         //TaskControllerTest.getTaskByAdmin(1);
-        //TaskControllerTest.deleteTaskByAdmin(2);
+        //TaskControllerTest.deleteTaskByAdmin(1);
         //TaskControllerTest.closeTaskByAdmin(1);
         //TaskControllerTest.executeTaskByAdmin(1);
         //TaskControllerTest.addTaskCommentByAdmin(1);
         //TaskControllerTest.getTaskCommentByAdmin(1);
         //TaskControllerTest.getTaskHistoryByAdmin(1);
+
+        //TaskAttributesControllerTest.addMemoToTask(1);
+        //TaskAttributesControllerTest.getMemosFromTask(1);
+        //TaskAttributesControllerTest.deleteMemoFromTask(1,3);
+
+        //TaskAttributesControllerTest.addObjectiveToTask(1);
+        //TaskAttributesControllerTest.getObjectivesFromTask(1);
+        //TaskAttributesControllerTest.deleteObjectiveFromTask(1,2);
+
+        //TaskAttributesControllerTest.addSampleToTask(1);
+        //TaskAttributesControllerTest.getSamplesFromTask(1);
+        //TaskAttributesControllerTest.deleteSampleFromTask(1,2);
+
+        //TaskAttributesControllerTest.addPromoItemToTask(1);
+        //TaskAttributesControllerTest.getPromoItemsFromTask(1);
+        //TaskAttributesControllerTest.deletePromoItemFromTask(1,2);
+
 
         //DoctorTaskControllerTest.addDoctorToTask(1,3);
         //DoctorTaskControllerTest.deleteDoctorToTask(2,3);
