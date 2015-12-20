@@ -1,9 +1,12 @@
 package md.pharm.restservice.service.task.attributes;
 
+import md.pharm.hibernate.product.ManageProduct;
+import md.pharm.hibernate.product.Product;
 import md.pharm.hibernate.task.ManageTask;
 import md.pharm.hibernate.task.Task;
 import md.pharm.hibernate.task.attributes.NextObjective;
 import md.pharm.hibernate.task.attributes.PromoItem;
+import md.pharm.hibernate.task.attributes.PromoItemManage;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.Response;
 import md.pharm.util.StaticStrings;
@@ -40,67 +43,60 @@ public class PromoItemTaskController {
         }
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<Response> add(@RequestBody PromoItem promoItem,
-                                        @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                        @PathVariable(value = "taskID") Integer taskID) {
+    @RequestMapping(value = "/add/{promoitemID}", method = RequestMethod.POST)
+    public ResponseEntity<Response> add(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                        @PathVariable(value = "taskID") Integer taskID,
+                                        @PathVariable(value = "promoitemID") Integer promoitemID){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
         Task task = manageTask.getTaskByID(taskID);
-        if (task != null) {
-            promoItem.setTask(task);
-            Set<PromoItem> memos = task.getPromoItems();
-            memos.add(promoItem);
-            task.setPromoItems(memos);
-            if (manageTask.updateTask(task)) {
+        if(task!=null){
+            PromoItemManage manageProduct = new PromoItemManage(country);
+            PromoItem product = manageProduct.getByID(promoitemID);
+            if(product!=null) {
+                task.getPromoItems().add(product);
+                manageTask.updateTask(task);
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
-            } else {
-                response.setResponseCode(ErrorCodes.OK.name);
-                response.setResponseMessage(ErrorCodes.OK.userMessage);
+            }else{
+                response.setResponseCode(ErrorCodes.InternalError.name);
+                response.setResponseMessage(ErrorCodes.InternalError.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
-        } else {
+        }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
             return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
-    @RequestMapping(value = "/delete/{itemID}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{promoitemID}", method = RequestMethod.DELETE)
     public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                            @PathVariable(value = "taskID") Integer taskID,
-                                           @PathVariable(value = "itemID") Integer itemID) {
+                                           @PathVariable(value = "promoitemID") Integer promoitemID){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
         Task task = manageTask.getTaskByID(taskID);
-        if (task != null) {
-            Set<PromoItem> memos = task.getPromoItems();
-            PromoItem removeMemo = null;
-            for (PromoItem memo : memos) {
-                if (memo.getId().equals(itemID)) {
-                    removeMemo = memo;
-                }
-            }
-            if (removeMemo != null) {
-                memos.remove(removeMemo);
-                task.setPromoItems(memos);
-                if (manageTask.updateTask(task)) {
+        if(task!=null){
+            PromoItemManage manageProduct = new PromoItemManage(country);
+            PromoItem product = manageProduct.getByID(promoitemID);
+            if(product!=null) {
+                if(manageTask.deletePromoItemTask(taskID, promoitemID)) {
                     response.setResponseCode(ErrorCodes.OK.name);
                     response.setResponseMessage(ErrorCodes.OK.userMessage);
                     return new ResponseEntity<Response>(response, HttpStatus.OK);
-                } else {
+                }else{
                     response.setResponseCode(ErrorCodes.InternalError.name);
                     response.setResponseMessage(ErrorCodes.InternalError.userMessage);
                     return new ResponseEntity<Response>(response, HttpStatus.OK);
                 }
-            } else {
+            }else{
                 response.setResponseCode(ErrorCodes.InternalError.name);
                 response.setResponseMessage(ErrorCodes.InternalError.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
-        } else {
+        }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
             return new ResponseEntity<Response>(response, HttpStatus.OK);

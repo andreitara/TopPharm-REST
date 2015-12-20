@@ -1,8 +1,10 @@
 package md.pharm.hibernate.doctor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import md.pharm.hibernate.doctor.attributes.GeneralType;
 import md.pharm.hibernate.doctor.attributes.Habit;
 import md.pharm.hibernate.doctor.attributes.PersonalInfo;
+import md.pharm.hibernate.doctor.attributes.Speciality;
 import md.pharm.hibernate.institution.Office;
 import md.pharm.hibernate.task.Task;
 import md.pharm.hibernate.user.User;
@@ -110,6 +112,14 @@ public class Doctor {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<PersonalInfo> personalInfos ;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "generalTypeID")
+    private GeneralType generalType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "specialityID")
+    private Speciality speciality;
 
     public Doctor(){}
 
@@ -257,7 +267,6 @@ public class Doctor {
         this.doctorHistories = doctorHistories;
     }
 
-
     public Set<User> getUsers() {
         return users;
     }
@@ -298,6 +307,22 @@ public class Doctor {
         this.personalInfos = personalInfos;
     }
 
+    public GeneralType getGeneralType() {
+        return generalType;
+    }
+
+    public void setGeneralType(GeneralType generalType) {
+        this.generalType = generalType;
+    }
+
+    public Speciality getSpeciality() {
+        return speciality;
+    }
+
+    public void setSpeciality(Speciality speciality) {
+        this.speciality = speciality;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -320,7 +345,6 @@ public class Doctor {
         if (generalCategory != null ? !generalCategory.equals(doctor.generalCategory) : doctor.generalCategory != null)
             return false;
         return !(description != null ? !description.equals(doctor.description) : doctor.description != null);
-
     }
 
     @Override

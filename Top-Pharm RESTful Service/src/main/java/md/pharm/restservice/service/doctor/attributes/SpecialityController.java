@@ -1,34 +1,35 @@
-package md.pharm.restservice.service.doctor;
+package md.pharm.restservice.service.doctor.attributes;
 
-import md.pharm.hibernate.doctor.Doctor;
-import md.pharm.hibernate.doctor.ManageDoctor;
+import md.pharm.hibernate.doctor.attributes.GeneralType;
+import md.pharm.hibernate.doctor.attributes.ManageGeneralType;
+import md.pharm.hibernate.doctor.attributes.ManageSpeciality;
+import md.pharm.hibernate.doctor.attributes.Speciality;
 import md.pharm.hibernate.validator.ValidatorUtil;
 import md.pharm.hibernate.validator.Violation;
-import md.pharm.util.Response;
 import md.pharm.util.ErrorCodes;
+import md.pharm.util.Response;
 import md.pharm.util.StaticStrings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Created by Andrei on 10/5/2015.
+ * Created by Andrei on 12/20/2015.
  */
 
 @RestController
-@RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/doctor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-public class DoctorController {
+@RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/doctor/speciality/")
+public class SpecialityController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Doctor>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
-        Response response = new Response<List<Doctor>>();
-        ManageDoctor manageDoctor = new ManageDoctor(country);
-        List<Doctor> list = manageDoctor.getDoctors();
+    public ResponseEntity<Response<List<Speciality>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+        Response response = new Response<>();
+        ManageSpeciality manageDoctor = new ManageSpeciality(country);
+        List<Speciality> list = manageDoctor.getAll();
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -42,21 +43,19 @@ public class DoctorController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<Response<Integer>> create(@RequestBody Doctor doctor,
+    public ResponseEntity<Response<Integer>> create(@RequestBody Speciality speciality,
                                                     @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response<Integer>();
-        Set<Violation> violations = new ValidatorUtil<Doctor>().getViolations(doctor);
+        Set<Violation> violations = new ValidatorUtil<Speciality>().getViolations(speciality);
         if (violations.size() == 0) {
-            ManageDoctor manage = new ManageDoctor(country);
-            if (doctor.getId() == null) {
+            ManageSpeciality manage = new ManageSpeciality(country);
+            if (speciality.getId() == null) {
                 if (true) {//TODO condition if not exists this doctor in DB
-                    Integer id = manage.addDoctor(doctor);
+                    Integer id = manage.add(speciality);
                     if (id != null) {
                         response.setResponseCode(ErrorCodes.Created.name);
                         response.setResponseMessage(ErrorCodes.Created.userMessage);
                         response.setObject(id);
-                        //doctor.setId(id);
-                        //response.addMapItem("doctor", doctor);
                         return new ResponseEntity<Response<Integer>>(response, HttpStatus.CREATED);
                     } else {
                         response.setResponseCode(ErrorCodes.InternalError.name);
@@ -82,16 +81,16 @@ public class DoctorController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Response> update(@RequestBody Doctor doctor,
+    public ResponseEntity<Response> update(@RequestBody Speciality speciality,
                                            @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response();
-        Set<Violation> violations = new ValidatorUtil<Doctor>().getViolations(doctor);
+        Set<Violation> violations = new ValidatorUtil<Speciality>().getViolations(speciality);
         if (violations.size() == 0) {
-            ManageDoctor manage = new ManageDoctor(country);
-            if (doctor.getId() != null) {
-                Doctor doctorFromDB = manage.getDoctorByID(doctor.getId());
+            ManageSpeciality manage = new ManageSpeciality(country);
+            if (speciality.getId() != null) {
+                Speciality doctorFromDB = manage.getByID(speciality.getId());
                 if (doctorFromDB != null) {
-                    if (manage.updateDoctor(doctor)) {
+                    if (manage.update(speciality)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);
                         return new ResponseEntity<Response>(response, HttpStatus.OK);
@@ -122,10 +121,10 @@ public class DoctorController {
     public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                            @PathVariable(value = "id") int id) {
         Response response = new Response();
-        ManageDoctor manage = new ManageDoctor(country);
-        Doctor doctor = manage.getDoctorByID(id);
+        ManageSpeciality manage = new ManageSpeciality(country);
+        Speciality doctor = manage.getByID(id);
         if (doctor != null) {
-            if (manage.deleteDoctor(doctor)) {
+            if (manage.delete(doctor)) {
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
@@ -142,89 +141,20 @@ public class DoctorController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Response<Doctor>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                @PathVariable(value = "id") int id) {
+    public ResponseEntity<Response<Speciality>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                     @PathVariable(value = "id") int id) {
         Response response = new Response();
-        ManageDoctor manageDoctor = new ManageDoctor(country);
-        Doctor doctor = manageDoctor.getDoctorByID(id);
+        ManageSpeciality manageDoctor = new ManageSpeciality(country);
+        Speciality doctor = manageDoctor.getByID(id);
         if (doctor != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(doctor);
-            return new ResponseEntity<Response<Doctor>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Speciality>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.ResourceNotExists.name);
             response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-            return new ResponseEntity<Response<Doctor>>(response, HttpStatus.OK);
-        }
-    }
-
-
-    //GET DOCTORS
-    @RequestMapping(value = "/speciality/{speciality}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Doctor>>> getAllBySpeciality(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                                     @PathVariable(value = "speciality") String speciality) {
-        Response response = new Response();
-        ManageDoctor manageDoctor = new ManageDoctor(country);
-        List<Doctor> list = manageDoctor.getDoctorsBySpeciality(speciality);
-        if (list != null) {
-            response.setResponseCode(ErrorCodes.OK.name);
-            response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.setObject(list);
-            return new ResponseEntity<Response<List<Doctor>>>(response, HttpStatus.OK);
-        } else {
-            response.setResponseCode(ErrorCodes.InternalError.name);
-            response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Doctor>>>(response, HttpStatus.OK);
-        }
-    }
-
-    @RequestMapping(value = "/institution/{institutionID}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Doctor>>> getAllBynstitutionID(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                                       @PathVariable(value = "institutionID") Integer institutionID) {
-        Response response = new Response();
-        ManageDoctor manageDoctor = new ManageDoctor(country);
-        List<Doctor> list = manageDoctor.getDoctorsByInstitutionID(institutionID);
-        if (list != null) {
-            response.setResponseCode(ErrorCodes.OK.name);
-            response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.setObject(list);
-            return new ResponseEntity<Response<List<Doctor>>>(response, HttpStatus.OK);
-        } else {
-            response.setResponseCode(ErrorCodes.InternalError.name);
-            response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Doctor>>>(response, HttpStatus.OK);
-        }
-    }
-
-    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Doctor>>> getAllPartOfName(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                                   @PathVariable(value = "name") String name) {
-        Response response = new Response();
-        ManageDoctor manageDoctor = new ManageDoctor(country);
-        List<Doctor> list = null;
-        String[] names = name.trim().replace("( )+", " ").split(" ");
-        if (names.length == 1) {
-            list = manageDoctor.getDoctorsByPartOfFirstName(names[0]);
-            list.addAll(manageDoctor.getDoctorsByPartOfLastName(names[0]));
-        } else if (names.length == 2) {
-            list = manageDoctor.getDoctorsByPartOfFirstAndLastName(names[0],names[1]);
-            list.addAll(manageDoctor.getDoctorsByPartOfFirstAndLastName(names[1],names[0]));
-        } else if (names.length == 3) {
-            list = manageDoctor.getDoctorsByPartOfFirstLastAndFatherName(names[0],names[1],names[2]);
-            list.addAll(manageDoctor.getDoctorsByPartOfFirstLastAndFatherName(names[1],names[0],names[2]));
-        } else {
-            list = new ArrayList<>();
-        }
-        if (list != null) {
-            response.setResponseCode(ErrorCodes.OK.name);
-            response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.setObject(list);
-            return new ResponseEntity<Response<List<Doctor>>>(response, HttpStatus.OK);
-        } else {
-            response.setResponseCode(ErrorCodes.InternalError.name);
-            response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Doctor>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Speciality>>(response, HttpStatus.OK);
         }
     }
 }

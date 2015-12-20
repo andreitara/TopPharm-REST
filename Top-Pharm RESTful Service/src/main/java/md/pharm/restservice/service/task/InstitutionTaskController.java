@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class InstitutionTaskController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<Response<Institution>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "taskID") int taskID){
+    public ResponseEntity<Response<Institution>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                        @PathVariable(value = "taskID") int taskID){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
         Task task = manageTask.getTaskByID(taskID);

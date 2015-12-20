@@ -212,6 +212,46 @@ public class ManageTask {
         return flag;
     }
 
+    public boolean deletePromoItemTask(Integer taskID, Integer promoitemID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            //session.delete(task);
+            Query query = session.createSQLQuery("delete [TopPharm].[dbo].[PromoItemTask] where taskID = " + taskID + " and promoitemID = " + promoitemID);
+            int result = query.executeUpdate();
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
+    public boolean deleteSampleTask(Integer taskID, Integer sampleID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            //session.delete(task);
+            Query query = session.createSQLQuery("delete [TopPharm].[dbo].[SampleTask] where taskID = " + taskID + " and sampleID = " + sampleID);
+            int result = query.executeUpdate();
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
     public boolean deleteUserTask(Integer taskID, Integer userID){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;

@@ -2,8 +2,7 @@ package md.pharm.restservice.service.task.attributes;
 
 import md.pharm.hibernate.task.ManageTask;
 import md.pharm.hibernate.task.Task;
-import md.pharm.hibernate.task.attributes.Memo;
-import md.pharm.hibernate.task.attributes.Sample;
+import md.pharm.hibernate.task.attributes.*;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.Response;
 import md.pharm.util.StaticStrings;
@@ -40,28 +39,28 @@ public class SampleTaskController {
         }
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<Response> add(@RequestBody Sample sample,
-                                        @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                        @PathVariable(value = "taskID") Integer taskID) {
+    @RequestMapping(value = "/add/{sampleID}", method = RequestMethod.POST)
+    public ResponseEntity<Response> add(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                        @PathVariable(value = "taskID") Integer taskID,
+                                        @PathVariable(value = "sampleID") Integer sampleID){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
         Task task = manageTask.getTaskByID(taskID);
-        if (task != null) {
-            sample.setTask(task);
-            Set<Sample> memos = task.getSamples();
-            memos.add(sample);
-            task.setSamples(memos);
-            if(manageTask.updateTask(task)) {
+        if(task!=null){
+            SampleManage manageProduct = new SampleManage(country);
+            Sample product = manageProduct.getByID(sampleID);
+            if(product!=null) {
+                task.getSamples().add(product);
+                manageTask.updateTask(task);
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
-            }else {
-                response.setResponseCode(ErrorCodes.OK.name);
-                response.setResponseMessage(ErrorCodes.OK.userMessage);
+            }else{
+                response.setResponseCode(ErrorCodes.InternalError.name);
+                response.setResponseMessage(ErrorCodes.InternalError.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
-        } else {
+        }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
             return new ResponseEntity<Response>(response, HttpStatus.OK);

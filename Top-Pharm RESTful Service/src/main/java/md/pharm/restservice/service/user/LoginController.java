@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Andrei on 9/24/2015.
  */
@@ -43,7 +46,10 @@ public class LoginController {
                     userFromDB.setConnection(connection);
                     connection.setUser(userFromDB);
                     manageConnection.addConnection(connection);
-                    response.setObject(connection.getConnectionKey());
+                    Map<String, String> map = new HashMap<>();
+                    map.put("userID", userFromDB.getId().toString());
+                    map.put("auth-token", connection.getConnectionKey());
+                    response.setObject(map);
                     response.setResponseCode(ErrorCodes.ValidAuthenticationInfo.name);
                     response.setResponseMessage(ErrorCodes.ValidAuthenticationInfo.userMessage);
                     return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
