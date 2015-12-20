@@ -9,7 +9,7 @@ public class StaticStrings {
     public static int ADMIN_ID = 1;
     public static int USER_ID = 2;
 
-    public static String ADMIN_AUTH_TOKEN = "88d64b22-d9cd-4c54-9308-7970c6e4051a";
+    public static String ADMIN_AUTH_TOKEN = "4dfee96c-f134-496b-812e-c3a3efb03b13";
     public static String USER_AUTH_TOKEN =  "13be860a-071e-4225-adb7-8b1359ec5591";
 
     public static String LOGIN_URI =  REST_IP_PORT + "/toppharm/v1/user/login";
@@ -55,6 +55,18 @@ public class StaticStrings {
     public static String GET_DOCTORS_BY_SPECIALITY_URI =     REST_IP_PORT + "/toppharm/v1/medical/doctor/speciality/{speciality}";
     public static String GET_DOCTORS_BY_INSTITUTION_URI =    REST_IP_PORT + "/toppharm/v1/medical/doctor/institution/{institutionID}";
 
+    public static String GET_ALL_SPECIALITY_URI = REST_IP_PORT + "/toppharm/v1/medical/doctor/speciality/all";
+    public static String GET_SPECIALITY_URI =      REST_IP_PORT + "/toppharm/v1/medical/doctor/speciality/{id}";
+    public static String CREATE_SPECIALITY_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/speciality/create";
+    public static String UPDATE_SPECIALITY_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/speciality/update";
+    public static String DELETE_SPECIALITY_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/speciality/delete/{id}";
+
+    public static String GET_ALL_GENERAL_TYPE_URI = REST_IP_PORT + "/toppharm/v1/medical/doctor/generaltype/all";
+    public static String GET_GENERAL_TYPE_URI =      REST_IP_PORT + "/toppharm/v1/medical/doctor/generaltype/{id}";
+    public static String CREATE_GENERAL_TYPE_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/generaltype/create";
+    public static String UPDATE_GENERAL_TYPE_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/generaltype/update";
+    public static String DELETE_GENERAL_TYPE_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/generaltype/delete/{id}";
+
     public static String GET_ALL_OFFICES_OF_DOCTOR_URI = REST_IP_PORT + "/toppharm/v1/medical/doctor/{doctorID}/office/all";
     public static String GET_OFFICE_URI =                REST_IP_PORT + "/toppharm/v1/medical/doctor/{doctorID}/office/{id}";
     public static String CREATE_OFFICE_FOR_DOCTOR_URI =  REST_IP_PORT + "/toppharm/v1/medical/doctor/{doctorID}/office/create/institution/{institutionID}";
@@ -86,6 +98,18 @@ public class StaticStrings {
     public static String GET_TASK_COMMENT_URI =  REST_IP_PORT + "/toppharm/v1/task/{id}/comment/all";
     public static String GET_TASK_HISTORY_URI =  REST_IP_PORT + "/toppharm/v1/task/{id}/history/all";
 
+    public static String GET_ALL_PROMO_ITEMS_URI = REST_IP_PORT + "/toppharm/v1/medical/promoitem/all";
+    public static String GET_PROMO_ITEM_URI =      REST_IP_PORT + "/toppharm/v1/medical/promoitem/{id}";
+    public static String CREATE_PROMO_ITEMS_URI =   REST_IP_PORT + "/toppharm/v1/medical/promoitem/create";
+    public static String UPDATE_PROMO_ITEMS_URI =   REST_IP_PORT + "/toppharm/v1/medical/promoitem/update";
+    public static String DELETE_PROMO_ITEMS_URI =   REST_IP_PORT + "/toppharm/v1/medical/promoitem/delete/{id}";
+
+    public static String GET_ALL_SAMPLES_URI = REST_IP_PORT + "/toppharm/v1/medical/sample/all";
+    public static String GET_SAMPLE_URI =      REST_IP_PORT + "/toppharm/v1/medical/sample/{id}";
+    public static String CREATE_SAMPLE_URI =   REST_IP_PORT + "/toppharm/v1/medical/sample/create";
+    public static String UPDATE_SAMPLE_URI =   REST_IP_PORT + "/toppharm/v1/medical/sample/update";
+    public static String DELETE_SAMPLE_URI =   REST_IP_PORT + "/toppharm/v1/medical/sample/delete/{id}";
+
     public static String ADD_INSTITUTION_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/institution/add/{institutionID}";
     public static String UPDATE_INSTITUTION_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/institution/update/{institutionID}";
     public static String DELETE_INSTITUTION_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/institution/delete";
@@ -111,7 +135,7 @@ public class StaticStrings {
     public static String DELETE_MEMO_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/memo/delete/{memoID}";
     public static String GET_MEMOS_TASK_URI =    REST_IP_PORT + "/toppharm/v1/task/{taskID}/memo/all";
 
-    public static String ADD_SAMPLE_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/sample/add";
+    public static String ADD_SAMPLE_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/sample/add/{sampleID}";
     public static String DELETE_SAMPLE_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/sample/delete/{sampleID}";
     public static String GET_SAMPLES_TASK_URI =    REST_IP_PORT + "/toppharm/v1/task/{taskID}/sample/all";
 

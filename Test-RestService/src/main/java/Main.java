@@ -53,6 +53,19 @@ public class Main {
         //DoctorControllerTest.getDoctorByAdmin(1);
         //DoctorControllerTest.deleteDoctorByAdmin(2);
 
+        //SpecialityController.createDoctorByAdmin();
+        //SpecialityController.getAllDoctorsByAdmin();
+        //SpecialityController.getDoctorByAdmin(2);
+        //SpecialityController.updateDoctorByAdmin(3);
+        //SpecialityController.deleteDoctorByAdmin(4);
+
+        //GeneralTypeControllerTest.createDoctorByAdmin();
+        //GeneralTypeControllerTest.getAllDoctorsByAdmin();
+        //GeneralTypeControllerTest.getDoctorByAdmin(2);
+        //GeneralTypeControllerTest.updateDoctorByAdmin(4);
+        //GeneralTypeControllerTest.deleteDoctorByAdmin(5);
+
+
         //ProductControllerTest.getAllProductsByAdmin();
         //ProductControllerTest.createProductByAdmin();
         //ProductControllerTest.getProductByAdmin(2);
@@ -91,13 +104,25 @@ public class Main {
         //TaskAttributesControllerTest.getObjectivesFromTask(1);
         //TaskAttributesControllerTest.deleteObjectiveFromTask(1,2);
 
-        //TaskAttributesControllerTest.addSampleToTask(1);
+        //TaskAttributesControllerTest.addSampleToTask(1,1);
         //TaskAttributesControllerTest.getSamplesFromTask(1);
         //TaskAttributesControllerTest.deleteSampleFromTask(1,2);
 
         //TaskAttributesControllerTest.addPromoItemToTask(1);
         //TaskAttributesControllerTest.getPromoItemsFromTask(1);
         //TaskAttributesControllerTest.deletePromoItemFromTask(1,2);
+
+        //PromoItemControllerTest.createDoctorByAdmin();
+        //PromoItemControllerTest.getAllDoctorsByAdmin();
+        //PromoItemControllerTest.getDoctorByAdmin(3);
+        //PromoItemControllerTest.updateDoctorByAdmin(2);
+        //PromoItemControllerTest.deleteDoctorByAdmin(4);
+
+        //SampleControllerTest.createDoctorByAdmin();
+        //SampleControllerTest.getAllDoctorsByAdmin();
+        //SampleControllerTest.getDoctorByAdmin(3);
+        //SampleControllerTest.updateDoctorByAdmin(2);
+        //SampleControllerTest.deleteDoctorByAdmin(4);
 
 
         //DoctorTaskControllerTest.addDoctorToTask(1,3);

@@ -100,13 +100,14 @@ public class TaskAttributesControllerTest {
     }
 
 
-    public static void addSampleToTask(Integer taskID) throws JsonProcessingException {
+    public static void addSampleToTask(Integer taskID, Integer sampleID) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
         HttpEntity entity = new HttpEntity(sample, headers);
         Map<String,String> params = new HashMap<>();
         params.put("taskID",String.valueOf(taskID));
+        params.put("sampleID",String.valueOf(sampleID));
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.ADD_SAMPLE_TASK_URI, HttpMethod.POST, entity, Response.class, params);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
