@@ -2,6 +2,7 @@ package md.pharm.hibernate.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import md.pharm.hibernate.doctor.Doctor;
+import md.pharm.hibernate.doctor.attributes.GeneralType;
 import md.pharm.hibernate.institution.Institution;
 import md.pharm.hibernate.product.Product;
 import md.pharm.hibernate.task.attributes.Memo;
@@ -31,18 +32,17 @@ public class Task {
 
     @Column(name = "name")
     @NotNull
-    @Size(max = 256)
     private String name;
 
     @Column(name = "category")
     @Size(max = 50)
     private String category;
 
-    @Column(name = "type")
-    @Size(max = 50)
-    private String type;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "typeID")
+    private GeneralType type;
 
-    @Column(name = "repeat")
+    @Column(name = "repeatField")
     @Size(max = 100)
     private String repeat;
 
@@ -53,36 +53,26 @@ public class Task {
     private boolean isCapital;
 
     @Column(name = "visitNumbers")
+    @JsonIgnore
     private int visitNumbers;
 
     @Column(name = "startDate")
-    @NotNull
     private Date startDate;
 
     @Column(name = "endDate")
-    @NotNull
     private Date endDate;
 
     @Column(name = "description")
     @Size(max = 512)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentTask")
-    @JsonIgnore
-    private Task parentTask;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentTask")
-    @JsonIgnore
-    private Set<Task> childTasks;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="UserTask", joinColumns=@JoinColumn(name="taskID"), inverseJoinColumns=@JoinColumn(name="userID"))
-    private Set<User> users;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userID")
+    private User user;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="DoctorTask", joinColumns=@JoinColumn(name="taskID"), inverseJoinColumns=@JoinColumn(name="doctorID"))
-    private Set<Doctor> doctors;
+    private Set<Doctor> attendees;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customerID")
@@ -100,9 +90,6 @@ public class Task {
     @JsonIgnore
     private Set<TaskHistory> taskHistories;
 
-    //@OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
-    //private Set<Training> trainings;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="ProductTask", joinColumns=@JoinColumn(name="taskID"), inverseJoinColumns=@JoinColumn(name="productID"))
     private Set<Product> products;
@@ -110,10 +97,12 @@ public class Task {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Memo> memos;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="PromoItemTask", joinColumns=@JoinColumn(name="taskID"), inverseJoinColumns=@JoinColumn(name="promoitemID"))
     private Set<PromoItem> promoItems;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="SampleTask", joinColumns=@JoinColumn(name="taskID"), inverseJoinColumns=@JoinColumn(name="sampleID"))
     private Set<Sample> samples;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -121,7 +110,7 @@ public class Task {
 
     public Task(){}
 
-    public Task(String name, String category, String type, String repeat, boolean isSubmitted, boolean isCapital, int visitNumbers, Date startDate, Date endDate, String description) {
+    public Task(String name, String category, GeneralType type, String repeat, boolean isSubmitted, boolean isCapital, int visitNumbers, Date startDate, Date endDate, String description) {
         this.name = name;
         this.category = category;
         this.type = type;
@@ -150,11 +139,11 @@ public class Task {
         this.name = name;
     }
 
-    public String getType() {
+    public GeneralType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(GeneralType type) {
         this.type = type;
     }
 
@@ -198,36 +187,12 @@ public class Task {
         this.description = description;
     }
 
-    public Task getParentTask() {
-        return parentTask;
+    public Set<Doctor> getAttendees() {
+        return attendees;
     }
 
-    public void setParentTask(Task parentTask) {
-        this.parentTask = parentTask;
-    }
-
-    public Set<Task> getChildTasks() {
-        return childTasks;
-    }
-
-    public void setChildTasks(Set<Task> childTasks) {
-        this.childTasks = childTasks;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
-    public Set<Doctor> getDoctors() {
-        return doctors;
-    }
-
-    public void setDoctors(Set<Doctor> doctors) {
-        this.doctors = doctors;
+    public void setAttendees(Set<Doctor> attendees) {
+        this.attendees = attendees;
     }
 
     public Institution getInstitution() {
@@ -322,14 +287,6 @@ public class Task {
         this.objectives = objectives;
     }
 
-    // public Set<Training> getTrainings() {
-   //     return trainings;
-   // }
-
-   // public void setTrainings(Set<Training> trainings) {
-   //     this.trainings = trainings;
-   // }
-
     public Set<Product> getProducts() {
         return products;
     }
@@ -338,7 +295,13 @@ public class Task {
         this.products = products;
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public boolean equals(Object o) {

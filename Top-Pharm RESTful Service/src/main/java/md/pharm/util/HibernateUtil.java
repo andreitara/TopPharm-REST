@@ -28,7 +28,7 @@ public class HibernateUtil {
     public static void buildMDSessionFactory() {
         try {
             org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
-            configuration.configure("sqlserver/md.hibernate.cfg.xml");
+            configuration.configure("mysql/md.hibernate.cfg.xml");
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
             mdFactory = configuration.buildSessionFactory(serviceRegistry);
         } catch (Throwable ex) {
@@ -40,7 +40,7 @@ public class HibernateUtil {
     public static void buildROSessionFactory() {
         try {
             org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
-            configuration.configure("sqlserver/ro.hibernate.cfg.xml");
+            configuration.configure("mysql/ro.hibernate.cfg.xml");
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
             roFactory = configuration.buildSessionFactory(serviceRegistry);
         } catch (Throwable ex) {
@@ -75,20 +75,20 @@ public class HibernateUtil {
 
     public static void createDefaultAdminsIfUsersNotExist(){
         ManageUser manageUser = new ManageUser("MD");
-        List<User> users = manageUser.getUsers();
+        List<User> users = manageUser.getUsers("name", true);
         if(users.size()==0){
-            User admin = new User("admin", "admin", "admin", "admin", Calendar.getInstance().getTime(),"adminmd", "admin1234", null, null, null, "MD");
-            Permission permission = new Permission(admin, true,true,true,true,true,true,true);
-            admin.setPermission(permission);
+            User admin = new User("admin", "admin", "adress", Calendar.getInstance().getTime(),"adminmd", "c93ccd78b2076528346216b3b2f701e6", null, null, null, "MD");
+            //Permission permission = new Permission(admin, true,true,true,true,true,true,true);
+            //admin.setPermission(permission);
             manageUser.addUser(admin);
         }
 
         manageUser = new ManageUser("RO");
-        users = manageUser.getUsers();
+        users = manageUser.getUsers("name", true);
         if(users.size()==0){
-            User admin = new User("admin", "admin", "admin", "admin", Calendar.getInstance().getTime(),"adminro", "admin1234", null, null, null, "RO");
-            Permission permission = new Permission(admin, true,true,true,true,true,true,true);
-            admin.setPermission(permission);
+            User admin = new User("admin", "admin", "adress", Calendar.getInstance().getTime(),"adminro", "c93ccd78b2076528346216b3b2f701e6", null, null, null, "RO");
+            //Permission permission = new Permission(admin, true,true,true,true,true,true,true);
+            //admin.setPermission(permission);
             manageUser.addUser(admin);
         }
     }

@@ -6,6 +6,7 @@ import md.pharm.hibernate.task.Task;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * Created by c-andrtara on 12/17/2015.
@@ -25,10 +26,9 @@ public class PromoItem {
     @Size(max = 256)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "taskID")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy="promoItems", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Task task;
+    private Set<Task> tasks;
 
     public PromoItem(){}
 
@@ -52,12 +52,12 @@ public class PromoItem {
         this.name = name;
     }
 
-    public Task getTask() {
-        return task;
+    public Set<Task> getTasks() {
+        return tasks;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override

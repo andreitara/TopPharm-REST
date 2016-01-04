@@ -1,10 +1,10 @@
 package md.pharm.hibernate.task.attributes;
 
+import md.pharm.hibernate.doctor.attributes.GeneralType;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
+import org.hibernate.criterion.Order;
 
 import java.util.List;
 
@@ -19,13 +19,21 @@ public class SampleManage {
         this.country = Country.valueOf(country);
     }
 
-    public List<Sample> getAll(){
+    public List<Sample> getAll(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Sample> list = null;
         try{
             tx = session.beginTransaction();
-            list = session.createQuery("FROM md.pharm.hibernate.task.attributes.Sample").list();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
+            Criteria criteria = session.createCriteria(Sample.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order);
+
+            list = criteria.list();
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();

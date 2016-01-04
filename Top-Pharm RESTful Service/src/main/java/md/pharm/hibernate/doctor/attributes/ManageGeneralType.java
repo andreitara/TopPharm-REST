@@ -3,10 +3,8 @@ package md.pharm.hibernate.doctor.attributes;
 import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
@@ -22,13 +20,21 @@ public class ManageGeneralType {
         this.country = Country.valueOf(country);
     }
 
-    public List<GeneralType> getAll(){
+    public List<GeneralType> getAll(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<GeneralType> list = null;
         try{
             tx = session.beginTransaction();
-            list = session.createQuery("FROM md.pharm.hibernate.doctor.attributes.GeneralType").list();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
+            Criteria criteria = session.createCriteria(GeneralType.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order);
+
+            list = criteria.list();
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();

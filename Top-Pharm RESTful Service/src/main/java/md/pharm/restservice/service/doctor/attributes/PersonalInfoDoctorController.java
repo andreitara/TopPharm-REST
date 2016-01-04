@@ -1,8 +1,11 @@
-package md.pharm.restservice.service.task.attributes;
+package md.pharm.restservice.service.doctor.attributes;
 
+import md.pharm.hibernate.doctor.Doctor;
+import md.pharm.hibernate.doctor.ManageDoctor;
+import md.pharm.hibernate.doctor.attributes.PersonalInfo;
 import md.pharm.hibernate.task.ManageTask;
 import md.pharm.hibernate.task.Task;
-import md.pharm.hibernate.task.attributes.*;
+import md.pharm.hibernate.task.attributes.Memo;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.Response;
 import md.pharm.util.StaticStrings;
@@ -13,77 +16,79 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 /**
- * Created by Andrei on 12/19/2015.
+ * Created by Andrei on 12/21/2015.
  */
 
 @RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/task/{taskID}/sample/")
-public class SampleTaskController {
+@RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/doctor/{doctorID}/personalinfo/")
+public class PersonalInfoDoctorController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<Response<Set<Sample>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                        @PathVariable(value = "taskID") Integer taskID){
+    public ResponseEntity<Response<Set<PersonalInfo>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                              @PathVariable(value = "doctorID") Integer doctorID){
         Response response = new Response();
-        ManageTask manageTask = new ManageTask(country);
-        Task task = manageTask.getTaskByID(taskID);
+        ManageDoctor manageTask = new ManageDoctor(country);
+        Doctor task = manageTask.getDoctorByID(doctorID);
         if(task!=null){
-            Set<Sample> products = task.getSamples();
+            Set<PersonalInfo> products = task.getPersonalInfos();
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(products);
-            return new ResponseEntity<Response<Set<Sample>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Set<PersonalInfo>>>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<Set<Sample>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<Set<PersonalInfo>>>(response, HttpStatus.OK);
         }
     }
 
-    @RequestMapping(value = "/add/{sampleID}", method = RequestMethod.POST)
-    public ResponseEntity<Response> add(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                        @PathVariable(value = "taskID") Integer taskID,
-                                        @PathVariable(value = "sampleID") Integer sampleID){
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public ResponseEntity<Response> add(@RequestBody PersonalInfo personalInfo,
+                                        @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                        @PathVariable(value = "doctorID") Integer doctorID) {
         Response response = new Response();
-        ManageTask manageTask = new ManageTask(country);
-        Task task = manageTask.getTaskByID(taskID);
-        if(task!=null){
-            SampleManage manageProduct = new SampleManage(country);
-            Sample product = manageProduct.getByID(sampleID);
-            if(product!=null) {
-                task.getSamples().add(product);
-                manageTask.updateTask(task);
+        ManageDoctor manageTask = new ManageDoctor(country);
+        Doctor task = manageTask.getDoctorByID(doctorID);
+        if (task != null) {
+            personalInfo.setDoctor(task);
+            Set<PersonalInfo> memos = task.getPersonalInfos();
+            memos.add(personalInfo);
+            task.setPersonalInfos(memos);
+            if(manageTask.updateDoctor(task)) {
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
-            }else{
-                response.setResponseCode(ErrorCodes.InternalError.name);
-                response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+            }else {
+                response.setResponseCode(ErrorCodes.OK.name);
+                response.setResponseMessage(ErrorCodes.OK.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
-        }else{
+        } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
             return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
-    @RequestMapping(value = "/delete/{sampleID}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{personalinfoID}", method = RequestMethod.DELETE)
     public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                           @PathVariable(value = "taskID") Integer taskID,
-                                           @PathVariable(value = "sampleID") Integer sampleID) {
+                                           @PathVariable(value = "doctorID") Integer doctorID,
+                                           @PathVariable(value = "personalinfoID") Integer personalinfoID) {
         Response response = new Response();
-        ManageTask manageTask = new ManageTask(country);
-        Task task = manageTask.getTaskByID(taskID);
+        ManageDoctor manageTask = new ManageDoctor(country);
+        Doctor task = manageTask.getDoctorByID(doctorID);
         if (task != null) {
-            Set<Sample> memos = task.getSamples();
-            Sample removeMemo = null;
-            for (Sample memo : memos) {
-                if (memo.getId().equals(sampleID)) {
+            Set<PersonalInfo> memos = task.getPersonalInfos();
+            PersonalInfo removeMemo = null;
+            for (PersonalInfo memo : memos) {
+                if (memo.getId().equals(personalinfoID)) {
                     removeMemo = memo;
                 }
             }
             if(removeMemo!=null){
-                if (manageTask.deleteSampleTask(taskID, sampleID)) {
+                memos.remove(removeMemo);
+                task.setPersonalInfos(memos);
+                if (manageTask.updateDoctor(task)) {
                     response.setResponseCode(ErrorCodes.OK.name);
                     response.setResponseMessage(ErrorCodes.OK.userMessage);
                     return new ResponseEntity<Response>(response, HttpStatus.OK);
@@ -103,5 +108,4 @@ public class SampleTaskController {
             return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
-
 }

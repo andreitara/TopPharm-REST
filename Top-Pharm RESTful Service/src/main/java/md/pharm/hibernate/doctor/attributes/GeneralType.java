@@ -2,6 +2,7 @@ package md.pharm.hibernate.doctor.attributes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import md.pharm.hibernate.doctor.Doctor;
+import md.pharm.hibernate.task.Task;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -26,9 +27,9 @@ public class GeneralType {
     @Size(max = 256)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "generalType", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "type", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Doctor> doctors;
+    private Set<Task> tasks;
 
     public GeneralType(){}
 
@@ -52,12 +53,12 @@ public class GeneralType {
         this.name = name;
     }
 
-    public Set<Doctor> getDoctors() {
-        return doctors;
+    public Set<Task> getTasks() {
+        return tasks;
     }
 
-    public void setDoctors(Set<Doctor> doctors) {
-        this.doctors = doctors;
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override

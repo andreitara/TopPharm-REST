@@ -6,6 +6,7 @@ import md.pharm.hibernate.task.Task;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * Created by c-andrtara on 12/17/2015.
@@ -20,20 +21,18 @@ public class Sample {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "title")
     @NotNull
-    @Size(max = 256)
-    private String name;
+    private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "taskID")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy="samples", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Task task;
+    private Set<Task> tasks;
 
     public Sample(){}
 
-    public Sample(String name) {
-        this.name = name;
+    public Sample(String title) {
+        this.title = title;
     }
 
     public Integer getId() {
@@ -44,20 +43,20 @@ public class Sample {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public Task getTask() {
-        return task;
+    public Set<Task> getTasks() {
+        return tasks;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override
@@ -68,14 +67,14 @@ public class Sample {
         Sample sample = (Sample) o;
 
         if (id != null ? !id.equals(sample.id) : sample.id != null) return false;
-        return !(name != null ? !name.equals(sample.name) : sample.name != null);
+        return !(title != null ? !title.equals(sample.title) : sample.title != null);
 
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
         return result;
     }
 }

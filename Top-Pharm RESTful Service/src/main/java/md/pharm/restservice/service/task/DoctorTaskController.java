@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,26 +19,26 @@ import java.util.Set;
  */
 
 @RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/task/{taskID}/doctor/")
+@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/task/{taskID}/attendee/")
 public class DoctorTaskController {
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<Response<Set<Doctor>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                    @PathVariable(value = "taskID") int taskID){
+    @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
+    public ResponseEntity<Response<List<Doctor>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                        @PathVariable(value = "taskID") int taskID,
+                                                        @PathVariable("byField") String byField,
+                                                        @PathVariable("ascending") boolean ascending){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        Task task = manageTask.getTaskByID(taskID);
-        if(task!=null){
-            Set<Doctor> doctors = task.getDoctors();
+        List<Doctor> list = manageTask.getDoctorsByTaskID(taskID, byField, ascending);
+        if(list!=null){
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.setObject(doctors);
-            //response.addMapItem("doctors", list);
-            return new ResponseEntity<Response<Set<Doctor>>>(response, HttpStatus.OK);
+            response.setObject(list);
+            return new ResponseEntity<Response<List<Doctor>>>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<Set<Doctor>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Doctor>>>(response, HttpStatus.OK);
         }
     }
 
@@ -52,12 +53,16 @@ public class DoctorTaskController {
             ManageDoctor manageDoctor = new ManageDoctor(country);
             Doctor doctor = manageDoctor.getDoctorByID(doctorID);
             if(doctor!=null) {
-                //doctor.getTasks().add(task);
-                task.getDoctors().add(doctor);
-                manageTask.updateTask(task);
-                response.setResponseCode(ErrorCodes.OK.name);
-                response.setResponseMessage(ErrorCodes.OK.userMessage);
-                return new ResponseEntity<Response>(response, HttpStatus.OK);
+                task.getAttendees().add(doctor);
+                if(manageTask.updateTask(task)) {
+                    response.setResponseCode(ErrorCodes.OK.name);
+                    response.setResponseMessage(ErrorCodes.OK.userMessage);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
+                }else{
+                    response.setResponseCode(ErrorCodes.InternalError.name);
+                    response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
+                }
             }else{
                 response.setResponseCode(ErrorCodes.InternalError.name);
                 response.setResponseMessage(ErrorCodes.InternalError.userMessage);

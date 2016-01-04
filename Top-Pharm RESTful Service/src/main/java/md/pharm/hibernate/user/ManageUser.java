@@ -2,16 +2,16 @@ package md.pharm.hibernate.user;
 
 import md.pharm.hibernate.connection.Connection;
 import md.pharm.hibernate.connection.ManageConnection;
+import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.hibernate.task.Task;
 import md.pharm.hibernate.user.permission.Permission;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by Andrei on 9/3/2015.
@@ -25,13 +25,50 @@ public class ManageUser {
         this.country = Country.valueOf(country);
     }
 
-    public List<User> getUsers(){
+    public List<User> getUsers(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<User> list = null;
         try{
             tx = session.beginTransaction();
-            list = session.createQuery("FROM md.pharm.hibernate.user.User").list();
+
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
+
+            Criteria criteria = session.createCriteria(User.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order);
+            list = criteria.list();
+
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return list;
+    }
+
+    public List<Doctor> getDoctorsFromUser(Integer userID, String field, boolean ascending){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<Doctor> list = null;
+        try{
+            tx = session.beginTransaction();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
+
+            Criteria criteria = session.createCriteria(Doctor.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order)
+                    .createAlias("users", "users")
+                    .add(Restrictions.eq("users.id", userID))
+                    ;
+            list = criteria.list();
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();
@@ -63,6 +100,28 @@ public class ManageUser {
         boolean flag = false;
         try{
             tx = session.beginTransaction();
+            session.update(user);
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return flag;
+    }
+
+    public boolean updateUserAddDoctor(Integer doctorID, Doctor doctor){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            User user = (User)session.get(User.class, doctorID);
+            Set<Doctor> doctors = user.getDoctors();
+            if(doctors==null) doctors = new HashSet<>();
+            doctors.add(doctor);
+            user.setDoctors(doctors);
             session.update(user);
             tx.commit();
             flag = true;
@@ -107,67 +166,6 @@ public class ManageUser {
         return user;
     }
 
-    public  List<Task> getTasksFromDateToDate(Integer userID, Date start, Date end){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        List<Task> tasks = null;
-        try{
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(Task.class)
-                    .add(Restrictions.ge("startDate", start))
-                    .add(Restrictions.le("endDate", end))
-                    .createCriteria("users")
-                    .add(Restrictions.eq("id",userID));
-            tasks = criteria.list();
-            tx.commit();
-        }catch (HibernateException e){
-            if(tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return tasks;
-    }
-
-    public  List<Task> getTasksByStatus(Integer userID, String status){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        List<Task> tasks = null;
-        try{
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(Task.class)
-                    .add(Restrictions.eq("status", status))
-                    .createCriteria("users")
-                    .add(Restrictions.eq("id",userID));
-            tasks = criteria.list();
-            tx.commit();
-        }catch (HibernateException e){
-            if(tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return tasks;
-    }
-
-    public  List<Task> getTasksByType(Integer userID, String type){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        List<Task> tasks = null;
-        try{
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(Task.class)
-                    .add(Restrictions.eq("type", type))
-                    .createCriteria("users")
-                    .add(Restrictions.eq("id",userID));
-            tasks = criteria.list();
-            tx.commit();
-        }catch (HibernateException e){
-            if(tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return tasks;
-    }
-
     public User getUserByUsername(String username){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
@@ -183,27 +181,6 @@ public class ManageUser {
         }finally {
         }
         return user;
-    }
-
-    public boolean hasSpecialPermission(String username){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        User user = null;
-        try{
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(User.class);
-            user = (User) criteria.add(Restrictions.eq("username",username)).uniqueResult();
-            Permission permission = user.getPermission();
-            tx.commit();
-            if(permission.getSpecialWriteDate()!=null)
-                return permission.getSpecialWriteDate().after(Calendar.getInstance().getTime());
-            else return false;
-        }catch (HibernateException e){
-            if(tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return false;
     }
 
     public User getUserByConnectionKey(String connectionKey){

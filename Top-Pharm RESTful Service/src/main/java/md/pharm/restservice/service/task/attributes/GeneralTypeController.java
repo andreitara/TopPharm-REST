@@ -1,16 +1,13 @@
-package md.pharm.restservice.service.doctor.attributes;
+package md.pharm.restservice.service.task.attributes;
 
 import md.pharm.hibernate.doctor.attributes.GeneralType;
 import md.pharm.hibernate.doctor.attributes.ManageGeneralType;
-import md.pharm.hibernate.doctor.attributes.ManageSpeciality;
-import md.pharm.hibernate.doctor.attributes.Speciality;
 import md.pharm.hibernate.validator.ValidatorUtil;
 import md.pharm.hibernate.validator.Violation;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.Response;
 import md.pharm.util.StaticStrings;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,16 +19,16 @@ import java.util.Set;
  */
 
 @RestController
-@RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/speciality/")
-public class SpecialityController {
+@RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/generaltype/")
+public class GeneralTypeController {
 
     @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Speciality>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                             @PathVariable("byField") String byField,
-                                                             @PathVariable("ascending") boolean ascending) {
+    public ResponseEntity<Response<List<GeneralType>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                              @PathVariable("byField") String byField,
+                                                              @PathVariable("ascending") boolean ascending) {
         Response response = new Response<>();
-        ManageSpeciality manageDoctor = new ManageSpeciality(country);
-        List<Speciality> list = manageDoctor.getAll(byField, ascending);
+        ManageGeneralType manageDoctor = new ManageGeneralType(country);
+        List<GeneralType> list = manageDoctor.getAll(byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -45,15 +42,15 @@ public class SpecialityController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<Response<Integer>> create(@RequestBody Speciality speciality,
+    public ResponseEntity<Response<Integer>> create(@RequestBody GeneralType generalType,
                                                     @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response<Integer>();
-        Set<Violation> violations = new ValidatorUtil<Speciality>().getViolations(speciality);
+        Set<Violation> violations = new ValidatorUtil<GeneralType>().getViolations(generalType);
         if (violations.size() == 0) {
-            ManageSpeciality manage = new ManageSpeciality(country);
-            if (speciality.getId() == null) {
+            ManageGeneralType manage = new ManageGeneralType(country);
+            if (generalType.getId() == null) {
                 if (true) {//TODO condition if not exists this doctor in DB
-                    Integer id = manage.add(speciality);
+                    Integer id = manage.add(generalType);
                     if (id != null) {
                         response.setResponseCode(ErrorCodes.Created.name);
                         response.setResponseMessage(ErrorCodes.Created.userMessage);
@@ -83,16 +80,16 @@ public class SpecialityController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Response> update(@RequestBody Speciality speciality,
+    public ResponseEntity<Response> update(@RequestBody GeneralType generalType,
                                            @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response();
-        Set<Violation> violations = new ValidatorUtil<Speciality>().getViolations(speciality);
+        Set<Violation> violations = new ValidatorUtil<GeneralType>().getViolations(generalType);
         if (violations.size() == 0) {
-            ManageSpeciality manage = new ManageSpeciality(country);
-            if (speciality.getId() != null) {
-                Speciality doctorFromDB = manage.getByID(speciality.getId());
+            ManageGeneralType manage = new ManageGeneralType(country);
+            if (generalType.getId() != null) {
+                GeneralType doctorFromDB = manage.getByID(generalType.getId());
                 if (doctorFromDB != null) {
-                    if (manage.update(speciality)) {
+                    if (manage.update(generalType)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);
                         return new ResponseEntity<Response>(response, HttpStatus.OK);
@@ -123,8 +120,8 @@ public class SpecialityController {
     public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                            @PathVariable(value = "id") int id) {
         Response response = new Response();
-        ManageSpeciality manage = new ManageSpeciality(country);
-        Speciality doctor = manage.getByID(id);
+        ManageGeneralType manage = new ManageGeneralType(country);
+        GeneralType doctor = manage.getByID(id);
         if (doctor != null) {
             if (manage.delete(doctor)) {
                 response.setResponseCode(ErrorCodes.OK.name);
@@ -143,20 +140,21 @@ public class SpecialityController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Response<Speciality>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<GeneralType>> get(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                      @PathVariable(value = "id") int id) {
         Response response = new Response();
-        ManageSpeciality manageDoctor = new ManageSpeciality(country);
-        Speciality doctor = manageDoctor.getByID(id);
+        ManageGeneralType manageDoctor = new ManageGeneralType(country);
+        GeneralType doctor = manageDoctor.getByID(id);
         if (doctor != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(doctor);
-            return new ResponseEntity<Response<Speciality>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<GeneralType>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.ResourceNotExists.name);
             response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-            return new ResponseEntity<Response<Speciality>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<GeneralType>>(response, HttpStatus.OK);
         }
     }
+
 }

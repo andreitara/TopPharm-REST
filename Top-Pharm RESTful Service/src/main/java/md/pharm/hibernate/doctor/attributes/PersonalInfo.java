@@ -1,5 +1,6 @@
 package md.pharm.hibernate.doctor.attributes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import md.pharm.hibernate.doctor.Doctor;
 
 import javax.persistence.*;
@@ -26,7 +27,14 @@ public class PersonalInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctorID")
+    @JsonIgnore
     private Doctor doctor;
+
+    public PersonalInfo(){}
+
+    public PersonalInfo(String name) {
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;

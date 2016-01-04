@@ -21,11 +21,13 @@ import java.util.Set;
 @RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/user/")
 public class UserController {
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-     public ResponseEntity<Response<List<User>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country){
+    @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
+     public ResponseEntity<Response<List<User>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                        @PathVariable("byField") String byField,
+                                                        @PathVariable("ascending") boolean ascending){
         Response response = new Response();
         ManageUser manageUser = new ManageUser(country);
-        List<User> list = manageUser.getUsers();
+        List<User> list = manageUser.getUsers(byField, ascending);
         if(list!=null){
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -50,9 +52,8 @@ public class UserController {
                 existUser = manageUser.getUserByUsername(user.getUsername());
             }
             if (existUser == null) {
-                if (user.getPermission() == null) {
-                    user.createDefaultPermission();
-                }
+                //if (user.getPermission() == null)
+                //    user.createDefaultPermission();
                 user.setCountry(country);
                 manageUser = new ManageUser(country);
                 Integer id = manageUser.addUser(user);
@@ -80,7 +81,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public ResponseEntity<Response<User>> getUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "id") Integer id){
+    public ResponseEntity<Response<User>> getUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                  @PathVariable(value = "id") Integer id){
         Response response = new Response();
         ManageUser manageUser = new ManageUser(country);
         User user = manageUser.getUserByID(id);
@@ -133,7 +135,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Response> deleteUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Response> deleteUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                               @PathVariable(value = "id") Integer id) {
         Response response = new Response();
         ManageUser manageUser = new ManageUser(country);
         User user = manageUser.getUserByID(id);
@@ -155,7 +158,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Response> updateUser(@RequestBody User user, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country){
+    public ResponseEntity<Response> updateUser(@RequestBody User user,
+                                               @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country){
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<User>().getViolations(user);
         if(violations.size()==0) {
@@ -163,6 +167,7 @@ public class UserController {
             if (user.getId() > 0) {
                 User userFromDB = manageUser.getUserByID(user.getId());
                 if (userFromDB != null) {
+                    user.setCountry(country);
                     if (manageUser.updateUser(user)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);

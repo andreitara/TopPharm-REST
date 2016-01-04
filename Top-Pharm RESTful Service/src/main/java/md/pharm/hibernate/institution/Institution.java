@@ -2,6 +2,8 @@ package md.pharm.hibernate.institution;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import md.pharm.hibernate.common.Address;
+import md.pharm.hibernate.doctor.Doctor;
+import md.pharm.hibernate.institution.attributes.InstitutionType;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -34,6 +36,10 @@ public class Institution {
     @Size(max = 20)
     private String shortName;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "institutionTypeID")
+    private InstitutionType type;
+
     @Column(name = "phone1")
     @Pattern(regexp = "^\\+?([0-9])+$")
     @Size(max = 20)
@@ -44,13 +50,16 @@ public class Institution {
     @Size(max = 20)
     private String phone2;
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "institution", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Valid
-    private Address address;
+    @Column(name = "city")
+    private String city;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "institution", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "street")
+    private String street;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name="InstitutionDoctor", joinColumns=@JoinColumn(name="institutionID"), inverseJoinColumns=@JoinColumn(name="doctorID"))
     @JsonIgnore
-    private Set<Office> offices;
+    private Set<Doctor> doctors;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "institution", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -62,12 +71,14 @@ public class Institution {
 
     public Institution(){}
 
-    public Institution(String longName, String shortName, String phone1, String phone2, Address address) {
+    public Institution(String longName, String shortName, InstitutionType type, String phone1, String phone2, String city, String street) {
         this.longName = longName;
         this.shortName = shortName;
+        this.type = type;
         this.phone1 = phone1;
         this.phone2 = phone2;
-        this.address = address;
+        this.city = city;
+        this.street = street;
     }
 
     public Integer getId() {
@@ -94,6 +105,14 @@ public class Institution {
         this.shortName = shortName;
     }
 
+    public InstitutionType getType() {
+        return type;
+    }
+
+    public void setType(InstitutionType type) {
+        this.type = type;
+    }
+
     public String getPhone1() {
         return phone1;
     }
@@ -110,20 +129,28 @@ public class Institution {
         this.phone2 = phone2;
     }
 
-    public Address getAddress() {
-        return address;
+    public String getCity() {
+        return city;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public Set<Office> getOffices() {
-        return offices;
+    public String getStreet() {
+        return street;
     }
 
-    public void setOffices(Set<Office> offices) {
-        this.offices = offices;
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public Set<Doctor> getDoctors() {
+        return doctors;
+    }
+
+    public void setDoctors(Set<Doctor> doctors) {
+        this.doctors = doctors;
     }
 
     public Set<InstitutionComment> getInstitutionComments() {
@@ -152,10 +179,11 @@ public class Institution {
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (longName != null ? !longName.equals(that.longName) : that.longName != null) return false;
         if (shortName != null ? !shortName.equals(that.shortName) : that.shortName != null) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (phone1 != null ? !phone1.equals(that.phone1) : that.phone1 != null) return false;
         if (phone2 != null ? !phone2.equals(that.phone2) : that.phone2 != null) return false;
-        return !(address != null ? !address.equals(that.address) : that.address != null);
-
+        if (city != null ? !city.equals(that.city) : that.city != null) return false;
+        return !(street != null ? !street.equals(that.street) : that.street != null);
     }
 
     @Override
@@ -163,9 +191,11 @@ public class Institution {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (longName != null ? longName.hashCode() : 0);
         result = 31 * result + (shortName != null ? shortName.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (phone1 != null ? phone1.hashCode() : 0);
         result = 31 * result + (phone2 != null ? phone2.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (street != null ? street.hashCode() : 0);
         return result;
     }
 }

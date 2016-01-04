@@ -24,11 +24,13 @@ import java.util.Set;
 @RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/sample/")
 public class SampleController {
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Sample>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+    @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
+    public ResponseEntity<Response<List<Sample>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                         @PathVariable("byField") String byField,
+                                                         @PathVariable("ascending") boolean ascending) {
         Response response = new Response<>();
         SampleManage manageDoctor = new SampleManage(country);
-        List<Sample> list = manageDoctor.getAll();
+        List<Sample> list = manageDoctor.getAll(byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);

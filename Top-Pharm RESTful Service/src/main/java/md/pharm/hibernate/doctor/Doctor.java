@@ -1,11 +1,8 @@
 package md.pharm.hibernate.doctor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import md.pharm.hibernate.doctor.attributes.GeneralType;
-import md.pharm.hibernate.doctor.attributes.Habit;
-import md.pharm.hibernate.doctor.attributes.PersonalInfo;
-import md.pharm.hibernate.doctor.attributes.Speciality;
-import md.pharm.hibernate.institution.Office;
+import md.pharm.hibernate.doctor.attributes.*;
+import md.pharm.hibernate.institution.Institution;
 import md.pharm.hibernate.task.Task;
 import md.pharm.hibernate.user.User;
 import org.hibernate.validator.constraints.Email;
@@ -30,24 +27,16 @@ public class Doctor {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "firstName")
+    @Column(name = "name")
     @NotNull
-    @Size(min = 1, max = 40)
-    private String firstName;
+    @Size(min = 1, max = 256)
+    private String name;
 
-    @Column(name = "lastName")
-    @NotNull
-    @Size(min = 1, max = 40)
-    private String lastName;
+    @Column(name = "city")
+    private String city;
 
-    @Column(name = "fatherName")
-    @Size(min = 1, max = 40)
-    private String fatherName;
-
-    @Column(name = "specialty")
-    @NotNull
-    @Size(min = 1, max = 40)
-    private String specialty;
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "birthDate")
     private Date birthDate;
@@ -62,38 +51,25 @@ public class Doctor {
     @Size(max = 20)
     private String phone2;
 
+    @Column(name = "officePhone")
+    @Pattern(regexp = "^\\+?([0-9])+$", message = "Invalid phone number")
+    @Size(max = 20)
+    private String officePhone;
+
     @Column(name = "email")
     @Email
     @Size(max = 320)
     private String email;
 
-    @Column(name = "loyaltyCategory")
-    @Size(max = 20)
-    private String loyaltyCategory;
-
-    @Column(name = "saleCategory")
-    @Size(max = 20)
-    private String saleCategory;
-
-    @Column(name = "generalCategory")
-    @Size(max = 20)
-    private String generalCategory;
-
-    @Column(name = "description")
-    private String description;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Office> offices;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy="doctors", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Institution> institutions;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<DoctorComment> doctorComments;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private Set<DoctorHistory> doctorHistories;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy="doctors", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy="attendees", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Task> tasksAsAttendees;
 
@@ -105,37 +81,44 @@ public class Doctor {
     @JsonIgnore
     private Set<User> users;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<Habit> habits;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<PersonalInfo> personalInfos ;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "generalTypeID")
-    private GeneralType generalType;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Comment> comments;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "specialityID")
     private Speciality speciality;
 
+    @Column(name = "type")
+    @JsonIgnore
+    private String type;
+
+    @Column(name = "subType")
+    @JsonIgnore
+    private String subType;
+
     public Doctor(){}
 
-    public Doctor(String firstName, String lastName, String fatherName, String specialty, Date birthDate, String phone1, String phone2, String email, String loyaltyCategory, String saleCategory, String generalCategory, String description) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.fatherName = fatherName;
-        this.specialty = specialty;
+    public Doctor(String name, String city, String address, Date birthDate, String phone1, String phone2, String officePhone, String email, Speciality speciality, String type, String subType) {
+        this.name = name;
+        this.city = city;
+        this.address = address;
         this.birthDate = birthDate;
         this.phone1 = phone1;
         this.phone2 = phone2;
+        this.officePhone = officePhone;
         this.email = email;
-        this.loyaltyCategory = loyaltyCategory;
-        this.saleCategory = saleCategory;
-        this.generalCategory = generalCategory;
-        this.description = description;
+        this.speciality = speciality;
+        this.type = type;
+        this.subType = subType;
     }
 
     public Integer getId() {
@@ -146,36 +129,28 @@ public class Doctor {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getCity() {
+        return city;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getFatherName() {
-        return fatherName;
+    public String getAddress() {
+        return address;
     }
 
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
-    }
-
-    public String getSpecialty() {
-        return specialty;
-    }
-
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Date getBirthDate() {
@@ -202,6 +177,14 @@ public class Doctor {
         this.phone2 = phone2;
     }
 
+    public String getOfficePhone() {
+        return officePhone;
+    }
+
+    public void setOfficePhone(String officePhone) {
+        this.officePhone = officePhone;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -210,45 +193,12 @@ public class Doctor {
         this.email = email;
     }
 
-    public String getLoyaltyCategory() {
-        return loyaltyCategory;
+    public Set<Institution> getInstitutions() {
+        return institutions;
     }
 
-    public void setLoyaltyCategory(String loyaltyCategory) {
-        this.loyaltyCategory = loyaltyCategory;
-    }
-
-    public String getSaleCategory() {
-        return saleCategory;
-    }
-
-    public void setSaleCategory(String saleCategory) {
-        this.saleCategory = saleCategory;
-    }
-
-    public String getGeneralCategory() {
-        return generalCategory;
-    }
-
-    public void setGeneralCategory(String generalCategory) {
-        this.generalCategory = generalCategory;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<Office> getOffices() {
-        return offices;
-    }
-
-    @JsonIgnore
-    public void setOffices(Set<Office> offices) {
-        this.offices = offices;
+    public void setInstitutions(Set<Institution> institutions) {
+        this.institutions = institutions;
     }
 
     public Set<DoctorComment> getDoctorComments() {
@@ -257,22 +207,6 @@ public class Doctor {
 
     public void setDoctorComments(Set<DoctorComment> doctorComments) {
         this.doctorComments = doctorComments;
-    }
-
-    public Set<DoctorHistory> getDoctorHistories() {
-        return doctorHistories;
-    }
-
-    public void setDoctorHistories(Set<DoctorHistory> doctorHistories) {
-        this.doctorHistories = doctorHistories;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
 
     public Set<Task> getTasksAsAttendees() {
@@ -291,6 +225,14 @@ public class Doctor {
         this.tasksAsCustomers = tasksAsCustomers;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
     public Set<Habit> getHabits() {
         return habits;
     }
@@ -307,12 +249,12 @@ public class Doctor {
         this.personalInfos = personalInfos;
     }
 
-    public GeneralType getGeneralType() {
-        return generalType;
+    public Set<Comment> getComments() {
+        return comments;
     }
 
-    public void setGeneralType(GeneralType generalType) {
-        this.generalType = generalType;
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     public Speciality getSpeciality() {
@@ -323,6 +265,22 @@ public class Doctor {
         this.speciality = speciality;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -331,36 +289,26 @@ public class Doctor {
         Doctor doctor = (Doctor) o;
 
         if (id != null ? !id.equals(doctor.id) : doctor.id != null) return false;
-        if (firstName != null ? !firstName.equals(doctor.firstName) : doctor.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(doctor.lastName) : doctor.lastName != null) return false;
-        if (specialty != null ? !specialty.equals(doctor.specialty) : doctor.specialty != null) return false;
+        if (name != null ? !name.equals(doctor.name) : doctor.name != null) return false;
+        if (city != null ? !city.equals(doctor.city) : doctor.city != null) return false;
+        if (address != null ? !address.equals(doctor.address) : doctor.address != null) return false;
         if (birthDate != null ? !birthDate.equals(doctor.birthDate) : doctor.birthDate != null) return false;
-        if (phone1 != null ? !phone1.equals(doctor.phone1) : doctor.phone1 != null) return false;
-        if (phone2 != null ? !phone2.equals(doctor.phone2) : doctor.phone2 != null) return false;
         if (email != null ? !email.equals(doctor.email) : doctor.email != null) return false;
-        if (loyaltyCategory != null ? !loyaltyCategory.equals(doctor.loyaltyCategory) : doctor.loyaltyCategory != null)
-            return false;
-        if (saleCategory != null ? !saleCategory.equals(doctor.saleCategory) : doctor.saleCategory != null)
-            return false;
-        if (generalCategory != null ? !generalCategory.equals(doctor.generalCategory) : doctor.generalCategory != null)
-            return false;
-        return !(description != null ? !description.equals(doctor.description) : doctor.description != null);
+        if (type != null ? !type.equals(doctor.type) : doctor.type != null) return false;
+        return !(subType != null ? !subType.equals(doctor.subType) : doctor.subType != null);
+
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (specialty != null ? specialty.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
-        result = 31 * result + (phone1 != null ? phone1.hashCode() : 0);
-        result = 31 * result + (phone2 != null ? phone2.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (loyaltyCategory != null ? loyaltyCategory.hashCode() : 0);
-        result = 31 * result + (saleCategory != null ? saleCategory.hashCode() : 0);
-        result = 31 * result + (generalCategory != null ? generalCategory.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (subType != null ? subType.hashCode() : 0);
         return result;
     }
 }

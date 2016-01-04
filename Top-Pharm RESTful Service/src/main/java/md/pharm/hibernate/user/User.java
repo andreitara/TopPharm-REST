@@ -30,23 +30,17 @@ public class User{
 
     @Column(name = "type")
     @Size(max = 20)
-    private String type;
+    private String rights;
 
-    @Column(name = "firstName")
+    @Column(name = "user_name")
     @NotNull
-    @Size(min = 1, max = 40)
-    private String firstName;
+    @Size(min = 1, max = 256)
+    private String name;
 
-    @Column(name = "lastName")
-    @NotNull
-    @Size(min = 1, max = 40)
-    private String lastName;
+    @Column(name = "address")
+    private String address;
 
-    @Column(name = "fatherName")
-    @Size(min = 1, max = 40)
-    private String fatherName;
-
-    @Column(name = "BirthDate")
+    @Column(name = "birthDate")
     private Date birthDate;
 
     @Column(name = "username")
@@ -56,8 +50,7 @@ public class User{
 
     @Column(name = "password")
     @NotNull
-    @Size(min = 8, max = 30)
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password must contains at least one number and one letter")
+    @Size(min = 8, max = 256)
     private String password;
 
     @Column(name = "email")
@@ -66,12 +59,10 @@ public class User{
     private String email;
 
     @Column(name = "phone1")
-    @Pattern(regexp = "^\\+?([0-9])+$", message = "Invalid phone number")
     @Size(max = 20)
     private String phone1;
 
     @Column(name = "phone2")
-    @Pattern(regexp = "^\\+?([0-9])+$", message = "Invalid phone number")
     @Size(max = 20)
     private String phone2;
 
@@ -88,19 +79,11 @@ public class User{
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private Set<UserComment> userComments;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private Set<UserHistory> userHistories;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy="users", cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<Task> tasks;
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private Permission permission;
+    //@OneToOne(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JsonIgnore
+    //private Permission permission;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "from", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -118,11 +101,10 @@ public class User{
     public User() {
     }
 
-    public User(String type, String firstName, String lastName, String fatherName, Date birthDate, String username, String password, String email, String phone1, String phone2, String country) {
-        this.type = type;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.fatherName = fatherName;
+    public User(String rights, String name, String address, Date birthDate, String username, String password, String email, String phone1, String phone2, String country) {
+        this.rights = rights;
+        this.name = name;
+        this.address = address;
         this.birthDate = birthDate;
         this.username = username;
         this.password = password;
@@ -132,10 +114,12 @@ public class User{
         this.country = country;
     }
 
+    /*
     public void createDefaultPermission(){
         Permission permission = new Permission(this,true,false,true,false,true,false,false);
         this.permission = permission;
     }
+    */
 
     public Integer getId() {
         return id;
@@ -145,36 +129,20 @@ public class User{
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getAddress() {
+        return address;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getRights() {
+        return rights;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getFatherName() {
-        return fatherName;
-    }
-
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
+    public void setRights(String rights) {
+        this.rights = rights;
     }
 
     public Date getBirthDate() {
@@ -243,36 +211,12 @@ public class User{
         this.connection = connection;
     }
 
-    public Set<UserComment> getUserComments() {
-        return userComments;
-    }
-
-    public void setUserComments(Set<UserComment> userComments) {
-        this.userComments = userComments;
-    }
-
-    public Set<UserHistory> getUserHistories() {
-        return userHistories;
-    }
-
-    public void setUserHistories(Set<UserHistory> userHistories) {
-        this.userHistories = userHistories;
-    }
-
     public Set<Task> getTasks() {
         return tasks;
     }
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
-    }
-
-    public Permission getPermission() {
-        return permission;
-    }
-
-    public void setPermission(Permission permission) {
-        this.permission = permission;
     }
 
     public Set<Message> getSendMessages() {
@@ -307,6 +251,14 @@ public class User{
         this.hasUnreadMessages = hasUnreadMessages;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -315,32 +267,18 @@ public class User{
         User user = (User) o;
 
         if (id != null ? !id.equals(user.id) : user.id != null) return false;
-        if (type != null ? !type.equals(user.type) : user.type != null) return false;
-        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
-        if (fatherName != null ? !fatherName.equals(user.fatherName) : user.fatherName != null) return false;
-        if (birthDate != null ? !birthDate.equals(user.birthDate) : user.birthDate != null) return false;
-        if (username != null ? !username.equals(user.username) : user.username != null) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (phone1 != null ? !phone1.equals(user.phone1) : user.phone1 != null) return false;
-        return !(phone2 != null ? !phone2.equals(user.phone2) : user.phone2 != null);
+        if (rights != null ? !rights.equals(user.rights) : user.rights != null) return false;
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        return !(username != null ? !username.equals(user.username) : user.username != null);
 
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (fatherName != null ? fatherName.hashCode() : 0);
-        result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
+        result = 31 * result + (rights != null ? rights.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (phone1 != null ? phone1.hashCode() : 0);
-        result = 31 * result + (phone2 != null ? phone2.hashCode() : 0);
         return result;
     }
 }

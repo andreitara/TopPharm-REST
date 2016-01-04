@@ -4,6 +4,7 @@ import md.pharm.hibernate.common.Address;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
@@ -20,13 +21,23 @@ public class ManageInstitution {
         this.country = Country.valueOf(country);
     }
 
-    public List<Institution> getInstitutions(){
+    public List<Institution> getInstitutions(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Institution> list = null;
         try{
             tx = session.beginTransaction();
-            list = session.createQuery("FROM md.pharm.hibernate.institution.Institution").list();
+
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
+
+            Criteria criteria = session.createCriteria(Institution.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order);
+            list = criteria.list();
+
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();
@@ -36,14 +47,21 @@ public class ManageInstitution {
         return list;
     }
 
-    public  List<Institution> getInstitutionsByName(String name){
+    public  List<Institution> getInstitutionsByName(String name, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Institution> institutions = null;
         try{
             tx = session.beginTransaction();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
             Criteria criteria = session.createCriteria(Institution.class)
-                    .add(Restrictions.like("longName", "%" + name + "%"));
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .add(Restrictions.like("longName", "%" + name + "%"))
+                    .addOrder(order)
+                    ;
             institutions = criteria.list();
             tx.commit();
         }catch (HibernateException e){
@@ -54,35 +72,21 @@ public class ManageInstitution {
         return institutions;
     }
 
-    public  List<Institution> getInstitutionsByCity( String city){
+    public  List<Institution> getInstitutionsByCity( String city, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Institution> institutions = null;
         try{
             tx = session.beginTransaction();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
             Criteria criteria = session.createCriteria(Institution.class)
-                    .createCriteria("address")
-                    .add(Restrictions.eq("city",city));
-            institutions = criteria.list();
-            tx.commit();
-        }catch (HibernateException e){
-            if(tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return institutions;
-    }
-
-    public  List<Institution> getInstitutionsByCityAndDistrict(String city, String district){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        List<Institution> institutions = null;
-        try{
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(Institution.class)
-                    .createCriteria("address")
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("city", city))
-                    .add(Restrictions.eq("district",district));
+                    .addOrder(order)
+                    ;
             institutions = criteria.list();
             tx.commit();
         }catch (HibernateException e){
@@ -93,15 +97,22 @@ public class ManageInstitution {
         return institutions;
     }
 
-    public  List<Institution> getInstitutionsByState(String state){
+    public  List<Institution> getInstitutionsByType( Integer typeID, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Institution> institutions = null;
         try{
             tx = session.beginTransaction();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
             Criteria criteria = session.createCriteria(Institution.class)
-                    .createCriteria("address")
-                    .add(Restrictions.eq("state",state));
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order)
+                    .createCriteria("type")
+                    .add(Restrictions.eq("id", typeID))
+                    ;
             institutions = criteria.list();
             tx.commit();
         }catch (HibernateException e){
@@ -111,6 +122,34 @@ public class ManageInstitution {
         }
         return institutions;
     }
+
+    public  List<Institution> getInstitutionsByCityAndType( String city, Integer typeID, String field, boolean ascending){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<Institution> institutions = null;
+        try{
+            tx = session.beginTransaction();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
+            Criteria criteria = session.createCriteria(Institution.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .add(Restrictions.eq("city", city))
+                    .addOrder(order)
+                    .createCriteria("type")
+                    .add(Restrictions.eq("id",typeID))
+                    ;
+            institutions = criteria.list();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return institutions;
+    }
+
 
     public Integer addInstitution(Institution institution){
         session = HibernateUtil.getSession(country);
@@ -128,22 +167,6 @@ public class ManageInstitution {
         return institutionID;
     }
 
-    public Integer addInstitutionAddress(Address address){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        Integer id = null;
-        try{
-            tx = session.beginTransaction();
-            id = (Integer) session.save(address);
-            tx.commit();
-        }catch(HibernateException e){
-            if(tx!=null)tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return id;
-    }
-
     public boolean updateInstitution(Institution institution){
         session = HibernateUtil.getSession(country);
         boolean flag = false;
@@ -151,23 +174,6 @@ public class ManageInstitution {
         try{
             tx = session.beginTransaction();
             session.update(institution);
-            tx.commit();
-            flag = true;
-        }catch(HibernateException e){
-            if(tx!=null)tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return flag;
-    }
-
-    public boolean updateAddress(Address address){
-        session = HibernateUtil.getSession(country);
-        boolean flag = false;
-        Transaction tx = null;
-        try{
-            tx = session.beginTransaction();
-            session.update(address);
             tx.commit();
             flag = true;
         }catch(HibernateException e){
@@ -192,28 +198,6 @@ public class ManageInstitution {
         }finally {
         }
         return institution;
-    }
-
-    public Address getInstitutionAddressByInstitutionID(int id){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        Institution institution;
-        Address address = null;
-        boolean flag = true;
-        try{
-            tx = session.beginTransaction();
-            institution = (Institution)session.get(Institution.class, id);
-            if(institution!=null) address = institution.getAddress();
-            tx.commit();
-            flag = false;
-        }catch (HibernateException e){
-            if(tx!=null) tx.rollback();
-            e.printStackTrace();
-            flag = true;
-        }finally {
-        }
-        if(flag) return null;
-        return address;
     }
 
     public Institution getInstitutionByLongName(String longName){

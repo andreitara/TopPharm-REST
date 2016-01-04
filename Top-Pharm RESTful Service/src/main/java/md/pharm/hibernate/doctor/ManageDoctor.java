@@ -1,8 +1,10 @@
 package md.pharm.hibernate.doctor;
 
+import md.pharm.hibernate.task.Task;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
@@ -18,13 +20,24 @@ public class ManageDoctor {
         this.country = Country.valueOf(country);
     }
 
-    public List<Doctor> getDoctors(){
+    public List<Doctor> getDoctors(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Doctor> list = null;
         try{
             tx = session.beginTransaction();
-            list = session.createQuery("FROM md.pharm.hibernate.doctor.Doctor").list();
+
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
+
+            Query query = session.createSQLQuery("");
+
+            Criteria criteria = session.createCriteria(Doctor.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order);
+            list = criteria.list();
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();
@@ -34,14 +47,21 @@ public class ManageDoctor {
         return list;
     }
 
-    public  List<Doctor> getDoctorsBySpeciality(String speciality){
+    public  List<Doctor> getDoctorsBySpecialityID(Integer specialityID, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Doctor> doctors = null;
         try{
             tx = session.beginTransaction();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
             Criteria criteria = session.createCriteria(Doctor.class)
-                    .add(Restrictions.eq("speciality", speciality));
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order)
+                    .createCriteria("speciality")
+                        .add(Restrictions.eq("id", specialityID));
             doctors = criteria.list();
             tx.commit();
         }catch (HibernateException e){
@@ -52,15 +72,21 @@ public class ManageDoctor {
         return doctors;
     }
 
-    public List<Doctor> getDoctorsByInstitutionID(Integer institutionID){
+    public List<Doctor> getDoctorsByInstitutionID(Integer institutionID, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Doctor> doctors = null;
         try{
             tx = session.beginTransaction();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
             Criteria criteria = session.createCriteria(Doctor.class)
-                    .createCriteria("offices")
-                        .add(Restrictions.eq("institutionID", institutionID));
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order)
+                    .createCriteria("institution")
+                        .add(Restrictions.eq("id", institutionID));
             doctors = criteria.list();
             tx.commit();
         }catch (HibernateException e){
@@ -71,53 +97,20 @@ public class ManageDoctor {
         return doctors;
     }
 
-    public  List<Doctor> getDoctorsByPartOfFirstLastAndFatherName(String firstName, String lastName, String fatherName){
+    public  List<Doctor> getDoctorsByPartOfName(String name, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Doctor> doctors = null;
         try{
             tx = session.beginTransaction();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
             Criteria criteria = session.createCriteria(Doctor.class)
-                    .add(Restrictions.like("firstName", "%" + firstName + "%"))
-                    .add(Restrictions.like("lastName", "%" + lastName + "%"))
-                    .add(Restrictions.like("fatherName", "%" + fatherName + "%"));
-            doctors = criteria.list();
-            tx.commit();
-        }catch (HibernateException e){
-            if(tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return doctors;
-    }
-
-    public  List<Doctor> getDoctorsByPartOfFirstAndLastName(String firstName, String lastName){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        List<Doctor> doctors = null;
-        try{
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(Doctor.class)
-                    .add(Restrictions.like("firstName", "%" + firstName + "%"))
-                    .add(Restrictions.like("lastName", "%" + lastName + "%"));
-            doctors = criteria.list();
-            tx.commit();
-        }catch (HibernateException e){
-            if(tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return doctors;
-    }
-
-    public  List<Doctor> getDoctorsByPartOfFirstName(String firstName){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        List<Doctor> doctors = null;
-        try{
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(Doctor.class)
-                    .add(Restrictions.like("firstName", "%" + firstName + "%"));
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .add(Restrictions.like("name", "%" + name + "%"))
+                    .addOrder(order);
             doctors = criteria.list();
             tx.commit();
         }catch (HibernateException e){
@@ -135,6 +128,8 @@ public class ManageDoctor {
         try{
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(Doctor.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.like("lastName", "%" + lastName + "%"));
             doctors = criteria.list();
             tx.commit();

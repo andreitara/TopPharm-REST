@@ -2,6 +2,8 @@ package md.pharm.restservice.service.doctor;
 
 import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.hibernate.doctor.ManageDoctor;
+import md.pharm.hibernate.doctor.attributes.ManageSpeciality;
+import md.pharm.hibernate.doctor.attributes.Speciality;
 import md.pharm.hibernate.validator.ValidatorUtil;
 import md.pharm.hibernate.validator.Violation;
 import md.pharm.util.Response;
@@ -21,14 +23,16 @@ import java.util.Set;
  */
 
 @RestController
-@RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/doctor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/doctor")
 public class DoctorController {
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Doctor>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+    @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
+    public ResponseEntity<Response<List<Doctor>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                         @PathVariable("byField") String byField,
+                                                         @PathVariable("ascending") boolean ascending) {
         Response response = new Response<List<Doctor>>();
         ManageDoctor manageDoctor = new ManageDoctor(country);
-        List<Doctor> list = manageDoctor.getDoctors();
+        List<Doctor> list = manageDoctor.getDoctors(byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -48,15 +52,15 @@ public class DoctorController {
         Set<Violation> violations = new ValidatorUtil<Doctor>().getViolations(doctor);
         if (violations.size() == 0) {
             ManageDoctor manage = new ManageDoctor(country);
+            ManageSpeciality manageSpeciality = new ManageSpeciality(country);
             if (doctor.getId() == null) {
-                if (true) {//TODO condition if not exists this doctor in DB
+                Speciality speciality = doctor.getSpeciality();
+                if (speciality==null || (speciality != null && speciality.getId()!=null && manageSpeciality.getByID(speciality.getId())!=null)) {
                     Integer id = manage.addDoctor(doctor);
                     if (id != null) {
                         response.setResponseCode(ErrorCodes.Created.name);
                         response.setResponseMessage(ErrorCodes.Created.userMessage);
                         response.setObject(id);
-                        //doctor.setId(id);
-                        //response.addMapItem("doctor", doctor);
                         return new ResponseEntity<Response<Integer>>(response, HttpStatus.CREATED);
                     } else {
                         response.setResponseCode(ErrorCodes.InternalError.name);
@@ -64,8 +68,8 @@ public class DoctorController {
                         return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                     }
                 } else {
-                    response.setResponseCode(ErrorCodes.AccountAlreadyExists.name);
-                    response.setResponseMessage(ErrorCodes.AccountAlreadyExists.userMessage);
+                    response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
+                    response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
                     return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
                 }
             } else {
@@ -91,6 +95,9 @@ public class DoctorController {
             if (doctor.getId() != null) {
                 Doctor doctorFromDB = manage.getDoctorByID(doctor.getId());
                 if (doctorFromDB != null) {
+                    doctor.setPersonalInfos(doctorFromDB.getPersonalInfos());
+                    doctor.setHabits(doctorFromDB.getHabits());
+                    doctor.setDoctorComments(doctorFromDB.getDoctorComments());
                     if (manage.updateDoctor(doctor)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -161,12 +168,14 @@ public class DoctorController {
 
 
     //GET DOCTORS
-    @RequestMapping(value = "/speciality/{speciality}", method = RequestMethod.GET)
+    @RequestMapping(value = "/speciality/{specialityID}/{byField}/{ascending}", method = RequestMethod.GET)
     public ResponseEntity<Response<List<Doctor>>> getAllBySpeciality(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                                     @PathVariable(value = "speciality") String speciality) {
+                                                                     @PathVariable(value = "specialityID") Integer specialityID,
+                                                                     @PathVariable("byField") String byField,
+                                                                     @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
-        List<Doctor> list = manageDoctor.getDoctorsBySpeciality(speciality);
+        List<Doctor> list = manageDoctor.getDoctorsBySpecialityID(specialityID, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -179,12 +188,14 @@ public class DoctorController {
         }
     }
 
-    @RequestMapping(value = "/institution/{institutionID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/institution/{institutionID}/{byField}/{ascending}", method = RequestMethod.GET)
     public ResponseEntity<Response<List<Doctor>>> getAllBynstitutionID(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                                       @PathVariable(value = "institutionID") Integer institutionID) {
+                                                                       @PathVariable(value = "institutionID") Integer institutionID,
+                                                                       @PathVariable("byField") String byField,
+                                                                       @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
-        List<Doctor> list = manageDoctor.getDoctorsByInstitutionID(institutionID);
+        List<Doctor> list = manageDoctor.getDoctorsByInstitutionID(institutionID, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -197,25 +208,15 @@ public class DoctorController {
         }
     }
 
-    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/name/{name}/{byField}/{ascending}", method = RequestMethod.GET)
     public ResponseEntity<Response<List<Doctor>>> getAllPartOfName(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                                   @PathVariable(value = "name") String name) {
+                                                                   @PathVariable(value = "name") String name,
+                                                                   @PathVariable("byField") String byField,
+                                                                   @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
-        List<Doctor> list = null;
-        String[] names = name.trim().replace("( )+", " ").split(" ");
-        if (names.length == 1) {
-            list = manageDoctor.getDoctorsByPartOfFirstName(names[0]);
-            list.addAll(manageDoctor.getDoctorsByPartOfLastName(names[0]));
-        } else if (names.length == 2) {
-            list = manageDoctor.getDoctorsByPartOfFirstAndLastName(names[0],names[1]);
-            list.addAll(manageDoctor.getDoctorsByPartOfFirstAndLastName(names[1],names[0]));
-        } else if (names.length == 3) {
-            list = manageDoctor.getDoctorsByPartOfFirstLastAndFatherName(names[0],names[1],names[2]);
-            list.addAll(manageDoctor.getDoctorsByPartOfFirstLastAndFatherName(names[1],names[0],names[2]));
-        } else {
-            list = new ArrayList<>();
-        }
+        List<Doctor> list = manageDoctor.getDoctorsByPartOfName(name, byField, ascending);
+
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);

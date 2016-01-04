@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,17 +21,18 @@ import java.util.Set;
 @RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/user/{userID}/doctor/")
 public class DoctorUserController {
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
     public ResponseEntity<Response<Set<Doctor>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                    @PathVariable(value = "userID") int userID){
+                                                        @PathVariable(value = "userID") int userID,
+                                                        @PathVariable("byField") String byField,
+                                                        @PathVariable("ascending") boolean ascending){
         Response response = new Response();
         ManageUser manageUser = new ManageUser(country);
-        User user = manageUser.getUserByID(userID);
-        if(user!=null){
-            Set<Doctor> doctors = user.getDoctors();
+        List<Doctor> list = manageUser.getDoctorsFromUser(userID, byField, ascending);
+        if(list!=null){
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.setObject(doctors);
+            response.setObject(list);
             return new ResponseEntity<Response<Set<Doctor>>>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
@@ -50,8 +52,7 @@ public class DoctorUserController {
             ManageDoctor manageDoctor = new ManageDoctor(country);
             Doctor doctor = manageDoctor.getDoctorByID(doctorID);
             if(doctor!=null) {
-                user.getDoctors().add(doctor);
-                manageUser.updateUser(user);
+                manageUser.updateUserAddDoctor(userID, doctor);
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);

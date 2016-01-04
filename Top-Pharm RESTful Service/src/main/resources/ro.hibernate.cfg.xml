@@ -45,8 +45,8 @@
         <mapping class="md.pharm.hibernate.product.ProductComment"/>
         <mapping class="md.pharm.hibernate.product.ProductHistory"/>
         <mapping class="md.pharm.hibernate.product.Objective"/>
-        <mapping class="md.pharm.hibernate.institution.Office"/>
-        <mapping class="md.pharm.hibernate.institution.ScheduleDay"/>
+        <mapping class="md.pharm.hibernate.institution.obsolente.Office"/>
+        <mapping class="md.pharm.hibernate.institution.obsolente.ScheduleDay"/>
         <mapping class="md.pharm.hibernate.user.User"/>
         <mapping class="md.pharm.hibernate.user.UserComment"/>
         <mapping class="md.pharm.hibernate.user.UserHistory"/>

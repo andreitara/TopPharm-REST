@@ -15,8 +15,7 @@ import java.util.Set;
  * Created by Andrei on 10/4/2015.
  */
 @Entity
-@Table(name="Product", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "name")})
+@Table(name="Product", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class Product {
 
     @Id
@@ -38,6 +37,7 @@ public class Product {
 
     @Column(name = "category")
     @Size(max = 50)
+    @JsonIgnore
     private String category;
 
     @Column(name = "message")
@@ -45,30 +45,19 @@ public class Product {
     private String message;
 
     @Column(name = "priority")
-    private int priority;
+    private String priority;
 
     @Column(name = "slideURL")
     @Size(max = 1024)
     private String slideURL;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Objective> objectives;
-
     @ManyToMany(fetch = FetchType.LAZY, mappedBy="products", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Task> tasks;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private Set<ProductComment> productComments;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private Set<ProductHistory> productHistories;
-
     public Product(){}
 
-    public Product(String name, String category, String boxQuantity, Double averagePrice, String message, int priority, String slideURL) {
+    public Product(String name, String category, String boxQuantity, Double averagePrice, String message, String priority, String slideURL) {
         this.name = name;
         this.category = category;
         this.boxQuantity = boxQuantity;
@@ -126,11 +115,11 @@ public class Product {
         this.message = message;
     }
 
-    public int getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
@@ -142,36 +131,12 @@ public class Product {
         this.slideURL = slideURL;
     }
 
-    public Set<Objective> getObjectives() {
-        return objectives;
-    }
-
-    public void setObjectives(Set<Objective> objectives) {
-        this.objectives = objectives;
-    }
-
     public Set<Task> getTasks() {
         return tasks;
     }
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
-    }
-
-    public Set<ProductComment> getProductComments() {
-        return productComments;
-    }
-
-    public void setProductComments(Set<ProductComment> productComments) {
-        this.productComments = productComments;
-    }
-
-    public Set<ProductHistory> getProductHistories() {
-        return productHistories;
-    }
-
-    public void setProductHistories(Set<ProductHistory> productHistories) {
-        this.productHistories = productHistories;
     }
 
     @Override
@@ -181,24 +146,26 @@ public class Product {
 
         Product product = (Product) o;
 
-        if (id != product.id) return false;
-        if (priority != product.priority) return false;
+        if (id != null ? !id.equals(product.id) : product.id != null) return false;
         if (name != null ? !name.equals(product.name) : product.name != null) return false;
         if (boxQuantity != null ? !boxQuantity.equals(product.boxQuantity) : product.boxQuantity != null) return false;
         if (averagePrice != null ? !averagePrice.equals(product.averagePrice) : product.averagePrice != null)
             return false;
-        return !(message != null ? !message.equals(product.message) : product.message != null);
+        if (category != null ? !category.equals(product.category) : product.category != null) return false;
+        if (message != null ? !message.equals(product.message) : product.message != null) return false;
+        return !(slideURL != null ? !slideURL.equals(product.slideURL) : product.slideURL != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (boxQuantity != null ? boxQuantity.hashCode() : 0);
         result = 31 * result + (averagePrice != null ? averagePrice.hashCode() : 0);
+        result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
-        result = 31 * result + priority;
+        result = 31 * result + (slideURL != null ? slideURL.hashCode() : 0);
         return result;
     }
 }

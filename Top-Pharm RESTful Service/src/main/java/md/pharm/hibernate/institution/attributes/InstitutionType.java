@@ -1,19 +1,20 @@
-package md.pharm.hibernate.doctor.attributes;
+package md.pharm.hibernate.institution.attributes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import md.pharm.hibernate.doctor.Doctor;
+import md.pharm.hibernate.institution.Institution;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
- * Created by c-andrtara on 12/17/2015.
+ * Created by Andrei on 12/22/2015.
  */
 
 @Entity
-@Table(name="Habit")
-public class Habit {
+@Table(name="InstitutionType")
+public class InstitutionType {
 
     @Id
     @GeneratedValue
@@ -22,17 +23,16 @@ public class Habit {
 
     @Column(name = "name")
     @NotNull
-    @Size(max = 256)
+    @Size(max = 100)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctorID")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "type", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Doctor doctor;
+    private Set<Institution> institutions;
 
-    public Habit(){}
+    public InstitutionType(){}
 
-    public Habit(String name){
+    public InstitutionType(String name) {
         this.name = name;
     }
 
@@ -52,12 +52,12 @@ public class Habit {
         this.name = name;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
+    public Set<Institution> getInstitutions() {
+        return institutions;
     }
 
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+    public void setInstitutions(Set<Institution> institutions) {
+        this.institutions = institutions;
     }
 
     @Override
@@ -65,10 +65,10 @@ public class Habit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Habit habit = (Habit) o;
+        InstitutionType that = (InstitutionType) o;
 
-        if (id != null ? !id.equals(habit.id) : habit.id != null) return false;
-        return !(name != null ? !name.equals(habit.name) : habit.name != null);
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        return !(name != null ? !name.equals(that.name) : that.name != null);
 
     }
 

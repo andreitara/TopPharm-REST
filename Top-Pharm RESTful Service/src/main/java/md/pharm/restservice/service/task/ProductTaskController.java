@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,26 +22,30 @@ import java.util.Set;
 @RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/task/{taskID}/product/")
 public class ProductTaskController {
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<Response<Set<Product>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "taskID") Integer taskID){
+    @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
+    public ResponseEntity<Response<List<Product>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                         @PathVariable(value = "taskID") Integer taskID,
+                                                         @PathVariable("byField") String byField,
+                                                         @PathVariable("ascending") boolean ascending){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        Task task = manageTask.getTaskByID(taskID);
-        if(task!=null){
-            Set<Product> products = task.getProducts();
+        List<Product> list = manageTask.getProductsByTaskID(taskID, byField, ascending);
+        if(list!=null){
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.setObject(products);
-            return new ResponseEntity<Response<Set<Product>>>(response, HttpStatus.OK);
+            response.setObject(list);
+            return new ResponseEntity<Response<List<Product>>>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<Set<Product>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Product>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/add/{productID}", method = RequestMethod.POST)
-    public ResponseEntity<Response> add(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "taskID") Integer taskID, @PathVariable(value = "productID") Integer productID){
+    public ResponseEntity<Response> add(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                        @PathVariable(value = "taskID") Integer taskID,
+                                        @PathVariable(value = "productID") Integer productID){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
         Task task = manageTask.getTaskByID(taskID);
@@ -66,7 +71,9 @@ public class ProductTaskController {
     }
 
     @RequestMapping(value = "/delete/{productID}", method = RequestMethod.DELETE)
-    public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country, @PathVariable(value = "taskID") Integer taskID, @PathVariable(value = "productID") Integer productID){
+    public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                           @PathVariable(value = "taskID") Integer taskID,
+                                           @PathVariable(value = "productID") Integer productID){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
         Task task = manageTask.getTaskByID(taskID);

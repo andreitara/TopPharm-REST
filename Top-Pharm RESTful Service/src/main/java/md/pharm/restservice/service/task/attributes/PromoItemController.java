@@ -22,11 +22,13 @@ import java.util.Set;
 @RequestMapping(value = StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/medical/promoitem/")
 public class PromoItemController{
 
-        @RequestMapping(value = "/all", method = RequestMethod.GET)
-        public ResponseEntity<Response<List<PromoItem>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+        @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
+        public ResponseEntity<Response<List<PromoItem>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                                @PathVariable("byField") String byField,
+                                                                @PathVariable("ascending") boolean ascending) {
             Response response = new Response<>();
             PromoItemManage manageDoctor = new PromoItemManage(country);
-            List<PromoItem> list = manageDoctor.getAll();
+            List<PromoItem> list = manageDoctor.getAll(byField, ascending);
             if (list != null) {
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);

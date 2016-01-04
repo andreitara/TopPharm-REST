@@ -1,8 +1,10 @@
 package md.pharm.hibernate.product;
 
+import md.pharm.hibernate.institution.Institution;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
@@ -20,13 +22,23 @@ public class ManageProduct {
         this.country = Country.valueOf(country);
     }
 
-    public List<Product> getProducts(){
+    public List<Product> getProducts(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Product> list = null;
         try{
             tx = session.beginTransaction();
-            list = session.createQuery("FROM md.pharm.hibernate.product.Product").list();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
+
+            Criteria criteria = session.createCriteria(Product.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order);
+
+            list = criteria.list();
+
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();
@@ -36,33 +48,24 @@ public class ManageProduct {
         return list;
     }
 
-    public List<Product> getProductsByPartOfCategory(String category){
+    public List<Product> getProductsByPriority(String priority, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<Product> list = null;
         try{
             tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(Product.class)
-                    .add(Restrictions.like("category", "%" + category + "%"));
-            list = criteria.list();
-            tx.commit();
-        }catch (HibernateException e){
-            if(tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-        }
-        return list;
-    }
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
 
-    public List<Product> getProductsByPartOfName(String name){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        List<Product> list = null;
-        try{
-            tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(Product.class)
-                    .add(Restrictions.like("name", "%" + name + "%"));
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .add(Restrictions.eq("priority", priority))
+                    .addOrder(order);
+
             list = criteria.list();
+
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();
@@ -212,7 +215,7 @@ public class ManageProduct {
         try{
             tx = session.beginTransaction();
             product = (Product)session.get(Product.class, productID);
-            list = product.getObjectives();
+            //list = product.getObjectives();
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();

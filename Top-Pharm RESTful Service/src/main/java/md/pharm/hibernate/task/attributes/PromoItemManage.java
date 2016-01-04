@@ -1,11 +1,11 @@
 package md.pharm.hibernate.task.attributes;
 
+import md.pharm.hibernate.doctor.attributes.GeneralType;
 import md.pharm.hibernate.doctor.attributes.Speciality;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
+import org.hibernate.criterion.Order;
 
 import java.util.List;
 
@@ -20,13 +20,21 @@ public class PromoItemManage {
         this.country = Country.valueOf(country);
     }
 
-    public List<PromoItem> getAll(){
+    public List<PromoItem> getAll(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<PromoItem> list = null;
         try{
             tx = session.beginTransaction();
-            list = session.createQuery("FROM md.pharm.hibernate.task.attributes.PromoItem").list();
+            Order order = null;
+            if(ascending) order = Order.asc(field);
+            else order = Order.desc(field);
+            Criteria criteria = session.createCriteria(PromoItem.class)
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order);
+
+            list = criteria.list();
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();

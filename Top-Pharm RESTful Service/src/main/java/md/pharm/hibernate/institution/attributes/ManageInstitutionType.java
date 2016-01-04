@@ -1,6 +1,7 @@
-package md.pharm.hibernate.doctor.attributes;
+package md.pharm.hibernate.institution.attributes;
 
-import md.pharm.hibernate.doctor.Doctor;
+import md.pharm.hibernate.common.Address;
+import md.pharm.hibernate.institution.Institution;
 import md.pharm.hibernate.task.Task;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
@@ -11,28 +12,28 @@ import org.hibernate.criterion.Restrictions;
 import java.util.List;
 
 /**
- * Created by Andrei on 9/5/2015.
+ * Created by Andrei on 9/4/2015.
  */
-public class ManageSpeciality {
-    private Session session;
-    Country country;
+public class ManageInstitutionType {
 
-    public ManageSpeciality(String country){
+    private Session session;
+    private Country country;
+
+    public ManageInstitutionType(String country){
         this.country = Country.valueOf(country);
     }
 
-    public List<Speciality> getAll(String field, boolean ascending){
+    public List<InstitutionType> getInstitutions(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Speciality> list = null;
+        List<InstitutionType> list = null;
         try{
             tx = session.beginTransaction();
-
             Order order = null;
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Speciality.class)
+            Criteria criteria = session.createCriteria(InstitutionType.class)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order);
@@ -48,74 +49,70 @@ public class ManageSpeciality {
         return list;
     }
 
-    public Integer add(Speciality speciality){
+    public Integer addInstitution(InstitutionType institution){
         session = HibernateUtil.getSession(country);
-        boolean flag = false;
         Transaction tx = null;
-        Integer doctorID = null;
+        Integer institutionID = null;
         try{
             tx = session.beginTransaction();
-            doctorID = (Integer) session.save(speciality);
+            institutionID = (Integer) session.save(institution);
             tx.commit();
-            flag = true;
         }catch(HibernateException e){
             if(tx!=null)tx.rollback();
             e.printStackTrace();
         }finally {
         }
-        if(flag) return doctorID;
-        else return null;
+        return institutionID;
     }
 
-    public boolean update(Speciality speciality){
+    public boolean updateInstitution(InstitutionType institution){
         session = HibernateUtil.getSession(country);
         boolean flag = false;
         Transaction tx = null;
         try{
             tx = session.beginTransaction();
-            session.update(speciality);
+            session.update(institution);
             tx.commit();
             flag = true;
         }catch(HibernateException e){
             if(tx!=null)tx.rollback();
             e.printStackTrace();
-            flag = false;
         }finally {
         }
         return flag;
     }
 
-    public boolean delete(Speciality speciality){
+    public InstitutionType getInstitutionByID(int id){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        boolean flag = false;
+        InstitutionType institution = null;
         try{
             tx = session.beginTransaction();
-            session.delete(speciality);
-            tx.commit();
-            flag = true;
-        }catch(HibernateException e){
-            if(tx!=null)tx.rollback();
-            e.printStackTrace();
-            flag = false;
-        }finally {
-        }
-        return flag;
-    }
-
-    public Speciality getByID(int id){
-        session = HibernateUtil.getSession(country);
-        Transaction tx = null;
-        Speciality speciality = null;
-        try{
-            tx = session.beginTransaction();
-            speciality = (Speciality)session.get(Speciality.class, id);
+            institution = (InstitutionType)session.get(InstitutionType.class, id);
             tx.commit();
         }catch (HibernateException e){
             if(tx!=null) tx.rollback();
             e.printStackTrace();
         }finally {
         }
-        return speciality;
+        return institution;
     }
+
+    public boolean deleteInstitution(InstitutionType institution){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            session.delete(institution);
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return flag;
+    }
+
 }

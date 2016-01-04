@@ -45,8 +45,6 @@
         <mapping class="md.pharm.hibernate.product.ProductComment"/>
         <mapping class="md.pharm.hibernate.product.ProductHistory"/>
         <mapping class="md.pharm.hibernate.product.Objective"/>
-        <mapping class="md.pharm.hibernate.institution.Office"/>
-        <mapping class="md.pharm.hibernate.institution.ScheduleDay"/>
         <mapping class="md.pharm.hibernate.user.User"/>
         <mapping class="md.pharm.hibernate.user.UserComment"/>
         <mapping class="md.pharm.hibernate.user.UserHistory"/>
@@ -54,10 +52,12 @@
         <mapping class="md.pharm.hibernate.institution.Institution"/>
         <mapping class="md.pharm.hibernate.institution.InstitutionComment"/>
         <mapping class="md.pharm.hibernate.institution.InstitutionHistory"/>
+        <mapping class="md.pharm.hibernate.institution.attributes.InstitutionType"/>
         <mapping class="md.pharm.hibernate.doctor.Doctor"/>
         <mapping class="md.pharm.hibernate.doctor.DoctorComment"/>
         <mapping class="md.pharm.hibernate.doctor.DoctorHistory"/>
         <mapping class="md.pharm.hibernate.doctor.attributes.GeneralType"/>
+        <mapping class="md.pharm.hibernate.doctor.attributes.Comment"/>
         <mapping class="md.pharm.hibernate.doctor.attributes.Habit"/>
         <mapping class="md.pharm.hibernate.doctor.attributes.PersonalInfo"/>
         <mapping class="md.pharm.hibernate.doctor.attributes.Speciality"/>
