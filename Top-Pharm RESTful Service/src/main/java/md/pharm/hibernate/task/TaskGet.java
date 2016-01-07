@@ -11,7 +11,6 @@ import md.pharm.hibernate.task.attributes.PromoItem;
 import md.pharm.hibernate.task.attributes.Sample;
 import md.pharm.hibernate.user.User;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -23,7 +22,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name="Task")
-public class Task {
+public class TaskGet {
 
     @Id
     @GeneratedValue
@@ -40,6 +39,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "typeID")
+    @JsonIgnore
     private GeneralType type;
 
     @Column(name = "repeatField")
@@ -60,14 +60,17 @@ public class Task {
 
     @Column(name = "description")
     @Size(max = 512)
+    @JsonIgnore
     private String description;
 
     @Column(name = "address")
     @Size(max = 256)
+    @JsonIgnore
     private String address;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userID")
+    @JsonIgnore
     private User user;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -77,10 +80,12 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customerID")
+    @JsonIgnore
     private Doctor customer;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "institutionID")
+    @JsonIgnore
     private Institution institution;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -114,9 +119,9 @@ public class Task {
     @JsonIgnore
     private Set<NextObjective> objectives;
 
-    public Task(){}
+    public TaskGet(){}
 
-    public Task(String name, String category, GeneralType type, String repeat, boolean isSubmitted, boolean isCapital, int visitNumbers, Date startDate, Date endDate, String description) {
+    public TaskGet(String name, String category, GeneralType type, String repeat, boolean isSubmitted, boolean isCapital, int visitNumbers, Date startDate, Date endDate, String description) {
         this.name = name;
         this.category = category;
         this.type = type;
@@ -128,7 +133,7 @@ public class Task {
         this.description = description;
     }
 
-    public Task(TaskCreate taskCreate){
+    public TaskGet(TaskCreate taskCreate){
         this.id = taskCreate.getId();
         this.name = taskCreate.getName();
         this.category = taskCreate.getCategory();
@@ -151,6 +156,34 @@ public class Task {
 
         if(taskCreate.getInstitutionID()!=null)
             this.institution = new Institution(taskCreate.getInstitutionID());
+    }
+
+    public String getInstitutionName(){
+        if(institution!=null)
+            return institution.getShortName();
+        else
+            return null;
+    }
+
+    public String getCustomerName(){
+        if(customer!=null)
+            return customer.getName();
+        else
+            return null;
+    }
+
+    public String getTypeName(){
+        if(type!=null)
+            return type.getName();
+        else
+            return null;
+    }
+
+    public String getUserName(){
+        if(user!=null)
+            return user.getName();
+        else
+            return null;
     }
 
     public Integer getId() {
@@ -334,7 +367,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Task task = (Task) o;
+        TaskGet task = (TaskGet) o;
 
         if (isSubmitted != task.isSubmitted) return false;
         if (isCapital != task.isCapital) return false;

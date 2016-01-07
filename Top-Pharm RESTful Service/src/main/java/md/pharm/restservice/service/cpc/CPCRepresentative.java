@@ -1,28 +1,21 @@
 package md.pharm.restservice.service.cpc;
 
-import md.pharm.hibernate.doctor.attributes.Speciality;
-
-import javax.persistence.*;
-
 /**
  * Created by Andrei on 1/4/2016.
  */
 
-public class CPCCustomer {
+public class CPCRepresentative {
 
     private Integer id;
-    private String name;
+    private String representativeName;
     private Integer plannedActivities;
     private Integer actualActivities;
     private Integer callsToMake;
     private Double cpc;
-    private String targetClass;
-    private String targetSubClass;
-    private String speciality;
     private Integer ydtPlanedActivities;
     private Integer ydtActualActivities;
 
-    public CPCCustomer(){};
+    public CPCRepresentative(){};
 
     public Integer getId() {
         return id;
@@ -32,12 +25,12 @@ public class CPCCustomer {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getRepresentativeName() {
+        return representativeName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRepresentativeName(String representativeName) {
+        this.representativeName = representativeName;
     }
 
     public Integer getPlannedActivities() {
@@ -72,29 +65,6 @@ public class CPCCustomer {
         this.cpc = cpc;
     }
 
-    public String getTargetClass() {
-        return targetClass;
-    }
-
-    public void setTargetClass(String targetClass) {
-        this.targetClass = targetClass;
-    }
-
-    public String getTargetSubClass() {
-        return targetSubClass;
-    }
-
-    public void setTargetSubClass(String targetSubClass) {
-        this.targetSubClass = targetSubClass;
-    }
-
-    public String getSpeciality() {
-        return speciality;
-    }
-
-    public void setSpeciality(String speciality) {
-        this.speciality = speciality;
-    }
 
     public Integer getYdtPlanedActivities() {
         return ydtPlanedActivities;
@@ -117,20 +87,17 @@ public class CPCCustomer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CPCCustomer that = (CPCCustomer) o;
+        CPCRepresentative that = (CPCRepresentative) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (representativeName != null ? !representativeName.equals(that.representativeName) : that.representativeName != null)
+            return false;
         if (plannedActivities != null ? !plannedActivities.equals(that.plannedActivities) : that.plannedActivities != null)
             return false;
         if (actualActivities != null ? !actualActivities.equals(that.actualActivities) : that.actualActivities != null)
             return false;
         if (callsToMake != null ? !callsToMake.equals(that.callsToMake) : that.callsToMake != null) return false;
         if (cpc != null ? !cpc.equals(that.cpc) : that.cpc != null) return false;
-        if (targetClass != null ? !targetClass.equals(that.targetClass) : that.targetClass != null) return false;
-        if (targetSubClass != null ? !targetSubClass.equals(that.targetSubClass) : that.targetSubClass != null)
-            return false;
-        if (speciality != null ? !speciality.equals(that.speciality) : that.speciality != null) return false;
         if (ydtPlanedActivities != null ? !ydtPlanedActivities.equals(that.ydtPlanedActivities) : that.ydtPlanedActivities != null)
             return false;
         return !(ydtActualActivities != null ? !ydtActualActivities.equals(that.ydtActualActivities) : that.ydtActualActivities != null);
@@ -140,14 +107,11 @@ public class CPCCustomer {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (representativeName != null ? representativeName.hashCode() : 0);
         result = 31 * result + (plannedActivities != null ? plannedActivities.hashCode() : 0);
         result = 31 * result + (actualActivities != null ? actualActivities.hashCode() : 0);
         result = 31 * result + (callsToMake != null ? callsToMake.hashCode() : 0);
         result = 31 * result + (cpc != null ? cpc.hashCode() : 0);
-        result = 31 * result + (targetClass != null ? targetClass.hashCode() : 0);
-        result = 31 * result + (targetSubClass != null ? targetSubClass.hashCode() : 0);
-        result = 31 * result + (speciality != null ? speciality.hashCode() : 0);
         result = 31 * result + (ydtPlanedActivities != null ? ydtPlanedActivities.hashCode() : 0);
         result = 31 * result + (ydtActualActivities != null ? ydtActualActivities.hashCode() : 0);
         return result;

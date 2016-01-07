@@ -62,15 +62,13 @@
         <mapping class="md.pharm.hibernate.doctor.attributes.PersonalInfo"/>
         <mapping class="md.pharm.hibernate.doctor.attributes.Speciality"/>
         <mapping class="md.pharm.hibernate.task.Task"/>
+        <mapping class="md.pharm.hibernate.task.TaskGet"/>
         <mapping class="md.pharm.hibernate.task.TaskComment"/>
         <mapping class="md.pharm.hibernate.task.TaskHistory"/>
         <mapping class="md.pharm.hibernate.task.attributes.Memo"/>
         <mapping class="md.pharm.hibernate.task.attributes.NextObjective"/>
         <mapping class="md.pharm.hibernate.task.attributes.PromoItem"/>
         <mapping class="md.pharm.hibernate.task.attributes.Sample"/>
-        <mapping class="md.pharm.hibernate.training.Training"/>
-        <mapping class="md.pharm.hibernate.training.TrainingComment"/>
-        <mapping class="md.pharm.hibernate.training.TrainingHistory"/>
         <mapping class="md.pharm.hibernate.message.Message"/>
         <mapping class="md.pharm.hibernate.connection.Connection"/>
     </session-factory>

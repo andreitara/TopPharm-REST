@@ -33,6 +33,8 @@ public class GeneralType {
 
     public GeneralType(){}
 
+    public GeneralType(Integer id){ this.id = id; }
+
     public GeneralType(String name) {
         this.name = name;
     }

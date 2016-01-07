@@ -59,18 +59,22 @@ public class User{
     private String email;
 
     @Column(name = "phone1")
-    @Size(max = 20)
+    @Size(max = 40)
+    @Pattern(regexp = "^\\+?([\\(\\) 0-9])+$", message = "Invalid phone number")
     private String phone1;
 
     @Column(name = "phone2")
-    @Size(max = 20)
+    @Size(max = 40)
+    @Pattern(regexp = "^\\+?([\\(\\) 0-9])+$", message = "Invalid phone number")
     private String phone2;
 
     @Column(name = "hasUnreadMessages")
+    @JsonIgnore
     private boolean hasUnreadMessages;
 
     @Column(name = "country")
     @Size(min = 2, max = 5)
+    @JsonIgnore
     private String country;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -80,10 +84,6 @@ public class User{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<Task> tasks;
-
-    //@OneToOne(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    //@JsonIgnore
-    //private Permission permission;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "from", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -101,6 +101,10 @@ public class User{
     public User() {
     }
 
+    public User(Integer id) {
+        this.id = id;
+    }
+
     public User(String rights, String name, String address, Date birthDate, String username, String password, String email, String phone1, String phone2, String country) {
         this.rights = rights;
         this.name = name;
@@ -113,13 +117,6 @@ public class User{
         this.phone2 = phone2;
         this.country = country;
     }
-
-    /*
-    public void createDefaultPermission(){
-        Permission permission = new Permission(this,true,false,true,false,true,false,false);
-        this.permission = permission;
-    }
-    */
 
     public Integer getId() {
         return id;

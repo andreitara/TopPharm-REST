@@ -39,12 +39,6 @@ public class Message {
     @NotNull
     private String message;
 
-    @Transient
-    private Integer fromID;
-
-    @Transient
-    private Integer toID;
-
     public Message(){}
 
     public Message(User from, User to, Date date, String message) {
@@ -66,9 +60,24 @@ public class Message {
         return from;
     }
 
+    public Integer getFromID(){
+        if(from!=null)
+            return from.getId();
+        else
+            return null;
+    }
+
+    public Integer getToID(){
+        if(to!=null)
+            return to.getId();
+        else
+            return null;
+    }
+
+
+
     public void setFrom(User from) {
         this.from = from;
-        if(from!=null) fromID = from.getId();
     }
 
     public User getTo() {
@@ -77,7 +86,6 @@ public class Message {
 
     public void setTo(User to) {
         this.to = to;
-        if(to!=null) toID = to.getId();
     }
 
     public Date getDate() {
@@ -94,24 +102,6 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Integer getFromID() {
-        if(from!=null) return from.getId();
-        return fromID;
-    }
-
-    public void setFromID(Integer fromID) {
-        this.fromID = fromID;
-    }
-
-    public Integer getToID() {
-        if(to!=null) return to.getId();
-        return toID;
-    }
-
-    public void setToID(Integer toID) {
-        this.toID = toID;
     }
 
     @Override

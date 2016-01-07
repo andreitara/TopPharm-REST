@@ -1,11 +1,13 @@
 package md.pharm.restservice.service.message;
 
+import md.pharm.hibernate.doctor.ManageDoctor;
 import md.pharm.hibernate.message.ManageMessage;
 import md.pharm.hibernate.message.Message;
 import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.validator.ValidatorUtil;
 import md.pharm.hibernate.validator.Violation;
+import md.pharm.restservice.service.cpc.CPCCustomer;
 import md.pharm.util.Response;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.StaticStrings;
@@ -27,30 +29,76 @@ import java.util.Set;
 @RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "toppharm/v1/message")
 public class MessageController {
 
-    @RequestMapping(value = "from/{fromID}/to/{toID}/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/representative/{byField}/{ascending}", method = RequestMethod.GET)
+    public ResponseEntity<Response<List<Representative>>> getRepresentatives(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                                            @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username,
+                                                                            @PathVariable("byField") String byField,
+                                                                            @PathVariable("ascending") boolean ascending){
+        Response response = new Response();
+        ManageMessage manageMessage = new ManageMessage(country);
+        List<CPCCustomer> list = manageMessage.getAllRepresentatives(1, byField, ascending);
+        if(list!=null){
+            response.setResponseCode(ErrorCodes.OK.name);
+            response.setResponseMessage(ErrorCodes.OK.userMessage);
+            response.setObject(list);
+            return new ResponseEntity<Response<List<Representative>>>(response, HttpStatus.OK);
+        }else{
+            response.setResponseCode(ErrorCodes.InternalError.name);
+            response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+            return new ResponseEntity<Response<List<Representative>>>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/representative/hasUnreadMessages", method = RequestMethod.GET)
+    public ResponseEntity<Response<Boolean>> hasUnreadMessages(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                               @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username){
+        Response response = new Response();
+        ManageUser manageUser = new ManageUser(country);
+        User user = manageUser.getUserByUsername(username);
+        if(user!=null){
+            response.setResponseCode(ErrorCodes.OK.name);
+            response.setResponseMessage(ErrorCodes.OK.userMessage);
+            response.setObject(user.isHasUnreadMessages());
+            return new ResponseEntity<Response<Boolean>>(response, HttpStatus.OK);
+        }else{
+            response.setResponseCode(ErrorCodes.InternalError.name);
+            response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+            return new ResponseEntity<Response<Boolean>>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "to/{toID}/add", method = RequestMethod.POST)
     public ResponseEntity<Response<Integer>> create(@RequestBody Message message,
                                                     @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                    @PathVariable(value = "fromID") Integer fromID,
+                                                    @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username,
                                                     @PathVariable(value = "toID") Integer toID) {
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<Message>().getViolations(message);
         if (violations.size() == 0) {
             ManageUser manageUser = new ManageUser(country);
-            User from = manageUser.getUserByID(fromID);
+            User from = manageUser.getUserByUsername(username);
             User to = manageUser.getUserByID(toID);
             if (from != null && to != null) {
                 ManageMessage manage = new ManageMessage(country);
                 if (message.getId() == null) {
                     if (true) {//TODO condition if not exists this doctor in DB
-                        message.setDate(Calendar.getInstance().getTime());
+                        if(message.getDate()==null)
+                            message.setDate(Calendar.getInstance().getTime());
                         message.setFrom(from);
                         message.setTo(to);
                         Integer id = manage.addMessage(message);
                         if (id != null) {
-                            response.setResponseCode(ErrorCodes.Created.name);
-                            response.setResponseMessage(ErrorCodes.Created.userMessage);
-                            response.setObject(id);
-                            return new ResponseEntity<Response<Integer>>(response, HttpStatus.CREATED);
+                            to.setHasUnreadMessages(true);
+                            if(manageUser.updateUser(to)) {
+                                response.setResponseCode(ErrorCodes.Created.name);
+                                response.setResponseMessage(ErrorCodes.Created.userMessage);
+                                response.setObject(id);
+                                return new ResponseEntity<Response<Integer>>(response, HttpStatus.CREATED);
+                            }else{
+                                response.setResponseCode(ErrorCodes.InternalError.name);
+                                response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+                                return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
+                            }
                         } else {
                             response.setResponseCode(ErrorCodes.InternalError.name);
                             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
@@ -79,7 +127,53 @@ public class MessageController {
         }
     }
 
-    @RequestMapping(value = "from/{fromID}/to/{toID}/start/{start}/end/{end}", method = RequestMethod.GET)
+    @RequestMapping(value = "from/{fromID}/{firstResult}/{maxResult}", method = RequestMethod.GET)
+    public ResponseEntity<Response<List<Message>>> getAllMess(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                              @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username,
+                                                              @PathVariable(value = "fromID") Integer fromID,
+                                                              @PathVariable(value = "firstResult") Integer firstResult,
+                                                              @PathVariable(value = "maxResult") Integer maxResult) {
+        Response response = new Response();
+        ManageMessage manageMessage = new ManageMessage(country);
+        ManageUser manageUser = new ManageUser(country);
+        User to = manageUser.getUserByUsername(username);
+        List<Message> messages = manageMessage.getMessagesBidirectional(fromID, to.getId(), firstResult, maxResult);
+        if (messages != null) {
+            response.setResponseCode(ErrorCodes.OK.name);
+            response.setResponseMessage(ErrorCodes.OK.userMessage);
+            response.setObject(messages);
+            return new ResponseEntity<Response<List<Message>>>(response, HttpStatus.OK);
+        } else {
+            response.setResponseCode(ErrorCodes.InternalError.name);
+            response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+            return new ResponseEntity<Response<List<Message>>>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "from/{fromID}/latest/{maxResult}", method = RequestMethod.GET)
+    public ResponseEntity<Response<List<Message>>> getLatestMess(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                              @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username,
+                                                              @PathVariable(value = "fromID") Integer fromID,
+                                                              @PathVariable(value = "maxResult") Integer maxResult) {
+        Response response = new Response();
+        ManageMessage manageMessage = new ManageMessage(country);
+        ManageUser manageUser = new ManageUser(country);
+        User to = manageUser.getUserByUsername(username);
+        List<Message> messages = manageMessage.getLatestMessagesBidirectional(fromID, to.getId(),maxResult);
+        if (messages != null) {
+            response.setResponseCode(ErrorCodes.OK.name);
+            response.setResponseMessage(ErrorCodes.OK.userMessage);
+            response.setObject(messages);
+            return new ResponseEntity<Response<List<Message>>>(response, HttpStatus.OK);
+        } else {
+            response.setResponseCode(ErrorCodes.InternalError.name);
+            response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+            return new ResponseEntity<Response<List<Message>>>(response, HttpStatus.OK);
+        }
+    }
+
+
+    //@RequestMapping(value = "from/{fromID}/to/{toID}/start/{start}/end/{end}", method = RequestMethod.GET)
     public ResponseEntity<Response<List<Message>>> getAllFromStartToEnd(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                   @PathVariable(value = "fromID") Integer fromID,
                                                   @PathVariable(value = "toID") Integer toID,
@@ -100,7 +194,7 @@ public class MessageController {
         }
     }
 
-    @RequestMapping(value = "user/{user1ID}/user/{user2ID}/start/{start}/end/{end}", method = RequestMethod.GET)
+    //@RequestMapping(value = "user/{user1ID}/user/{user2ID}/start/{start}/end/{end}", method = RequestMethod.GET)
     public ResponseEntity<Response<List<Message>>> getAllBidirectionalFromStartToEnd(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                @PathVariable(value = "user1ID") Integer user1ID,
                                                                @PathVariable(value = "user2ID") Integer user2ID,

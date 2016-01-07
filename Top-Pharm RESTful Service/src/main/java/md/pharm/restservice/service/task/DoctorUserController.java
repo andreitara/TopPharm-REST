@@ -17,11 +17,11 @@ import java.util.Set;
 /**
  * Created by Andrei on 10/17/2015.
  */
-@RestController
-@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/user/{userID}/doctor/")
+//@RestController
+//@RequestMapping(StaticStrings.PORT_FOR_ALL_CONTROLLERS + "/toppharm/v1/user/{userID}/doctor/")
 public class DoctorUserController {
 
-    @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
+    //@RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
     public ResponseEntity<Response<Set<Doctor>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                         @PathVariable(value = "userID") int userID,
                                                         @PathVariable("byField") String byField,
@@ -41,7 +41,7 @@ public class DoctorUserController {
         }
     }
 
-    @RequestMapping(value = "/add/{doctorID}", method = RequestMethod.POST)
+    //@RequestMapping(value = "/add/{doctorID}", method = RequestMethod.POST)
     public ResponseEntity<Response> add(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                  @PathVariable(value = "userID") int userID,
                                  @PathVariable(value = "doctorID") int doctorID){
@@ -68,7 +68,7 @@ public class DoctorUserController {
         }
     }
 
-    @RequestMapping(value = "/delete/{doctorID}", method = RequestMethod.DELETE)
+    //@RequestMapping(value = "/delete/{doctorID}", method = RequestMethod.DELETE)
     public ResponseEntity<Response> delete(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                     @PathVariable(value = "userID") int userID,
                                     @PathVariable(value = "doctorID") int doctorID){

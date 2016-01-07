@@ -41,13 +41,13 @@ public class Institution {
     private InstitutionType type;
 
     @Column(name = "phone1")
-    @Pattern(regexp = "^\\+?([0-9])+$")
-    @Size(max = 20)
+    @Pattern(regexp = "^\\+?([\\(\\) 0-9])+$")
+    @Size(max = 40)
     private String phone1;
 
     @Column(name = "phone2")
-    @Pattern(regexp = "^\\+?([0-9])+$")
-    @Size(max = 20)
+    @Pattern(regexp = "^\\+?([\\(\\) 0-9])+$")
+    @Size(max = 40)
     private String phone2;
 
     @Column(name = "city")
@@ -70,6 +70,8 @@ public class Institution {
     private Set<InstitutionHistory> institutionHistories;
 
     public Institution(){}
+
+    public Institution(Integer id){ this.id = id; }
 
     public Institution(String longName, String shortName, InstitutionType type, String phone1, String phone2, String city, String street) {
         this.longName = longName;

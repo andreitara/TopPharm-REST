@@ -1,9 +1,6 @@
 package md.pharm.restservice.service.task;
 
-import md.pharm.hibernate.task.ManageTask;
-import md.pharm.hibernate.task.Task;
-import md.pharm.hibernate.task.TaskComment;
-import md.pharm.hibernate.task.TaskHistory;
+import md.pharm.hibernate.task.*;
 import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.validator.ValidatorUtil;
@@ -31,29 +28,30 @@ import java.util.Set;
 public class TaskController {
 
     @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                        @PathVariable("byField") String byField,
                                                        @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasks(byField, ascending);
+        List<TaskGet> list = manageTask.getTasks(byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<Response<Integer>> create(@RequestBody Task task,
+    public ResponseEntity<Response<Integer>> create(@RequestBody TaskCreate taskCreate,
                                                     @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username,
                                                     @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response();
+        Task task = new Task(taskCreate);
         Set<Violation> violations = new ValidatorUtil<Task>().getViolations(task);
         if (violations.size() == 0) {
             ManageTask manage = new ManageTask(country);
@@ -100,10 +98,11 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Response> update(@RequestBody Task task,
+    public ResponseEntity<Response> update(@RequestBody TaskCreate taskCreate,
                                            @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username,
                                            @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response();
+        Task task = new Task(taskCreate);
         Set<Violation> violations = new ValidatorUtil<Task>().getViolations(task);
         if (violations.size() == 0) {
             ManageTask manage = new ManageTask(country);
@@ -114,8 +113,12 @@ public class TaskController {
                 if (taskFromDB != null) {
                     if (true) {
                         task.setAttendees(taskFromDB.getAttendees());
-                        task.setInstitution(taskFromDB.getInstitution());
                         task.setProducts(taskFromDB.getProducts());
+                        task.setSamples(taskFromDB.getSamples());
+                        task.setPromoItems(taskFromDB.getPromoItems());
+                        task.setObjectives(taskFromDB.getObjectives());
+                        task.setMemos(taskFromDB.getMemos());
+
                         if (manage.updateTask(task)) {
                             TaskHistory taskHistory = new TaskHistory(task, Calendar.getInstance().getTime(), "Task was updated by " + user.getName());
                             manage.addTaskHistory(taskHistory);

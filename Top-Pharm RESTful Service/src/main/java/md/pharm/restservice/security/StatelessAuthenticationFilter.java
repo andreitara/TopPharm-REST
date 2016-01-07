@@ -6,6 +6,7 @@ import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.user.permission.Permission;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.StaticStrings;
+import md.pharm.util.TokenUtil;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.*;
@@ -23,18 +24,20 @@ class StatelessAuthenticationFilter extends GenericFilterBean {
 			chain.doFilter(req, res);
 		}else {
 			String token = ((HttpServletRequest) req).getHeader(StaticStrings.HEADER_SECURITY_TOKEN);
+			String username = "";
+			if(TokenUtil.isValidToken(token))
+				username = TokenUtil.getUsernameFromToken(token);
 			ManageUser manageUser = new ManageUser("MD");
-			User user = manageUser.getUserByConnectionKey(token);
+			User user = manageUser.getUserByUsername(username);
 			if(user==null){
 				manageUser = new ManageUser("RO");
-				user = manageUser.getUserByConnectionKey(token);
+				user = manageUser.getUserByUsername(username);
 			}
 			if(user != null){
 				//Permission permission = user.getPermission();
 				//if(permission!=null && userHasPermission(permission,httpRequest)){
 				if(true){
 					HeaderMapRequestWrapper wrapper = new HeaderMapRequestWrapper(httpRequest);
-					String username = user.getUsername();
 					String country = user.getCountry();
 					wrapper.addHeader(StaticStrings.HEADER_USERNAME, username);
 					wrapper.addHeader(StaticStrings.HEADER_COUNTRY, country);

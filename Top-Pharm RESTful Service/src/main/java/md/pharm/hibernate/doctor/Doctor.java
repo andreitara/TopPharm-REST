@@ -42,18 +42,18 @@ public class Doctor {
     private Date birthDate;
 
     @Column(name = "phone1")
-    @Pattern(regexp = "^\\+?([0-9])+$", message = "Invalid phone number")
-    @Size(max = 20)
+    @Pattern(regexp = "^\\+?([\\(\\) 0-9])+$", message = "Invalid phone number")
+    @Size(max = 40)
     private String phone1;
 
     @Column(name = "phone2")
-    @Pattern(regexp = "^\\+?([0-9])+$", message = "Invalid phone number")
-    @Size(max = 20)
+    @Pattern(regexp = "^\\+?([\\(\\) 0-9])+$", message = "Invalid phone number")
+    @Size(max = 40)
     private String phone2;
 
     @Column(name = "officePhone")
-    @Pattern(regexp = "^\\+?([0-9])+$", message = "Invalid phone number")
-    @Size(max = 20)
+    @Pattern(regexp = "^\\+?([\\(\\) 0-9])+$", message = "Invalid phone number")
+    @Size(max = 40)
     private String officePhone;
 
     @Column(name = "email")
@@ -106,6 +106,8 @@ public class Doctor {
     private String subType;
 
     public Doctor(){}
+
+    public Doctor(Integer id){this.id = id;}
 
     public Doctor(String name, String city, String address, Date birthDate, String phone1, String phone2, String officePhone, String email, Speciality speciality, String type, String subType) {
         this.name = name;

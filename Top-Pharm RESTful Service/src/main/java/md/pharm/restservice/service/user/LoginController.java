@@ -9,6 +9,7 @@ import md.pharm.hibernate.user.login.UserLogin;
 import md.pharm.util.Response;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.StaticStrings;
+import md.pharm.util.TokenUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,17 +39,17 @@ public class LoginController {
             }
             if(userFromDB!=null) {
                 if (userFromDB.getPassword().equals(user.getPassword())) {
-                    Connection connectionFromDB = userFromDB.getConnection();
-                    if(connectionFromDB!=null){
-                        new ManageConnection(userFromDB.getCountry()).deleteConnection(connectionFromDB);
-                    }
-                    Connection connection = new Connection();
-                    userFromDB.setConnection(connection);
-                    connection.setUser(userFromDB);
-                    manageConnection.addConnection(connection);
+                    //Connection connectionFromDB = userFromDB.getConnection();
+                    //if(connectionFromDB!=null){
+                        //new ManageConnection(userFromDB.getCountry()).deleteConnection(connectionFromDB);
+                    //}
+                    //Connection connection = new Connection();
+                    //userFromDB.setConnection(connection);
+                    //connection.setUser(userFromDB);
+                    //manageConnection.addConnection(connection);
                     Map<String, String> map = new HashMap<>();
                     map.put("userID", userFromDB.getId().toString());
-                    map.put("auth-token", connection.getConnectionKey());
+                    map.put("auth-token", TokenUtil.getToken(userFromDB.getUsername()));
                     response.setObject(map);
                     response.setResponseCode(ErrorCodes.ValidAuthenticationInfo.name);
                     response.setResponseMessage(ErrorCodes.ValidAuthenticationInfo.userMessage);
@@ -76,19 +77,19 @@ public class LoginController {
         Response response = new Response();
         User user = new ManageUser(country).getUserByUsername(username);
         if(user!=null) {
-            Connection connection = user.getConnection();
-            if (connection != null && new ManageConnection(country).deleteConnection(connection) == false) {
-                response.setResponseCode(ErrorCodes.InternalError.name);
-                response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-                return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            response.setResponseCode(ErrorCodes.OK.name);
-            response.setResponseMessage(ErrorCodes.OK.userMessage);
-            return new ResponseEntity<Response>(response, HttpStatus.OK);
+            //Connection connection = user.getConnection();
+            //if (connection != null && new ManageConnection(country).deleteConnection(connection) == false) {
+                response.setResponseCode(ErrorCodes.OK.name);
+                response.setResponseMessage(ErrorCodes.OK.userMessage);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
+            //}
+            //response.setResponseCode(ErrorCodes.OK.name);
+            //response.setResponseMessage(ErrorCodes.OK.userMessage);
+            //return new ResponseEntity<Response>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 
@@ -98,17 +99,17 @@ public class LoginController {
         Response response = new Response();
         if(user!=null) {
             ManageUser manageUser = new ManageUser("MD");
-            User userFromDB = manageUser.getUserByConnectionKey(token);
+            User userFromDB = manageUser.getUserByUsername(user.getUsername());
             if(userFromDB == null){
                 manageUser = new ManageUser("RO");
-                userFromDB = manageUser.getUserByConnectionKey(token);
+                userFromDB = manageUser.getUserByUsername(user.getUsername());
             }
             if(userFromDB!=null) {
                 if (userFromDB.getPassword().equals(user.getPassword())) {
                     userFromDB.setPassword(user.getNewPassword());
                     if(manageUser.updateUser(userFromDB)) {
-                        response.setResponseCode(ErrorCodes.ValidAuthenticationInfo.name);
-                        response.setResponseMessage(ErrorCodes.ValidAuthenticationInfo.userMessage);
+                        response.setResponseCode(ErrorCodes.OK.name);
+                        response.setResponseMessage(ErrorCodes.OK.userMessage);
                         return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
                     }else{
                         response.setResponseCode(ErrorCodes.InternalError.name);

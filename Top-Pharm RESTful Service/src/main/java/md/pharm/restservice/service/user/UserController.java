@@ -52,8 +52,6 @@ public class UserController {
                 existUser = manageUser.getUserByUsername(user.getUsername());
             }
             if (existUser == null) {
-                //if (user.getPermission() == null)
-                //    user.createDefaultPermission();
                 user.setCountry(country);
                 manageUser = new ManageUser(country);
                 Integer id = manageUser.addUser(user);
@@ -159,15 +157,17 @@ public class UserController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResponseEntity<Response> updateUser(@RequestBody User user,
-                                               @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country){
+                                               @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response();
-        Set<Violation> violations = new ValidatorUtil<User>().getViolations(user);
-        if(violations.size()==0) {
-            ManageUser manageUser = new ManageUser(country);
-            if (user.getId() > 0) {
-                User userFromDB = manageUser.getUserByID(user.getId());
-                if (userFromDB != null) {
-                    user.setCountry(country);
+        ManageUser manageUser = new ManageUser(country);
+        if (user.getId() > 0) {
+            User userFromDB = manageUser.getUserByID(user.getId());
+            if (userFromDB != null) {
+                user.setCountry(country);
+                user.setPassword(userFromDB.getPassword());
+                user.setHasUnreadMessages(userFromDB.isHasUnreadMessages());
+                Set<Violation> violations = new ValidatorUtil<User>().getViolations(user);
+                if (violations.size() == 0) {
                     if (manageUser.updateUser(user)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -178,20 +178,21 @@ public class UserController {
                         return new ResponseEntity<Response>(response, HttpStatus.OK);
                     }
                 } else {
-                    response.setResponseCode(ErrorCodes.ResourceNotExists.name);
-                    response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-                    return new ResponseEntity<Response>(response, HttpStatus.OK);
+                    response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
+                    response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
+                    response.setViolations(violations);
+                    return new ResponseEntity<>(response, HttpStatus.OK);
                 }
             } else {
-                response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
-                response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
+                response.setResponseCode(ErrorCodes.ResourceNotExists.name);
+                response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
-        }else{
+        } else {
             response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
-            response.setViolations(violations);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
+
     }
 }

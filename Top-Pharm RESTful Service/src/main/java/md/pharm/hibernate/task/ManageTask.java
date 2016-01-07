@@ -25,10 +25,10 @@ public class ManageTask {
         this.country = Country.valueOf(country);
     }
 
-    public List<Task> getTasks(String field, boolean ascending){
+    public List<TaskGet> getTasks(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
 
@@ -36,7 +36,7 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order);
