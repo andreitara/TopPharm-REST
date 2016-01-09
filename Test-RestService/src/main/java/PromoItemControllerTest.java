@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by Andrei on 12/20/2015.
  */
 public class PromoItemControllerTest {
-    public static PromoItem speciality = new PromoItem("promo 5");
+    public static PromoItem speciality = new PromoItem("promo item 5");
 
     public static void createDoctorByAdmin() throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();

@@ -16,12 +16,12 @@ import java.util.UUID;
  */
 public class LoginControllerTest {
 
-    public static UserChangePassword userChangePassword = new UserChangePassword("user1","useruseruser1","useruseruser5");
+    public static UserChangePassword userChangePassword = new UserChangePassword("adminmd","admin1111","admin1234");
 
     public static void loginAdmin() throws JsonProcessingException {
         UserLogin user = new UserLogin();
         user.setUsername("adminmd");
-        user.setPassword("admin1234");
+        user.setPassword("c93ccd78b2076528346216b3b2f701e6");//c93ccd78b2076528346216b3b2f701e6  admin1234
         RestTemplate restTemplate = new RestTemplate();
         Response response = restTemplate.postForObject(StaticStrings.LOGIN_URI, user, Response.class);
         ObjectMapper mapper = new ObjectMapper();
@@ -42,26 +42,6 @@ public class LoginControllerTest {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
-        HttpEntity entity = new HttpEntity(headers);
-        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.LOGOUT_URI, HttpMethod.GET, entity, Response.class);
-        ObjectMapper mapper = new ObjectMapper();
-        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
-    }
-
-    public static void loginUser() throws JsonProcessingException {
-        UserLogin user = new UserLogin();
-        user.setUsername("user1");
-        user.setPassword("useruseruser3");
-        RestTemplate restTemplate = new RestTemplate();
-        Response response = restTemplate.postForObject(StaticStrings.LOGIN_URI, user, Response.class);
-        ObjectMapper mapper = new ObjectMapper();
-        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response));
-    }
-
-    public static void logoutUser() throws JsonProcessingException {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("auth-token", StaticStrings.USER_AUTH_TOKEN);
         HttpEntity entity = new HttpEntity(headers);
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.LOGOUT_URI, HttpMethod.GET, entity, Response.class);
         ObjectMapper mapper = new ObjectMapper();

@@ -22,10 +22,10 @@ public class PerformanceTest {
                             InstitutionAddressControllerTest.getInstitutionAddressByAdmin(4);
                             ProductControllerTest.getProductByAdmin(2);
                             ProductObjectiveControllerTest.getAllProductObjectivesByAdmin(2);
-                            DoctorControllerTest.getAllDoctorsByAdmin();
+                            DoctorControllerTest.getAllDoctorsByAdmin("name", true);
                             PermissionControllerTest.getAdminMyPermission();
                             UserControllerTest.getUserByAdmin(3);
-                            DoctorTaskControllerTest.getAllDoctorsTask(2);
+                            DoctorTaskControllerTest.getAllDoctorsTask(2, "name", true);
                             UserTaskControllerTest.getAllUsersTask(1);
                         } catch (JsonProcessingException e) {
                             e.printStackTrace();

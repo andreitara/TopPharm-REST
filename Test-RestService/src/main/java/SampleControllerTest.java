@@ -16,25 +16,25 @@ import java.util.Map;
  */
 public class SampleControllerTest {
 
-    public static Sample speciality = new Sample("sample 5");
+    public static Sample sample = new Sample("sample 1");
 
     public static void createDoctorByAdmin() throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
-        HttpEntity entity = new HttpEntity(speciality, headers);
+        HttpEntity entity = new HttpEntity(sample, headers);
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.CREATE_SAMPLE_URI, HttpMethod.POST, entity, Response.class);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
 
     public static void updateDoctorByAdmin(int id) throws JsonProcessingException {
-        speciality.setId(id);
-        speciality.setName("Sample Update");
+        sample.setId(id);
+        sample.setTitle("Sample Update");
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
-        HttpEntity entity = new HttpEntity(speciality, headers);
+        HttpEntity entity = new HttpEntity(sample, headers);
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.UPDATE_SAMPLE_URI, HttpMethod.POST, entity, Response.class);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));

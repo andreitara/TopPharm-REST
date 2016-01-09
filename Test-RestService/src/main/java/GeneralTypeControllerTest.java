@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class GeneralTypeControllerTest {
 
-    public static GeneralType speciality = new GeneralType("general type 5");
+    public static GeneralType speciality = new GeneralType("general type 3");
 
     public static void createDoctorByAdmin() throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();

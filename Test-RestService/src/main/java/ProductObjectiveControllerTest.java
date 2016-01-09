@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class ProductObjectiveControllerTest {
 
-    public static Objective objective = new Objective("obj name 2", "obj description 2");
+    public static Objective objective = new Objective("objșțăî name 2", "obj description 2");
 
     public static void createProductByAdmin(int productID) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();

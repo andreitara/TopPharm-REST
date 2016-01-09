@@ -139,13 +139,14 @@ public class TaskAttributesControllerTest {
     }
 
 
-    public static void addPromoItemToTask(Integer taskID) throws JsonProcessingException {
+    public static void addPromoItemToTask(Integer taskID, Integer promoitemID) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
-        HttpEntity entity = new HttpEntity(promoItem, headers);
+        HttpEntity entity = new HttpEntity(null, headers);
         Map<String,String> params = new HashMap<>();
         params.put("taskID",String.valueOf(taskID));
+        params.put("promoitemID",String.valueOf(promoitemID));
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.ADD_PROMO_ITEM_TASK_URI, HttpMethod.POST, entity, Response.class, params);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
@@ -163,14 +164,14 @@ public class TaskAttributesControllerTest {
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
 
-    public static void deletePromoItemFromTask(Integer taskID, Integer itemID) throws JsonProcessingException {
+    public static void deletePromoItemFromTask(Integer taskID, Integer promoitemID) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
         HttpEntity entity = new HttpEntity(null, headers);
         Map<String,String> params = new HashMap<>();
         params.put("taskID",String.valueOf(taskID));
-        params.put("itemID",String.valueOf(itemID));
+        params.put("promoitemID",String.valueOf(promoitemID));
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.DELETE_PROMO_ITEM_TASK_URI, HttpMethod.DELETE, entity, Response.class, params);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));

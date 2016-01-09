@@ -15,9 +15,10 @@ import java.util.Map;
  */
 public class ProductControllerTest {
 
-    public static Product product = new Product("product name 12", "23", "", 123.0, "message", 1,"");
+    public static Product product = new Product("Product name 2 șțăîȘȚĂÎ", "23", "", 123.0, "message", "","");
 
-    public static void createProductByAdmin() throws JsonProcessingException {
+    public static void createProductByAdmin(Integer id) throws JsonProcessingException {
+        product.setName(product.getName()+id);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
@@ -29,7 +30,7 @@ public class ProductControllerTest {
 
     public static void updateDoctorByAdmin(int id) throws JsonProcessingException {
         product.setId(id);
-        product.setName("Valera");
+        product.setName("Update");
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
@@ -39,17 +40,21 @@ public class ProductControllerTest {
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
 
-    public static void getAllProductsByAdmin() throws JsonProcessingException {
+    public static void getAllProductsByAdmin(String byField, boolean ascending) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
         HttpEntity entity = new HttpEntity(headers);
-        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.GET_ALL_PRODUCTS_URI, HttpMethod.GET, entity, Response.class);
+        Map<String,String> params = new HashMap<>();
+        params.put("byField",String.valueOf(byField));
+        params.put("ascending", String.valueOf(ascending));
+        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.GET_ALL_PRODUCTS_URI, HttpMethod.GET, entity, Response.class, params);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
 
     public static void getProductByAdmin(int id) throws JsonProcessingException {
+        System.out.println("șțăîȘȚĂÎ");
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
@@ -68,7 +73,21 @@ public class ProductControllerTest {
         HttpEntity entity = new HttpEntity(headers);
         Map<String,String> params = new HashMap<>();
         params.put("id",String.valueOf(id));
-        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.DELETE_PRODUCT_URI, HttpMethod.GET, entity, Response.class, params);
+        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.DELETE_PRODUCT_URI, HttpMethod.DELETE, entity, Response.class, params);
+        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
+    }
+
+    public static void getAllProductsByPriority(String priority, String byField, boolean ascending) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
+        HttpEntity entity = new HttpEntity(headers);
+        Map<String,String> params = new HashMap<>();
+        params.put("priority",String.valueOf(priority));
+        params.put("byField",String.valueOf(byField));
+        params.put("ascending", String.valueOf(ascending));
+        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.GET_ALL_PRODUCTS_BY_PRIORITY_URI, HttpMethod.GET, entity, Response.class, params);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }

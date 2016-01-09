@@ -40,13 +40,15 @@ public class DoctorUserControllerTest {
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
 
-    public static void getAllDoctorsFromUser(Integer userID) throws JsonProcessingException {
+    public static void getAllDoctorsFromUser(Integer userID, String byField, boolean ascending) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
         HttpEntity entity = new HttpEntity(null, headers);
         Map<String,String> params = new HashMap<>();
         params.put("userID",String.valueOf(userID));
+        params.put("byField",String.valueOf(byField));
+        params.put("ascending", String.valueOf(ascending));
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.GET_DOCTORS_USER_URI, HttpMethod.GET, entity, Response.class, params);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
