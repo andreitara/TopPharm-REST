@@ -22,7 +22,7 @@ import java.util.Set;
 public class UserController {
 
     @RequestMapping(value = "/all/{byField}/{ascending}", method = RequestMethod.GET)
-     public ResponseEntity<Response<List<User>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<User>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                         @PathVariable("byField") String byField,
                                                         @PathVariable("ascending") boolean ascending){
         Response response = new Response();
@@ -41,7 +41,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<Response<Integer>> createUser(@RequestBody User user, @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country){
+    public ResponseEntity<Response<Integer>> createUser(@RequestBody User user,
+                                                        @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country){
         Response response = new Response();
         Set<Violation> violations = new ValidatorUtil<User>().getViolations(user);
         if(violations.size()==0) {

@@ -18,7 +18,7 @@ public class TaskComment {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private int ID;
+    private Integer id;
 
     @Column(name = "date")
     private Date date;
@@ -35,18 +35,17 @@ public class TaskComment {
 
     public TaskComment(){}
 
-    public TaskComment(Date date, Task task, String comment) {
+    public TaskComment(Date date, String comment) {
         this.date = date;
-        this.task = task;
         this.comment = comment;
     }
 
-    public int getID() {
-        return ID;
+    public Integer getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Date getDate() {
@@ -80,18 +79,16 @@ public class TaskComment {
 
         TaskComment that = (TaskComment) o;
 
-        if (ID != that.ID) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (date != null ? !date.equals(that.date) : that.date != null) return false;
-        if (task != null ? !task.equals(that.task) : that.task != null) return false;
         return !(comment != null ? !comment.equals(that.comment) : that.comment != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = ID;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (task != null ? task.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         return result;
     }

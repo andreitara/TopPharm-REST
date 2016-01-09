@@ -23,7 +23,7 @@ public class Sample {
 
     @Column(name = "title")
     @NotNull
-    private String title;
+    private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy="samples", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -31,8 +31,8 @@ public class Sample {
 
     public Sample(){}
 
-    public Sample(String title) {
-        this.title = title;
+    public Sample(String name) {
+        this.name = name;
     }
 
     public Integer getId() {
@@ -43,12 +43,12 @@ public class Sample {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<Task> getTasks() {
@@ -67,14 +67,14 @@ public class Sample {
         Sample sample = (Sample) o;
 
         if (id != null ? !id.equals(sample.id) : sample.id != null) return false;
-        return !(title != null ? !title.equals(sample.title) : sample.title != null);
+        return !(name != null ? !name.equals(sample.name) : sample.name != null);
 
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
 }

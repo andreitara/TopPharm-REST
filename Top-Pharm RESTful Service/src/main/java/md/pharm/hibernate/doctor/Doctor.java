@@ -98,11 +98,9 @@ public class Doctor {
     private Speciality speciality;
 
     @Column(name = "type")
-    @JsonIgnore
     private String type;
 
     @Column(name = "subType")
-    @JsonIgnore
     private String subType;
 
     public Doctor(){}

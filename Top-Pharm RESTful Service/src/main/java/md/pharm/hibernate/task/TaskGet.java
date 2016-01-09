@@ -186,6 +186,13 @@ public class TaskGet {
             return null;
     }
 
+    public String getCustomerSpecialtyName(){
+        if(customer!=null)
+            if(customer.getSpeciality()!=null)
+                return customer.getSpeciality().getName();
+        return null;
+    }
+
     public Integer getId() {
         return id;
     }

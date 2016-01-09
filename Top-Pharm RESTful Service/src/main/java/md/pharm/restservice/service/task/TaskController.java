@@ -207,102 +207,102 @@ public class TaskController {
     //GET
     //####################################################################################
     @RequestMapping(value = "/all/category/{category}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllByCategory(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllByCategory(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                  @PathVariable("category") String category,
                                                                  @PathVariable("byField") String byField,
                                                                  @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksByCategory(category, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksByCategory(category, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/all/submitted/{isSubmitted}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllBySubmitted(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllBySubmitted(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                   @PathVariable("isSubmitted") boolean isSubmitted,
                                                                   @PathVariable("byField") String byField,
                                                                   @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksBySubmitted(isSubmitted, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksBySubmitted(isSubmitted, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/all/capital/{isCapital}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllByCapital(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllByCapital(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                 @PathVariable("isCapital") boolean isCapital,
                                                                 @PathVariable("byField") String byField,
                                                                 @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksByCapital(isCapital, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksByCapital(isCapital, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/all/type/{typeID}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllByType(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllByType(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                  @PathVariable("typeID") Integer typeID,
                                                                  @PathVariable("byField") String byField,
                                                                  @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksByType(typeID, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksByType(typeID, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/all/customer/{customerID}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllByCustomer(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllByCustomer(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                  @PathVariable("customerID") Integer customerID,
                                                                  @PathVariable("byField") String byField,
                                                                  @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksByCustomer(customerID, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksByCustomer(customerID, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
@@ -310,27 +310,27 @@ public class TaskController {
     //GET TASKS BY USER
     //####################################################################################
     @RequestMapping(value = "/all/user/{userID}/{byField}/{ascending}", method = RequestMethod.GET)
-     public ResponseEntity<Response<List<Task>>> getAllByUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+     public ResponseEntity<Response<List<TaskGet>>> getAllByUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                               @PathVariable("userID") Integer userID,
                                                               @PathVariable("byField") String byField,
                                                               @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksByUser(userID, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksByUser(userID, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/all/user/{userID}/from/{fromDate}/to/{toDate}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllByUserFromDateThruDate(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllByUserFromDateThruDate(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                              @PathVariable("userID") Integer userID,
                                                                              @PathVariable(value = "fromDate") @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss") Date fromDate,
                                                                              @PathVariable(value = "toDate")   @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss") Date toDate,
@@ -338,100 +338,100 @@ public class TaskController {
                                                                              @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksFromDateToDate(userID, fromDate, toDate, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksFromDateToDate(userID, fromDate, toDate, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/all/user/{userID}/category/{category}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllByUserByCategory(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllByUserByCategory(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                        @PathVariable("userID") Integer userID,
                                                                        @PathVariable("category") String category,
                                                                        @PathVariable("byField") String byField,
                                                                        @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksByUserByCategory(userID, category, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksByUserByCategory(userID, category, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/all/user/{userID}/capital/{isCapital}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllByUserByCapital(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllByUserByCapital(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                        @PathVariable("userID") Integer userID,
                                                                        @PathVariable("isCapital") boolean isCapital,
                                                                        @PathVariable("byField") String byField,
                                                                        @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksByUserByCapital(userID, isCapital, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksByUserByCapital(userID, isCapital, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/all/user/{userID}/submitted/{isSubmitted}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllByUserBySubmitted(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllByUserBySubmitted(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                       @PathVariable("userID") Integer userID,
                                                                       @PathVariable("isSubmitted") boolean isSubmitted,
                                                                       @PathVariable("byField") String byField,
                                                                       @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksByUserBySubmitted(userID, isSubmitted, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksByUserBySubmitted(userID, isSubmitted, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/all/user/{userID}/type/{typeID}/{byField}/{ascending}", method = RequestMethod.GET)
-    public ResponseEntity<Response<List<Task>>> getAllByUserByType(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<TaskGet>>> getAllByUserByType(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                         @PathVariable("userID") Integer userID,
                                                                         @PathVariable("typeID") Integer typeID,
                                                                         @PathVariable("byField") String byField,
                                                                         @PathVariable("ascending") boolean ascending) {
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
-        List<Task> list = manageTask.getTasksByUserByType(userID, typeID, byField, ascending);
+        List<TaskGet> list = manageTask.getTasksByUserByType(userID, typeID, byField, ascending);
         if (list != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<List<Task>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<TaskGet>>>(response, HttpStatus.OK);
         }
     }
 
@@ -442,7 +442,7 @@ public class TaskController {
     @RequestMapping(value = "/{taskID}/comment/add", method = RequestMethod.POST)
     public ResponseEntity<Response> addComment(@RequestBody TaskComment taskComment,
                                                @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                               @PathVariable(value = "id") Integer id) {
+                                               @PathVariable(value = "taskID") Integer id) {
         Response response = new Response();
         ManageTask manage = new ManageTask(country);
         Task taskFromDB = manage.getTaskByID(id);
@@ -475,7 +475,7 @@ public class TaskController {
 
     @RequestMapping(value = "/{taskID}/comment/all", method = RequestMethod.GET)
     public ResponseEntity<Response<List<TaskComment>>> getTaskComments(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                                       @PathVariable(value = "id") Integer id) {
+                                                                       @PathVariable(value = "taskID") Integer id) {
         Response response = new Response();
         ManageTask manage = new ManageTask(country);
         List<TaskComment> list = manage.getTaskCommentByTaskID(id);
@@ -491,9 +491,39 @@ public class TaskController {
         }
     }
 
+    @RequestMapping(value = "/{taskID}/comment/delete/{commentID}", method = RequestMethod.DELETE)
+    public ResponseEntity<Response> deleteTaskComments(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                                          @PathVariable(value = "taskID") Integer taskID,
+                                                                          @PathVariable(value = "taskID") Integer commentID) {
+        Response response = new Response();
+        ManageTask manage = new ManageTask(country);
+        Task task = manage.getTaskByID(taskID);
+        if (task != null) {
+            TaskComment taskComment = null;
+            List<TaskComment> list = manage.getTaskCommentByTaskID(taskID);
+            for(TaskComment comment : list){
+                if(comment.getId().equals(commentID))
+                    taskComment = comment;
+            }
+            if(taskComment!=null && manage.deleteTaskComment(taskComment)) {
+                response.setResponseCode(ErrorCodes.OK.name);
+                response.setResponseMessage(ErrorCodes.OK.userMessage);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
+            }else{
+                response.setResponseCode(ErrorCodes.ResourceNotExists.name);
+                response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage + " TaskComment does not exists");
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
+            }
+        } else {
+            response.setResponseCode(ErrorCodes.ResourceNotExists.name);
+            response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage + " Task does not exists");
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/{taskID}/history/all", method = RequestMethod.GET)
     public ResponseEntity<Response<List<TaskHistory>>> getTaskHistories(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                                        @PathVariable(value = "id") Integer id) {
+                                                                        @PathVariable(value = "taskID") Integer id) {
         Response response = new Response();
         ManageTask manage = new ManageTask(country);
         List<TaskHistory> list = manage.getTaskHistoryByTaskID(id);

@@ -37,6 +37,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order);
@@ -50,10 +52,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksFromDateToDate(Integer userID, Date start, Date end, String field, boolean ascending){
+    public List<TaskGet> getTasksFromDateToDate(Integer userID, Date start, Date end, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
 
@@ -61,7 +63,9 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.ge("startDate", start))
@@ -81,10 +85,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksByCategory(String category, String field, boolean ascending){
+    public List<TaskGet> getTasksByCategory(String category, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -92,7 +96,9 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("category", category))
@@ -107,10 +113,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksBySubmitted(boolean isSubmitted, String field, boolean ascending){
+    public List<TaskGet> getTasksBySubmitted(boolean isSubmitted, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -118,7 +124,9 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("isSubmitted", isSubmitted))
@@ -133,10 +141,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksByCapital(boolean isCapital, String field, boolean ascending){
+    public List<TaskGet> getTasksByCapital(boolean isCapital, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -144,7 +152,9 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("isCapital", isCapital))
@@ -159,10 +169,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksByType(Integer id, String field, boolean ascending){
+    public List<TaskGet> getTasksByType(Integer id, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -170,12 +180,14 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order)
-                    .createCriteria("type")
-                    .add(Restrictions.eq("id", id));
+                    //.createCriteria("type")
+                    .add(Restrictions.eq("type.id", id));
 
             list = criteria.list();
 
@@ -188,10 +200,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksByCustomer(Integer id, String field, boolean ascending){
+    public List<TaskGet> getTasksByCustomer(Integer id, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -199,12 +211,14 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order)
-                    .createCriteria("customer")
-                    .add(Restrictions.eq("id",id));
+                    //.createCriteria("customer")
+                    .add(Restrictions.eq("customer.id",id));
 
             list = criteria.list();
 
@@ -217,10 +231,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksByUser(Integer id, String field, boolean ascending){
+    public List<TaskGet> getTasksByUser(Integer id, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -228,12 +242,15 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order)
-                    .createCriteria("user")
-                    .add(Restrictions.eq("id",id));
+                    //.createCriteria("user")
+                    .add(Restrictions.eq("user.id",id));
 
             list = criteria.list();
 
@@ -246,10 +263,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksByUserByCategory(Integer id, String category, String field, boolean ascending){
+    public List<TaskGet> getTasksByUserByCategory(Integer id, String category, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -257,13 +274,16 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("category", category))
                     .addOrder(order)
-                    .createCriteria("user")
-                    .add(Restrictions.eq("id",id));
+                    //.createCriteria("user")
+                    .add(Restrictions.eq("user.id",id));
 
             list = criteria.list();
 
@@ -276,10 +296,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksByUserByCapital(Integer id, boolean isCapital, String field, boolean ascending){
+    public List<TaskGet> getTasksByUserByCapital(Integer id, boolean isCapital, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -287,13 +307,16 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("isCapital", isCapital))
                     .addOrder(order)
-                    .createCriteria("user")
-                    .add(Restrictions.eq("id",id));
+                    //.createCriteria("user")
+                    .add(Restrictions.eq("user.id",id));
 
             list = criteria.list();
 
@@ -306,10 +329,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksByUserBySubmitted(Integer id, boolean isSubmitted, String field, boolean ascending){
+    public List<TaskGet> getTasksByUserBySubmitted(Integer id, boolean isSubmitted, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -317,13 +340,16 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("isSubmitted", isSubmitted))
                     .addOrder(order)
-                    .createCriteria("user")
-                    .add(Restrictions.eq("id",id));
+                    //.createCriteria("user")
+                    .add(Restrictions.eq("user.id",id));
 
             list = criteria.list();
 
@@ -336,10 +362,10 @@ public class ManageTask {
         return list;
     }
 
-    public List<Task> getTasksByUserByType(Integer userID, Integer typeID, String field, boolean ascending){
+    public List<TaskGet> getTasksByUserByType(Integer userID, Integer typeID, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
-        List<Task> list = null;
+        List<TaskGet> list = null;
         try{
             tx = session.beginTransaction();
             Order order = null;
@@ -347,12 +373,14 @@ public class ManageTask {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
 
-            Criteria criteria = session.createCriteria(Task.class)
-                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                    .setFetchMode("childFiles", FetchMode.SELECT)
-                    .addOrder(order)
+            Criteria criteria = session.createCriteria(TaskGet.class)
+                    .createAlias("customer","customer")
+                    .createAlias("customer.speciality", "speciality")
                     .createAlias("user", "user")
                     .createAlias("type", "type")
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .addOrder(order)
                     .add(Restrictions.eq("user.id", userID))
                     .add(Restrictions.eq("type.id", typeID));
 
@@ -551,6 +579,24 @@ public class ManageTask {
         try{
             tx = session.beginTransaction();
             session.delete(task);
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
+    public boolean deleteTaskComment(TaskComment taskComment){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            session.delete(taskComment);
             tx.commit();
             flag = true;
         }catch(HibernateException e){

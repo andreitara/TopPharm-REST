@@ -3,6 +3,7 @@ package md.pharm;
 import md.pharm.external.backup.BackupUtil;
 import md.pharm.external.email.EmailTrigger;
 import md.pharm.external.email.EmailUtil;
+import md.pharm.external.log.LogUtil;
 import md.pharm.util.HibernateUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +21,8 @@ public class TopPharmResTfulServiceApplication extends WebMvcConfigurationSuppor
 
     public static void main(String[] args) {
         HibernateUtil.initiateHibernate();
-        //BackupUtil.startTrigger("0 0 6 * * ?");
+        BackupUtil.startTrigger("0 0 6 * * ?"); // 0 0 6 * * ?
+        LogUtil.startTrigger("0 0 * * * ?");
         //EmailUtil.startTrigger();
         SpringApplication.run(TopPharmResTfulServiceApplication.class, args);
     }

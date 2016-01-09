@@ -59,7 +59,7 @@ public class BackupUtil {
             int month = Calendar.getInstance().get(Calendar.MONTH);
             DateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
             String reportDate = df.format(Calendar.getInstance().getTime());
-            String folder = LINUX_PATH + "md/" + year + "/" + month + "/";
+            String folder = LINUX_PATH + "bakup/md/" + year + "/" + month + "/";
             File file = new File(folder);
             if(!file.exists())
                 file.mkdirs();
@@ -82,7 +82,7 @@ public class BackupUtil {
             int month = Calendar.getInstance().get(Calendar.MONTH);
             DateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
             String reportDate = df.format(Calendar.getInstance().getTime());
-            String folder = LINUX_PATH + "ro/" + year + "/" + month + "/";
+            String folder = LINUX_PATH + "bakup/ro/" + year + "/" + month + "/";
             File file = new File(folder);
             if(!file.exists())
                 file.mkdirs();
