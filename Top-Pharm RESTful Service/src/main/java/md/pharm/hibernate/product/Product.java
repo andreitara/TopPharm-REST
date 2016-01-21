@@ -35,6 +35,10 @@ public class Product {
     @Column(name = "averagePrice")
     private Double averagePrice;
 
+    @Column(name = "currency")
+    @Size(max = 3)
+    private String currency;
+
     @Column(name = "category")
     @Size(max = 50)
     @JsonIgnore
@@ -105,6 +109,14 @@ public class Product {
 
     public void setAveragePrice(Double averagePrice) {
         this.averagePrice = averagePrice;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public String getMessage() {

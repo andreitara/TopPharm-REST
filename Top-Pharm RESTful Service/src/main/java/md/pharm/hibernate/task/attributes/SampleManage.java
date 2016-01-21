@@ -1,12 +1,14 @@
 package md.pharm.hibernate.task.attributes;
 
 import md.pharm.hibernate.doctor.attributes.GeneralType;
+import md.pharm.hibernate.task.Task;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.Order;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Andrei on 12/20/2015.
@@ -62,31 +64,51 @@ public class SampleManage {
         else return null;
     }
 
-    public boolean update(Sample speciality){
+    public boolean update(Sample sample){
         session = HibernateUtil.getSession(country);
         boolean flag = false;
         Transaction tx = null;
+        Transaction tx2 = null;
+        Set<Task> taskSet = null;
+
         try{
-            tx = session.beginTransaction();
-            session.update(speciality);
-            tx.commit();
+            tx2 = session.beginTransaction();
+            Sample sampleDB = (Sample)session.get(Sample.class, sample.getId());
+            taskSet = sampleDB.getTasks();
+            tx2.commit();
             flag = true;
         }catch(HibernateException e){
-            if(tx!=null)tx.rollback();
+            if(tx2!=null)tx2.rollback();
             e.printStackTrace();
             flag = false;
-        }finally {
         }
+
+        if(flag) {
+            session = HibernateUtil.getSession(country);
+            try {
+                tx = session.beginTransaction();
+                sample.setTasks(taskSet);
+                session.update(sample);
+                tx.commit();
+                flag = true;
+            } catch (HibernateException e) {
+                if (tx != null) tx.rollback();
+                e.printStackTrace();
+                flag = false;
+            }
+        }
+
         return flag;
     }
 
-    public boolean delete(Sample speciality){
+    public boolean delete(Sample sample){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         boolean flag = false;
         try{
             tx = session.beginTransaction();
-            session.delete(speciality);
+            session.createSQLQuery("delete from SampleTask where sampleID="+sample.getId()+"").executeUpdate();
+            session.delete(sample);
             tx.commit();
             flag = true;
         }catch(HibernateException e){
@@ -113,4 +135,5 @@ public class SampleManage {
         }
         return speciality;
     }
+
 }

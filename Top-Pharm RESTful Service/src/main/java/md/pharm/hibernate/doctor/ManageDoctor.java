@@ -12,6 +12,7 @@ import org.hibernate.criterion.Restrictions;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Andrei on 9/5/2015.
@@ -318,17 +319,36 @@ public class ManageDoctor {
         session = HibernateUtil.getSession(country);
         boolean flag = false;
         Transaction tx = null;
+        Transaction tx2 = null;
+        Set<Task> taskSet = null;
+
         try{
-            tx = session.beginTransaction();
-            session.update(doctor);
-            tx.commit();
+            tx2 = session.beginTransaction();
+            Doctor doctorDB = (Doctor)session.get(Doctor.class, doctor.getId());
+            taskSet = doctorDB.getTasksAsAttendees();
+            tx2.commit();
             flag = true;
         }catch(HibernateException e){
-            if(tx!=null)tx.rollback();
+            if(tx2!=null)tx2.rollback();
             e.printStackTrace();
             flag = false;
-        }finally {
         }
+
+        if(flag) {
+            session = HibernateUtil.getSession(country);
+            try {
+                tx = session.beginTransaction();
+                doctor.setTasksAsAttendees(taskSet);
+                session.update(doctor);
+                tx.commit();
+                flag = true;
+            } catch (HibernateException e) {
+                if (tx != null) tx.rollback();
+                e.printStackTrace();
+                flag = false;
+            }
+        }
+
         return flag;
     }
 
@@ -338,6 +358,7 @@ public class ManageDoctor {
         boolean flag = false;
         try{
             tx = session.beginTransaction();
+            session.createSQLQuery("delete from DoctorTask where doctorID="+doctor.getId()).executeUpdate();
             session.delete(doctor);
             tx.commit();
             flag = true;

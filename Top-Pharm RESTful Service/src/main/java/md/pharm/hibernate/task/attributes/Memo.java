@@ -25,6 +25,10 @@ public class Memo {
     @Size(max = 256)
     private String name;
 
+    @Column(name = "description")
+    @Size(max = 512)
+    private String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "taskID")
     @JsonIgnore
@@ -50,6 +54,14 @@ public class Memo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Task getTask() {

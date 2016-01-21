@@ -1,6 +1,9 @@
 package md.pharm.hibernate.product;
 
 import md.pharm.hibernate.institution.Institution;
+import md.pharm.hibernate.task.Task;
+import md.pharm.hibernate.task.attributes.PromoItem;
+import md.pharm.hibernate.task.attributes.Sample;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
@@ -128,16 +131,36 @@ public class ManageProduct {
         session = HibernateUtil.getSession(country);
         boolean flag = false;
         Transaction tx = null;
+        Transaction tx2 = null;
+        Set<Task> taskSet = null;
+
         try{
-            tx = session.beginTransaction();
-            session.update(product);
-            tx.commit();
+            tx2 = session.beginTransaction();
+            Product productDB = (Product)session.get(Product.class, product.getId());
+            taskSet = productDB.getTasks();
+            tx2.commit();
             flag = true;
         }catch(HibernateException e){
-            if(tx!=null)tx.rollback();
+            if(tx2!=null)tx2.rollback();
             e.printStackTrace();
-        }finally {
+            flag = false;
         }
+
+        if(flag) {
+            session = HibernateUtil.getSession(country);
+            try {
+                tx = session.beginTransaction();
+                product.setTasks(taskSet);
+                session.update(product);
+                tx.commit();
+                flag = true;
+            } catch (HibernateException e) {
+                if (tx != null) tx.rollback();
+                e.printStackTrace();
+                flag = false;
+            }
+        }
+
         return flag;
     }
 
@@ -232,6 +255,7 @@ public class ManageProduct {
         boolean flag = false;
         try{
             tx = session.beginTransaction();
+            session.createSQLQuery("delete from ProductTask where productID="+product.getId()+"").executeUpdate();
             session.delete(product);
             tx.commit();
             flag = true;
