@@ -18,7 +18,7 @@ import java.util.Map;
 public class InstitutionsControllerTest {
 
     public static Address address = new Address("street34666", "district", "city2", "state", "country", "code");
-    public static Institution institution = new Institution("tong name 3", "tn1", null, "323", "145", "rezina", "street");
+    public static Institution institution = new Institution("long name 3", "tn1", null, "323", "145", "rezina", "street");
 
     public static void getAllInstitutionsByAdmin(String byField, boolean ascending) throws JsonProcessingException {
         InstitutionType type = new InstitutionType();

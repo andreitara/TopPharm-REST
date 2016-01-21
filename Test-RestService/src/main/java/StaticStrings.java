@@ -3,8 +3,8 @@
  */
 public class StaticStrings {
 
-    //public static String REST_IP_PORT = "http://localhost:81";
-    public static String REST_IP_PORT ="http://api.toppharm.md";
+    public static String REST_IP_PORT = "http://localhost:81";
+    //public static String REST_IP_PORT ="http://api.toppharm.md";
 
     public static int ADMIN_ID = 1;
     public static int USER_ID = 2;

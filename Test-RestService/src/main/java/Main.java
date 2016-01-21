@@ -42,7 +42,7 @@ public class Main {
         //InstitutionsControllerTest.createInstitutionByAdmin();
         //InstitutionsControllerTest.getInstitutionsByAdmin(1);
         //InstitutionsControllerTest.getAllInstitutionsByAdmin("longName", false);
-        //InstitutionsControllerTest.updateInstitutionByAdmin(1);
+        //InstitutionsControllerTest.updateInstitutionByAdmin(4);
         //InstitutionsControllerTest.deleteInstitutionByAdmin(1);
         //InstitutionsControllerTest.getAllInstitutionsByCity("rezina", "longName", true);
         //InstitutionsControllerTest.getAllInstitutionsByPartName("name", "longName", false);
@@ -64,16 +64,16 @@ public class Main {
 
         //DoctorControllerTest.createDoctorByAdmin();
         //DoctorControllerTest.updateDoctorByAdmin(1);
-        //DoctorControllerTest.getAllDoctorsByAdmin("speciality.name", true);
-        //DoctorControllerTest.getDoctorByAdmin(1);
-        //DoctorControllerTest.deleteDoctorByAdmin(2);
+        //DoctorControllerTest.getAllDoctorsByAdmin("name", true);
+        //DoctorControllerTest.getDoctorByAdmin(25);
+        //DoctorControllerTest.deleteDoctorByAdmin(25);
         //DoctorControllerTest.getLastDateDoctorByAdmin(2,1);
         //DoctorControllerTest.getAllDoctorsBySpecialityByAdmin(2);
         //DoctorControllerTest.getAllDoctorsByGeneralTypeByAdmin(1);
 
-        //DoctorControllerTest.addInstitutionsToDoctor(1);
-        //DoctorControllerTest.getAllInstitutionsToDoctor(1);
-        //DoctorControllerTest.deleteInstitutionsListToDoctor(1);
+        //DoctorControllerTest.addInstitutionsToDoctor(3, 4);
+        //DoctorControllerTest.getAllInstitutionsToDoctor(3);
+        //DoctorControllerTest.deleteInstitutionsListToDoctor(16);
 
 
         //SpecialityController.createDoctorByAdmin();
@@ -98,9 +98,9 @@ public class Main {
 
         //ProductControllerTest.getAllProductsByAdmin("name", false);
         //ProductControllerTest.getAllProductsByPriority("2", "name", true);
-        //ProductControllerTest.createProductByAdmin(10);
-        //ProductControllerTest.updateDoctorByAdmin(3);
-        //ProductControllerTest.deleteProductByAdmin(1);
+        //ProductControllerTest.createProductByAdmin(15);
+        //ProductControllerTest.updateDoctorByAdmin(1005);
+        //ProductControllerTest.deleteProductByAdmin(1006);
         //ProductControllerTest.getProductByAdmin(1);
 
         //ProductObjectiveControllerTest.createProductByAdmin(2);
@@ -111,15 +111,15 @@ public class Main {
 
         //TaskControllerTest.createTaskByAdmin();
         //TaskControllerTest.updateTaskByAdmin(13);
-        //TaskControllerTest.getAllTasksByAdmin("speciality.name", true);
-        //TaskControllerTest.getTaskByAdmin(13);
+        //TaskControllerTest.getAllTasksByAdmin("name", true);
+        //TaskControllerTest.getTaskByAdmin(21);
         //TaskControllerTest.deleteTaskByAdmin(1);
 
         //TaskControllerTest.getAllTasksByCategoryByAdmin("category 2", "speciality.name", true);
         //TaskControllerTest.getAllTasksByTypeByAdmin(2, "name", true);
         //TaskControllerTest.getAllTasksIsCapitalByAdmin(false, "name", false);
-        //TaskControllerTest.getAllTasksByUserByAdmin(1, "name", true);
 
+        //TaskControllerTest.getAllTasksByUserByAdmin(1, "name", true);
         //TaskControllerTest.getAllTasksByUserByCategoryByAdmin(1, "category 2", "name", true);
         //TaskControllerTest.getAllTasksByUserByTypeByAdmin(1, 1, "name", true);
 
@@ -161,9 +161,9 @@ public class Main {
         //DoctorTaskControllerTest.deleteDoctorToTask(2,3);
         //DoctorTaskControllerTest.getAllDoctorsTask(2,"name", true);
 
-        //ProductTaskControllerTest.addProductToTask(2,3);
-        //ProductTaskControllerTest.getAllProductsTask(2, "priority", true);
-        //ProductTaskControllerTest.deleteProductTask(2,2);
+        //ProductTaskControllerTest.addProductToTask(1009,1005);
+        //ProductTaskControllerTest.getAllProductsTask(1009, "priority", true);
+        //ProductTaskControllerTest.deleteProductTask(1009,1005);
 
         //UserTaskControllerTest.addUserToTask(6,2);
         //UserTaskControllerTest.deleteUserToTask(1,3);

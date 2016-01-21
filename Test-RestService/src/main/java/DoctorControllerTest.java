@@ -16,19 +16,21 @@ import java.util.*;
  */
 public class DoctorControllerTest {
 
-    public static Doctor doctor = new Doctor("doctor 2", "chisinau", "address", Calendar.getInstance().getTime(), "123", "133", "123", "email@email.md", null, "A", "A1");
+    public static Doctor doctor = new Doctor("doctor nou", "chisinau", "address", Calendar.getInstance().getTime(), "123", "133", "123", "email@email.md", null, "A", "A1");
 
     public static Speciality speciality = new Speciality();
 
     public static void createDoctorByAdmin() throws JsonProcessingException {
-        speciality.setId(2);
+        //speciality.setId(2);
         //doctor.setSpeciality(speciality);
+        ObjectMapper mapper = new ObjectMapper();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
         HttpEntity entity = new HttpEntity(doctor, headers);
+        //System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entity.getBody()));
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.CREATE_DOCTOR_URI, HttpMethod.POST, entity, Response.class);
-        ObjectMapper mapper = new ObjectMapper();
+        mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
 
@@ -137,13 +139,12 @@ public class DoctorControllerTest {
 
 
 
-    public static void addInstitutionsToDoctor(Integer doctorID) throws JsonProcessingException {
+    public static void addInstitutionsToDoctor(Integer doctorID, Integer instID) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
         List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(2);
+        list.add(instID);
         HttpEntity entity = new HttpEntity(list, headers);
         Map<String,String> params = new HashMap<>();
         params.put("doctorID",String.valueOf(doctorID));
@@ -157,8 +158,8 @@ public class DoctorControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
         List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(2);
+        list.add(4);
+        //list.add(2);
         HttpEntity entity = new HttpEntity(list, headers);
         Map<String,String> params = new HashMap<>();
         params.put("doctorID",String.valueOf(doctorID));
