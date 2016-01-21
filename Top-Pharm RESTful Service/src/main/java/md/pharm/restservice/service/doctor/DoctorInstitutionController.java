@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,21 +26,22 @@ import java.util.Set;
 public class DoctorInstitutionController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<Response<Set<Institution>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<List<Institution>>> getAll(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                               @PathVariable(value = "doctorID") Integer doctorID){
         Response response = new Response();
         ManageDoctor manageTask = new ManageDoctor(country);
-        Doctor task = manageTask.getDoctorByID(doctorID);
-        if(task!=null){
-            Set<Institution> products = task.getInstitutions();
+        //Doctor task = manageTask.getDoctorByID(doctorID);
+        List<Institution> list = manageTask.getInstitutionsByDoctorID(doctorID);
+        if(list!=null){
+            //Set<Institution> products = task.getInstitutions();
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.setObject(products);
-            return new ResponseEntity<Response<Set<Institution>>>(response, HttpStatus.OK);
+            response.setObject(list);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<Set<Institution>>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
         }
     }
 
@@ -53,8 +55,8 @@ public class DoctorInstitutionController {
         if (doctor != null) {
             boolean allInstitutionExists = true;
             ManageInstitution manageInstitution = new ManageInstitution(country);
-            Set<Institution> set = doctor.getInstitutions();
-            if(set==null) set = new HashSet<>();
+            List<Institution> set = manageTask.getInstitutionsByDoctorID(doctorID);
+            if(set==null) set = new ArrayList<>();
             for(Integer id : list){
                 Institution institution = manageInstitution.getInstitutionByID(id);
                 if(institution!=null)
@@ -62,7 +64,6 @@ public class DoctorInstitutionController {
                 else
                     allInstitutionExists = false;
             }
-            doctor.setInstitutions(set);
             if(allInstitutionExists) {
                 for(Integer id : list){
                     manageTask.addInstitutionDoctor(id, doctorID);

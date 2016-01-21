@@ -155,11 +155,12 @@
 					<restModel>
 						<restFramework>
 							<name>spring-mvc</name>
+
 						</restFramework>
 					</restModel>
 					<output>
 						<html>
-							<baseUrl>http://api.toppharm.md:81/</baseUrl>
+							<baseUrl>http://api.toppharm.md</baseUrl>
 						</html>
 					</output>
 				</configuration>

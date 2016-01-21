@@ -1,6 +1,7 @@
 package md.pharm.hibernate.institution;
 
 import md.pharm.hibernate.common.Address;
+import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
@@ -8,6 +9,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Andrei on 9/4/2015.
@@ -150,7 +152,6 @@ public class ManageInstitution {
         return institutions;
     }
 
-
     public Integer addInstitution(Institution institution){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
@@ -171,13 +172,29 @@ public class ManageInstitution {
         session = HibernateUtil.getSession(country);
         boolean flag = false;
         Transaction tx = null;
+        Transaction tx2 = null;
+        Set<Doctor> doctorSet = null;
         try{
             tx = session.beginTransaction();
-            session.update(institution);
+            Institution instDB = (Institution)session.get(Institution.class, institution.getId());
+            doctorSet = instDB.getDoctors();
             tx.commit();
-            flag = true;
         }catch(HibernateException e){
             if(tx!=null)tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+
+        session = HibernateUtil.getSession(country);
+        try{
+            tx2 = session.beginTransaction();
+            institution.setDoctors(doctorSet);
+            session.update(institution);
+            tx2.commit();
+
+            flag = true;
+        }catch(HibernateException e){
+            if(tx2!=null)tx2.rollback();
             e.printStackTrace();
         }finally {
         }

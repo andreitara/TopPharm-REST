@@ -8,6 +8,7 @@ import org.hibernate.*;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 
 import java.util.Date;
 import java.util.List;
@@ -37,8 +38,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order);
@@ -64,8 +65,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.ge("startDate", start))
@@ -97,8 +98,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("category", category))
@@ -125,8 +126,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("isSubmitted", isSubmitted))
@@ -153,8 +154,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.eq("isCapital", isCapital))
@@ -181,12 +182,12 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("type", "type")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order)
-                    //.createCriteria("type")
                     .add(Restrictions.eq("type.id", id));
 
             list = criteria.list();
@@ -243,14 +244,13 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order)
-                    //.createCriteria("user")
-                    .add(Restrictions.eq("user.id",id));
+                    .add(Restrictions.eq("user.id", id));
 
             list = criteria.list();
 
@@ -275,8 +275,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
@@ -308,8 +308,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
@@ -341,8 +341,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
@@ -374,8 +374,8 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer")
-                    .createAlias("customer.speciality", "speciality")
+                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("user", "user")
                     .createAlias("type", "type")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
@@ -614,7 +614,7 @@ public class ManageTask {
         boolean flag = false;
         try{
             tx = session.beginTransaction();
-            Query query = session.createSQLQuery("delete DoctorTask where taskID = " + taskID + " and doctorID = " + doctorID);
+            Query query = session.createSQLQuery("delete from DoctorTask where taskID = " + taskID + " and doctorID = " + doctorID);
             int result = query.executeUpdate();
             tx.commit();
             flag = true;
@@ -634,7 +634,7 @@ public class ManageTask {
         try{
             tx = session.beginTransaction();
             //session.delete(task);
-            Query query = session.createSQLQuery("delete ProductTask where taskID = " + taskID + " and productID = " + productID);
+            Query query = session.createSQLQuery("delete from ProductTask where taskID = " + taskID + " and productID = " + productID);
             int result = query.executeUpdate();
             tx.commit();
             flag = true;
@@ -654,7 +654,7 @@ public class ManageTask {
         try{
             tx = session.beginTransaction();
             //session.delete(task);
-            Query query = session.createSQLQuery("delete PromoItemTask where taskID = " + taskID + " and promoitemID = " + promoitemID);
+            Query query = session.createSQLQuery("delete from PromoItemTask where taskID = " + taskID + " and promoitemID = " + promoitemID);
             int result = query.executeUpdate();
             tx.commit();
             flag = true;
@@ -674,7 +674,7 @@ public class ManageTask {
         try{
             tx = session.beginTransaction();
             //session.delete(task);
-            Query query = session.createSQLQuery("delete SampleTask where taskID = " + taskID + " and sampleID = " + sampleID);
+            Query query = session.createSQLQuery("delete from SampleTask where taskID = " + taskID + " and sampleID = " + sampleID);
             int result = query.executeUpdate();
             tx.commit();
             flag = true;

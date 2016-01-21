@@ -25,13 +25,16 @@ class StatelessAuthenticationFilter extends GenericFilterBean {
 		}else {
 			String token = ((HttpServletRequest) req).getHeader(StaticStrings.HEADER_SECURITY_TOKEN);
 			String username = "";
-			if(TokenUtil.isValidToken(token))
-				username = TokenUtil.getUsernameFromToken(token);
-			ManageUser manageUser = new ManageUser("MD");
-			User user = manageUser.getUserByUsername(username);
-			if(user==null){
-				manageUser = new ManageUser("RO");
+			User user = null;
+			if(token!=null) {
+				if (TokenUtil.isValidToken(token))
+					username = TokenUtil.getUsernameFromToken(token);
+				ManageUser manageUser = new ManageUser("MD");
 				user = manageUser.getUserByUsername(username);
+				if (user == null) {
+					manageUser = new ManageUser("RO");
+					user = manageUser.getUserByUsername(username);
+				}
 			}
 			if(user != null){
 				//Permission permission = user.getPermission();

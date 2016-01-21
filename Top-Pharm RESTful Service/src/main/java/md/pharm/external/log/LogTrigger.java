@@ -27,9 +27,12 @@ public class LogTrigger implements Job{
     public void backupLogFile(){
         int year = Calendar.getInstance().get(Calendar.YEAR);
         int month = Calendar.getInstance().get(Calendar.MONTH);
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
         DateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String reportDate = df.format(Calendar.getInstance().getTime());
-        String folder = LINUX_PATH + "logs/" + year + "/" + month + "/";
+
+        String folder = LINUX_PATH + "logs/" + year + "/" + month + "/" + day + "/";
         File file = new File(folder);
         if(!file.exists())
             file.mkdirs();

@@ -61,7 +61,13 @@ public class Doctor {
     @Size(max = 320)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy="doctors", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy="doctors", cascade =
+            {
+                    CascadeType.DETACH,
+                    CascadeType.MERGE,
+                    CascadeType.REFRESH,
+                    CascadeType.PERSIST
+            })
     @JsonIgnore
     private Set<Institution> institutions;
 
@@ -280,6 +286,8 @@ public class Doctor {
     public void setSubType(String subType) {
         this.subType = subType;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

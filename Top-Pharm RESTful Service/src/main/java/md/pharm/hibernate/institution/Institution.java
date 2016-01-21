@@ -56,7 +56,7 @@ public class Institution {
     @Column(name = "street")
     private String street;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="InstitutionDoctor", joinColumns=@JoinColumn(name="institutionID"), inverseJoinColumns=@JoinColumn(name="doctorID"))
     @JsonIgnore
     private Set<Doctor> doctors;

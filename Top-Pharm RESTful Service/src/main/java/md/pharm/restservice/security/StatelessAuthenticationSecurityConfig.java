@@ -29,7 +29,8 @@ public class StatelessAuthenticationSecurityConfig extends WebSecurityConfigurer
 				.headers().cacheControl().and()
 				.authorizeRequests()
 				.antMatchers(HttpMethod.GET, "/toppharm/**").permitAll()
-				.antMatchers(HttpMethod.POST, "/toppharm/**").permitAll().and()
+				.antMatchers(HttpMethod.POST, "/toppharm/**").permitAll()
+				.antMatchers(HttpMethod.DELETE, "/toppharm/**").permitAll().and()
 				.addFilterBefore(new StatelessAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 	

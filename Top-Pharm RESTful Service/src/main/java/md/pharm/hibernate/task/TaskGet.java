@@ -65,7 +65,6 @@ public class TaskGet {
 
     @Column(name = "address")
     @Size(max = 256)
-    @JsonIgnore
     private String address;
 
     @ManyToOne(fetch = FetchType.EAGER)

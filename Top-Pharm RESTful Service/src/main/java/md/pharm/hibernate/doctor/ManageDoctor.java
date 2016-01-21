@@ -1,5 +1,6 @@
 package md.pharm.hibernate.doctor;
 
+import md.pharm.hibernate.institution.Institution;
 import md.pharm.hibernate.task.Task;
 import md.pharm.restservice.service.cpc.CPCCustomer;
 import md.pharm.util.Country;
@@ -21,6 +22,34 @@ public class ManageDoctor {
 
     public ManageDoctor(String country){
         this.country = Country.valueOf(country);
+    }
+
+    public List<Institution> getInstitutionsByDoctorID(Integer doctorID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<Institution> list = null;
+        try{
+            tx = session.beginTransaction();
+
+            //Order order = null;
+            //if(ascending) order = Order.asc(field);
+            //else order = Order.desc(field);
+
+            Criteria criteria = session.createCriteria(Institution.class)
+                    .createAlias("doctors", "doctor")
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .add(Restrictions.eq("doctor.id", doctorID))
+                    //.addOrder(order);
+                    ;
+            list = criteria.list();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return list;
     }
 
     public List<Doctor> getDoctors(String field, boolean ascending){
@@ -369,7 +398,27 @@ public class ManageDoctor {
         try{
             tx = session.beginTransaction();
             //session.delete(task);
-            Query query = session.createSQLQuery("delete InstitutionDoctor where institutionID = " + institutionID + " and doctorID = " + doctorID);
+            Query query = session.createSQLQuery("delete from InstitutionDoctor where institutionID = " + institutionID + " and doctorID = " + doctorID);
+            int result = query.executeUpdate();
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
+    public boolean deleteInstitutionDoctorforDoctorID(Integer doctorID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            //session.delete(task);
+            Query query = session.createSQLQuery("delete from InstitutionDoctor where doctorID = " + doctorID);
             int result = query.executeUpdate();
             tx.commit();
             flag = true;

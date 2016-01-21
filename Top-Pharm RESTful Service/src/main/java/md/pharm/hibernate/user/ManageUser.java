@@ -200,7 +200,7 @@ public class ManageUser {
         boolean flag = false;
         try{
             tx = session.beginTransaction();
-            Query query = session.createSQLQuery("delete [TopPharm].[dbo].[UserDoctor] where userID = " + userID + " and doctorID = " + doctorID);
+            Query query = session.createSQLQuery("delete from UserDoctor where userID = " + userID + " and doctorID = " + doctorID);
             int result = query.executeUpdate();
             tx.commit();
             flag = true;

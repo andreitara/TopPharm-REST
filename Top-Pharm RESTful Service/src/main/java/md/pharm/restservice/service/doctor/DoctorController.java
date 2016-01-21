@@ -132,6 +132,7 @@ public class DoctorController {
         ManageDoctor manage = new ManageDoctor(country);
         Doctor doctor = manage.getDoctorByID(id);
         if (doctor != null) {
+            manage.deleteInstitutionDoctorforDoctorID(id);
             if (manage.deleteDoctor(doctor)) {
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);
