@@ -2,6 +2,8 @@ package md.pharm.restservice.service.user;
 
 import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
+import md.pharm.hibernate.user.attributes.ManageStatus;
+import md.pharm.hibernate.user.attributes.Status;
 import md.pharm.hibernate.validator.ValidatorUtil;
 import md.pharm.hibernate.validator.Violation;
 import md.pharm.util.Response;
@@ -169,6 +171,7 @@ public class UserController {
                 user.setHasUnreadMessages(userFromDB.isHasUnreadMessages());
                 Set<Violation> violations = new ValidatorUtil<User>().getViolations(user);
                 if (violations.size() == 0) {
+                    user.setStatus(userFromDB.getStatus());
                     if (manageUser.updateUser(user)) {
                         response.setResponseCode(ErrorCodes.OK.name);
                         response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -195,5 +198,32 @@ public class UserController {
             return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
 
+    }
+
+    @RequestMapping(value = "/update/{userID}/status/{statusID}", method = RequestMethod.POST)
+    public ResponseEntity<Response> updateStatusUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                     @PathVariable(value = "userID") Integer userID,
+                                                     @PathVariable(value = "statusID") Integer statusID) {
+        Response response = new Response();
+        ManageUser manageUser = new ManageUser(country);
+        ManageStatus manageStatus = new ManageStatus(country);
+        User user = manageUser.getUserByID(userID);
+        Status status = manageStatus.getByID(statusID);
+        if(user!=null && status!=null){
+            user.setStatus(status);
+            if(manageUser.updateUser(user)){
+                response.setResponseCode(ErrorCodes.OK.name);
+                response.setResponseMessage(ErrorCodes.OK.userMessage);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
+            }else{
+                response.setResponseCode(ErrorCodes.InternalError.name);
+                response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
+            }
+        }else{
+            response.setResponseCode(ErrorCodes.ResourceNotExists.name);
+            response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
     }
 }

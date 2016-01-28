@@ -240,7 +240,7 @@ public class ManageDoctor {
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order)
-                    .createCriteria("institution")
+                    .createCriteria("institutions")
                         .add(Restrictions.eq("id", institutionID));
             doctors = criteria.list();
             tx.commit();
@@ -395,11 +395,9 @@ public class ManageDoctor {
             tx = session.beginTransaction();
             Query query = session.createSQLQuery(
                     "select max(t.startDate) as lastDate\n" +
-                            "from Doctor as d, [User] as u, Task as t\n" +
+                            "from Doctor as d, User as u, Task as t\n" +
                             "where t.customerID=d.id and t.userID=u.id and u.id="+userID+" and d.id="+doctorID+"\n" +
                             "group by u.id, d.id \n" )
-                    //.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
-                    //.addEntity(CPCCustomer.class)
                     ;
 
             list = query.uniqueResult();

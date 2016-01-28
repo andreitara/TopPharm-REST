@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -168,21 +169,21 @@ public class DoctorController {
     }
 
     @RequestMapping(value = "/latestVisit/{doctorID}/{userID}", method = RequestMethod.GET)
-    public ResponseEntity<Response<Doctor>> getLatestVisit(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    public ResponseEntity<Response<String>> getLatestVisit(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                            @PathVariable(value = "doctorID") int doctorID,
                                                            @PathVariable(value = "userID") int userID) {
         Response response = new Response();
         ManageDoctor manageDoctor = new ManageDoctor(country);
-        Object doctor = manageDoctor.getLatestVisit(userID, doctorID);
-        if (doctor != null) {
+        Object date = manageDoctor.getLatestVisit(userID, doctorID);
+        if (date != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.setObject(doctor);
-            return new ResponseEntity<Response<Doctor>>(response, HttpStatus.OK);
+            response.setObject(date);
+            return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
         } else {
             response.setResponseCode(ErrorCodes.ResourceNotExists.name);
             response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
-            return new ResponseEntity<Response<Doctor>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
         }
     }
 

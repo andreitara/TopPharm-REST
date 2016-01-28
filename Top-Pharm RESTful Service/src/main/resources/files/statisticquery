@@ -1,0 +1,40 @@
+select
+users.id, users.representativeName,
+ifnull(total2.tasks, 0) as plannedActivities,
+ifnull(submitted2.tasks, 0) as actualActivities,
+ifnull(total2.tasks, 0) - ifnull(submitted2.tasks, 0) as callsToMake,
+ifnull(submitted2.tasks, 0)*100/ifnull(total2.tasks, 1) as cpc,
+ifnull(total.tasks, 0) as ydtPlanedActivities,
+ifnull(submitted.tasks, 0) as ydtActualActivities
+
+from
+(select u.id, u.user_name as representativeName from User as u) as users
+
+left join
+(select u.id, u.user_name as representativeName, COUNT(t.id) as tasks
+from Task as t, User as u
+where u.id=t.userID and startDate>='2016-01-01' and endDate<='2016-12-31'
+group by u.id, u.user_name) as total
+on users.id=total.id
+
+left join
+(select u.id, u.user_name as representativeName, COUNT(t.id) as tasks
+from Task as t, User as u
+where u.id=t.userID and t.isSubmitted=1 and startDate>='2016-01-01' and endDate<='2016-12-31'
+group by u.id, u.user_name) as submitted
+on total.id = submitted.id
+
+left join
+(select u.id, u.user_name as representativeName, COUNT(t.id) as tasks
+from Task as t, User as u
+where u.id=t.userID and startDate>='2016-01-01' and endDate<='2016-01-31'
+group by u.id, u.user_name) as total2
+on total.id = total2.id
+
+left join
+(select u.id, u.user_name as representativeName, COUNT(t.id) as tasks
+from Task as t, User as u
+where u.id=t.userID and t.isSubmitted=1 and startDate>='2016-01-01' and endDate<='2016-01-31'
+group by u.id, u.user_name) as submitted2
+on total.id = submitted2.id
+order by id ASC

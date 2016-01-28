@@ -3,8 +3,10 @@ package md.pharm.hibernate.user;
 import com.fasterxml.jackson.annotation.*;
 import md.pharm.hibernate.connection.Connection;
 import md.pharm.hibernate.doctor.Doctor;
+import md.pharm.hibernate.doctor.attributes.Speciality;
 import md.pharm.hibernate.message.Message;
 import md.pharm.hibernate.task.Task;
+import md.pharm.hibernate.user.attributes.Status;
 import md.pharm.hibernate.user.permission.Permission;
 import org.hibernate.validator.constraints.Email;
 
@@ -97,6 +99,10 @@ public class User{
     @JoinTable(name="UserDoctor", joinColumns=@JoinColumn(name="userID"), inverseJoinColumns=@JoinColumn(name="doctorID"))
     @JsonIgnore
     private Set<Doctor> doctors;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "statusID")
+    private Status status;
 
     public User() {
     }
@@ -254,6 +260,14 @@ public class User{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
