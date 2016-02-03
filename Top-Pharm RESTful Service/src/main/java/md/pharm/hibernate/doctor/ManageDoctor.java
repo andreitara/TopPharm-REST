@@ -9,6 +9,7 @@ import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 
 import java.sql.Date;
 import java.util.List;
@@ -65,6 +66,7 @@ public class ManageDoctor {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(Doctor.class)
+                    .createAlias("speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order);
@@ -237,6 +239,7 @@ public class ManageDoctor {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
             Criteria criteria = session.createCriteria(Doctor.class)
+                    .createAlias("speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order)
@@ -262,6 +265,7 @@ public class ManageDoctor {
             if(ascending) order = Order.asc(field);
             else order = Order.desc(field);
             Criteria criteria = session.createCriteria(Doctor.class)
+                    .createAlias("speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .add(Restrictions.like("name", "%" + name + "%"))

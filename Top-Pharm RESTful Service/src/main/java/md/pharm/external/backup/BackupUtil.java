@@ -20,7 +20,6 @@ public class BackupUtil {
 
     private Session session;
 
-    private static String WINDOWS_PATH = "D:\\TopPharm/";
     private static String LINUX_PATH = "/home/toppharm/";
 
     Country md = Country.valueOf("MD");

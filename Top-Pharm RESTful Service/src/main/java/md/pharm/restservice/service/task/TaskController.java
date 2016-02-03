@@ -494,7 +494,7 @@ public class TaskController {
     @RequestMapping(value = "/{taskID}/comment/delete/{commentID}", method = RequestMethod.DELETE)
     public ResponseEntity<Response> deleteTaskComments(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                           @PathVariable(value = "taskID") Integer taskID,
-                                                                          @PathVariable(value = "taskID") Integer commentID) {
+                                                                          @PathVariable(value = "commentID") Integer commentID) {
         Response response = new Response();
         ManageTask manage = new ManageTask(country);
         Task task = manage.getTaskByID(taskID);
