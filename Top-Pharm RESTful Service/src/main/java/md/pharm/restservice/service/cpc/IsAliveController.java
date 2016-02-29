@@ -19,12 +19,12 @@ import java.util.List;
 public class IsAliveController {
 
     @RequestMapping(value = "/isAlive", method = RequestMethod.GET)
-    public ResponseEntity<Response<Boolean>> getCPC() {
+    public ResponseEntity<Integer> getCPC() {
         Response response = new Response();
         response.setResponseCode(ErrorCodes.OK.name);
         response.setResponseMessage(ErrorCodes.OK.userMessage);
         response.setObject(true);
-        return new ResponseEntity<Response<Boolean>>(response, HttpStatus.OK);
+        return new ResponseEntity<Integer>(1, HttpStatus.OK);
 
     }
 

@@ -203,6 +203,25 @@ public class TaskController {
         }
     }
 
+    @RequestMapping(value = "/{id}/isSubmitted/{isSubmitted}", method = RequestMethod.POST)
+    public ResponseEntity<Response> isSubmitted(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                @PathVariable(value = "id") Integer id,
+                                                @PathVariable(value = "isSubmitted") Boolean isSubmitted){
+        Response response = new Response();
+        ManageTask manageTask = new ManageTask(country);
+        Task task = manageTask.getTaskByID(id);
+        task.setIsSubmitted(isSubmitted);
+        if (manageTask.updateTask(task)) {
+            response.setResponseCode(ErrorCodes.OK.name);
+            response.setResponseMessage(ErrorCodes.OK.userMessage);
+            return new ResponseEntity<Response>(response, HttpStatus.CREATED);
+        } else {
+            response.setResponseCode(ErrorCodes.ResourceNotExists.name);
+            response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+    }
+
     //####################################################################################
     //GET
     //####################################################################################

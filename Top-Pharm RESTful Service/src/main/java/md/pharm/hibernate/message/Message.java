@@ -34,6 +34,10 @@ public class Message {
     @Column(name = "date")
     private Date date;
 
+    @Column(name = "unread")
+    @JsonIgnore
+    private boolean unread;
+
     @Column(name = "message")
     @Size(max = 512)
     @NotNull
@@ -102,6 +106,14 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean isUnread() {
+        return unread;
+    }
+
+    public void setUnread(boolean unread) {
+        this.unread = unread;
     }
 
     @Override

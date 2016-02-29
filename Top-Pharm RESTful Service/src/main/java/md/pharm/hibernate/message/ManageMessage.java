@@ -7,6 +7,7 @@ import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ManageMessage {
         this.country = Country.valueOf(country);
     }
 
-    public List<CPCCustomer> getAllRepresentatives(Integer userID, String field, boolean ascending){
+    public List<CPCCustomer> getAllRepresentatives(Integer userID, String date, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
         List<CPCCustomer> list = null;
@@ -34,18 +35,37 @@ public class ManageMessage {
             else ASC = "DESC";
 
             Query query = session.createSQLQuery(
-                            "select total.id, total.representativeName, isnull(messages.numbers, 0) as messagesNumber, total.hasUnreadMessages\n" +
-                            "from\n" +
-                            "\t(select u.id, u.user_name as representativeName, u.hasUnreadMessages\n" +
-                            "\tfrom [User] as u\n" +
-                            "\twhere u.id!=" + userID + ") as total\n" +
-                            "left join\n" +
-                            "\t(select u.id, u.user_name as representativeName, Count(m.id) as numbers\n" +
-                            "\tfrom [User] as u, Message as m\n" +
-                            "\twhere ((u.id=m.fromID and " + userID + "=m.toID) or (u.id=m.toID and " + userID + "=m.fromID)) and u.id!=" + userID + " \n" +
-                            "\tgroup by u.id, u.user_name) as messages\n" +
-                            "on total.id=messages.id\n" +
-                            "order by " + field + " " + ASC)
+                            "select total.id, total.representativeName, total.representiveAddress, total.representativePhone1, \n" +
+                                    "\t\tifnull(messages.numbers, 0) as messagesNumber, \n" +
+                                    "\t\tifnull(unreadMessages.numbers, 0) as unreadMessagesNumber, \n" +
+                                    "\t\tifnull(unreadMessages.hasUnreadMessages, 0) as hasUnreadMessages,\n" +
+                                    "\t\ttask.taskID as ongoingActivityID\n" +
+                                    "from\n" +
+                                    "\t(select u.id, u.user_name as representativeName, u.address as representiveAddress, u.phone1 as representativePhone1, u.hasUnreadMessages\n" +
+                                    "\tfrom User as u\n" +
+                                    "\twhere u.id!=" + userID + ") as total\n" +
+                                    "left join\n" +
+                                    "\t(select u.id, Count(m.id) as numbers\n" +
+                                    "\tfrom User as u, Message as m\n" +
+                                    "\twhere ((u.id=m.fromID and " + userID + "=m.toID) or (u.id=m.toID and " + userID + "=m.fromID)) and u.id!=" + userID + " \n" +
+                                    "\tgroup by u.id) as messages\n" +
+                                    "on total.id=messages.id\n" +
+                                    "\n" +
+                                    "left join\n" +
+                                    "\t(select u.id, count(m.id) as numbers, 1 as hasUnreadMessages\n" +
+                                    "\tfrom User as u, Message as m\n" +
+                                    "\twhere u.id=m.fromID and " + userID + "=m.toID and m.unread=1\n" +
+                                    "\tgroup by u.id) as unreadMessages\n" +
+                                    "on total.id=unreadMessages.id\n" +
+                                    "\n" +
+                                    "left join \n" +
+                                    "\t(select distinct u.id as userID, min(t.id) as taskID\n" +
+                                    "\tfrom User as u, Task as t\n" +
+                                    "\twhere u.id=t.userID and t.startDate<='" + date + "' and '" + date + "'<=t.endDate\n" +
+                                    "\tgroup by u.id\n" +
+                                    "\t)as task\n" +
+                                    "on total.id=task.userID\n" +
+                                    "order by " + field + " " + ASC)
                     .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
                     //.addEntity(CPCCustomer.class)
                     ;
@@ -58,6 +78,36 @@ public class ManageMessage {
         }finally {
         }
         return list;
+    }
+
+    public BigInteger getNumberOfUnreadMessages(Integer userID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        BigInteger number = null;
+        try{
+            tx = session.beginTransaction();
+
+            Query query = session.createSQLQuery(
+                    "Select ifnull(m.totalUnreadMessages, 0)\n" +
+                            "from User as u\n" +
+                            "left join\n" +
+                            "(Select u.id, count(m.id) as totalUnreadMessages from User as u, Message as m\n" +
+                            "where u.id="+userID+" and u.id=m.toID and m.unread=1\n" +
+                            "group by u.id, m.id) as m\n" +
+                            "on u.id=m.id\n" +
+                            "where u.id="+userID)
+                    //.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                    //.addEntity(CPCCustomer.class)
+                    ;
+
+            number = (BigInteger)query.uniqueResult();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return number;
     }
 
     public List<Message> getMessages() {

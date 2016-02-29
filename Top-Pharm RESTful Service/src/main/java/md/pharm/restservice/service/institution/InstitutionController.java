@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -72,6 +74,44 @@ public class InstitutionController {
             response.setResponseMessage(ErrorCodes.AccountAlreadyExists.userMessage);
             response.setViolations(violations);
             return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/create/list", method = RequestMethod.POST)
+    public ResponseEntity<Response<Map<Integer, Institution>>> createList(@RequestBody List<Institution> list,
+                                                        @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+        Response response = new Response();
+        Map<Integer, Institution> map = new HashMap<>();
+        Map<Institution, Set<Violation>> viol = new HashMap<>();
+
+        boolean flag = true;
+        for (Institution institution : list) {
+            Set<Violation> violations = new ValidatorUtil<Institution>().getViolations(institution);
+            if (violations.size() > 0 || institution.getId() != null) {
+                flag = false;
+                viol.put(institution, violations);
+            }
+        }
+
+        if (flag) {
+            ManageInstitution manage = new ManageInstitution(country);
+            for (Institution institution : list) {
+                Institution institutionFromDB = manage.getInstitutionByLongName(institution.getLongName());
+                if (institutionFromDB == null) {
+                    Integer id = manage.addInstitution(institution);
+                    if (id != null)
+                        map.put(id, institution);
+                }
+            }
+            response.setResponseCode(ErrorCodes.Created.name);
+            response.setResponseMessage(ErrorCodes.Created.userMessage);
+            response.setObject(map);
+            return new ResponseEntity<Response<Map<Integer, Institution>>>(response, HttpStatus.OK);
+        } else {
+            response.setResponseCode(ErrorCodes.AccountAlreadyExists.name);
+            response.setResponseMessage(ErrorCodes.AccountAlreadyExists.userMessage);
+            response.setObject(viol);
+            return new ResponseEntity<Response<Map<Integer, Institution>>>(response, HttpStatus.OK);
         }
     }
 

@@ -35,6 +35,7 @@
         <property name="conneciton.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
 
         <property name="current_session_context_class">thread</property>
+        <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.show_sql">true</property>
         <property name="cache.provider_class">org.hibernate.cache.NoCacheRegionFactoryAvailableException</property>
 

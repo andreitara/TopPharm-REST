@@ -15,9 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Andrei on 10/5/2015.
@@ -83,6 +81,45 @@ public class DoctorController {
             response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
             response.setViolations(violations);
             return new ResponseEntity<Response<Integer>>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/create/list", method = RequestMethod.POST)
+    public ResponseEntity<Response<Map<Integer, Doctor>>> createList(@RequestBody List<Doctor> list,
+                                                              @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+        Response response = new Response<Integer>();
+        Map<Integer, Doctor> map = new HashMap<>();
+        Map<Doctor, Set<Violation>> viol = new HashMap<>();
+        boolean flag = true;
+        for (Doctor doctor : list) {
+            Set<Violation> violations = new ValidatorUtil<Doctor>().getViolations(doctor);
+            if (violations.size() > 0 || doctor.getId() != null) {
+                flag = false;
+                viol.put(doctor, violations);
+            }
+        }
+        if (flag) {
+            ManageDoctor manage = new ManageDoctor(country);
+            ManageSpeciality manageSpeciality = new ManageSpeciality(country);
+
+            for (Doctor doctor : list) {
+                Speciality speciality = doctor.getSpeciality();
+                if (speciality == null || (speciality != null && speciality.getId() != null && manageSpeciality.getByID(speciality.getId()) != null)) {
+                    Integer id = manage.addDoctor(doctor);
+                    if (id != null)
+                        map.put(id, doctor);
+                }
+            }
+            response.setResponseCode(ErrorCodes.Created.name);
+            response.setResponseMessage(ErrorCodes.Created.userMessage);
+            response.setObject(map);
+            return new ResponseEntity<Response<Map<Integer, Doctor>>>(response, HttpStatus.CREATED);
+
+        } else {
+            response.setResponseCode(ErrorCodes.WriteConditionNotMet.name);
+            response.setResponseMessage(ErrorCodes.WriteConditionNotMet.userMessage);
+            response.setObject(viol);
+            return new ResponseEntity<Response<Map<Integer, Doctor>>>(response, HttpStatus.OK);
         }
     }
 

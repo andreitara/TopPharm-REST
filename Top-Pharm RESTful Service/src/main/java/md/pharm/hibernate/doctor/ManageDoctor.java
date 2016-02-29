@@ -179,14 +179,14 @@ public class ManageDoctor {
                             "left join\n" +
                             "(select u.id, u.user_name as representativeName, COUNT(t.id) as tasks\n" +
                             "from Task as t, User as u\n" +
-                            "where u.id=t.userID and startDate>='"+ DateUtil.getFirstDayForCurrentMonth() +"' and endDate<='"+ DateUtil.getLastDayForCurrentMonth() +"'\n" +
+                            "where u.id=t.userID and startDate>='"+ DateUtil.getStartCurrentDay() +"' and endDate<='"+ DateUtil.getEndCurrentDay() +"'\n" +
                             "group by u.id, u.user_name) as total2\n" +
                             "on total.id = total2.id\n" +
                             "\n" +
                             "left join\n" +
                             "(select u.id, u.user_name as representativeName, COUNT(t.id) as tasks\n" +
                             "from Task as t, User as u\n" +
-                            "where u.id=t.userID and t.isSubmitted=1 and startDate>='"+ DateUtil.getFirstDayForCurrentMonth() +"' and endDate<='"+ DateUtil.getLastDayForCurrentMonth() +"'\t \n" +
+                            "where u.id=t.userID and t.isSubmitted=1 and startDate>='"+ DateUtil.getStartCurrentDay() +"' and endDate<='"+ DateUtil.getEndCurrentDay() +"'\t \n" +
                             "group by u.id, u.user_name) as submitted2\n" +
                             "on total.id = submitted2.id\n" +
                             "order by " + field + " " + ASC)

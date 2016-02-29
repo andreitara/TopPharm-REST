@@ -1,5 +1,7 @@
 package md.pharm.util;
 
+import org.joda.time.LocalDateTime;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,6 +56,14 @@ public class DateUtil {
         String month = formatter.format(new java.util.Date());
         String result = calendar.get(Calendar.YEAR) + "-" + month + "-" + calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         return result;
+    }
+
+    public static String getStartCurrentDay(){
+        return new LocalDateTime().toString("yyyy-MM-dd " + "00:00:00");
+    }
+
+    public static String getEndCurrentDay(){
+        return new LocalDateTime().toString("yyyy-MM-dd " + "23:59:59");
     }
 
 }

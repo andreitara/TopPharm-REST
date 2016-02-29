@@ -3,6 +3,7 @@ package md.pharm.hibernate.task;
 import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.hibernate.product.Product;
 import md.pharm.util.Country;
+import md.pharm.util.DateUtil;
 import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.Criterion;
@@ -98,7 +99,7 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer", "customer", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .setFetchMode("childFiles", FetchMode.SELECT)
@@ -182,7 +183,7 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer", "customer", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("type", "type")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
@@ -219,7 +220,7 @@ public class ManageTask {
                     .setFetchMode("childFiles", FetchMode.SELECT)
                     .addOrder(order)
                     //.createCriteria("customer")
-                    .add(Restrictions.eq("customer.id",id));
+                    .add(Restrictions.eq("customer.id", id));
 
             list = criteria.list();
 
@@ -244,7 +245,7 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer", "customer", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
@@ -275,7 +276,7 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer", "customer", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("user","user")
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
@@ -283,7 +284,7 @@ public class ManageTask {
                     .add(Restrictions.eq("category", category))
                     .addOrder(order)
                     //.createCriteria("user")
-                    .add(Restrictions.eq("user.id",id));
+                    .add(Restrictions.eq("user.id", id));
 
             list = criteria.list();
 
@@ -374,7 +375,7 @@ public class ManageTask {
             else order = Order.desc(field);
 
             Criteria criteria = session.createCriteria(TaskGet.class)
-                    .createAlias("customer","customer", JoinType.LEFT_OUTER_JOIN)
+                    .createAlias("customer", "customer", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("customer.speciality", "speciality", JoinType.LEFT_OUTER_JOIN)
                     .createAlias("user", "user")
                     .createAlias("type", "type")
@@ -615,6 +616,25 @@ public class ManageTask {
         try{
             tx = session.beginTransaction();
             Query query = session.createSQLQuery("delete from DoctorTask where taskID = " + taskID + " and doctorID = " + doctorID);
+            int result = query.executeUpdate();
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
+    public boolean updateCurrentSubmittedTasks(){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            Query query = session.createSQLQuery("update Task set isSubmitted = 1 where '" + DateUtil.getStartCurrentDay() + "'<=startDate and endDate<='" + DateUtil.getEndCurrentDay() + "'");
             int result = query.executeUpdate();
             tx.commit();
             flag = true;

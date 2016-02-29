@@ -44,8 +44,8 @@ public class DoctorTaskController {
 
     @RequestMapping(value = "/add/{doctorID}", method = RequestMethod.POST)
     public ResponseEntity<Response> add(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                 @PathVariable(value = "taskID") int taskID,
-                                 @PathVariable(value = "doctorID") int doctorID){
+                                        @PathVariable(value = "taskID") int taskID,
+                                        @PathVariable(value = "doctorID") int doctorID){
         Response response = new Response();
         ManageTask manageTask = new ManageTask(country);
         Task task = manageTask.getTaskByID(taskID);
@@ -66,6 +66,47 @@ public class DoctorTaskController {
             }else{
                 response.setResponseCode(ErrorCodes.InternalError.name);
                 response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+                return new ResponseEntity<Response>(response, HttpStatus.OK);
+            }
+        }else{
+            response.setResponseCode(ErrorCodes.InternalError.name);
+            response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/add/list", method = RequestMethod.POST)
+    public ResponseEntity<Response> addList(@RequestBody List<Integer> attendeesIDs,
+                                            @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                            @PathVariable(value = "taskID") int taskID
+                                            ){
+        Response response = new Response();
+        ManageTask manageTask = new ManageTask(country);
+        Task task = manageTask.getTaskByID(taskID);
+        if(task!=null){
+            ManageDoctor manageDoctor = new ManageDoctor(country);
+            boolean flag = true;
+            for(Integer id : attendeesIDs){
+                Doctor doctor = manageDoctor.getDoctorByID(id);
+                if(doctor!=null){
+                    task.getAttendees().add(doctor);
+                }else{
+                    flag=false;
+                }
+            }
+            if(flag) {
+                if(manageTask.updateTask(task)) {
+                    response.setResponseCode(ErrorCodes.OK.name);
+                    response.setResponseMessage(ErrorCodes.OK.userMessage);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
+                }else{
+                    response.setResponseCode(ErrorCodes.InternalError.name);
+                    response.setResponseMessage(ErrorCodes.InternalError.userMessage);
+                    return new ResponseEntity<Response>(response, HttpStatus.OK);
+                }
+            }else{
+                response.setResponseCode(ErrorCodes.ResourceNotExists.name);
+                response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
                 return new ResponseEntity<Response>(response, HttpStatus.OK);
             }
         }else{

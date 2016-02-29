@@ -11,11 +11,14 @@ import md.pharm.restservice.service.cpc.CPCCustomer;
 import md.pharm.util.Response;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.StaticStrings;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +39,11 @@ public class MessageController {
                                                                             @PathVariable("ascending") boolean ascending){
         Response response = new Response();
         ManageMessage manageMessage = new ManageMessage(country);
-        List<CPCCustomer> list = manageMessage.getAllRepresentatives(1, byField, ascending);
+        ManageUser manageUser = new ManageUser(country);
+        User user = manageUser.getUserByUsername(username);
+        LocalDate localDate = new LocalDate();
+        LocalTime localTime = new LocalTime();
+        List<CPCCustomer> list = manageMessage.getAllRepresentatives(user.getId(), localDate.toString("yyyy-MM-dd" + " " + localTime.toString("HH:mm:ss")) , byField, ascending);
         if(list!=null){
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -49,21 +56,23 @@ public class MessageController {
         }
     }
 
-    @RequestMapping(value = "/representative/hasUnreadMessages", method = RequestMethod.GET)
-    public ResponseEntity<Response<Boolean>> hasUnreadMessages(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+    @RequestMapping(value = "/representative/unreadMessages", method = RequestMethod.GET)
+    public ResponseEntity<Response<BigInteger>> hasUnreadMessages(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
                                                                @RequestHeader(value = StaticStrings.HEADER_USERNAME) String username){
         Response response = new Response();
         ManageUser manageUser = new ManageUser(country);
+        ManageMessage manageMessage = new ManageMessage(country);
         User user = manageUser.getUserByUsername(username);
-        if(user!=null){
+        BigInteger number = manageMessage.getNumberOfUnreadMessages(user.getId());
+        if(number!=null){
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
-            response.setObject(user.isHasUnreadMessages());
-            return new ResponseEntity<Response<Boolean>>(response, HttpStatus.OK);
+            response.setObject(number);
+            return new ResponseEntity<Response<BigInteger>>(response, HttpStatus.OK);
         }else{
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
-            return new ResponseEntity<Response<Boolean>>(response, HttpStatus.OK);
+            return new ResponseEntity<Response<BigInteger>>(response, HttpStatus.OK);
         }
     }
 
@@ -86,6 +95,7 @@ public class MessageController {
                             message.setDate(Calendar.getInstance().getTime());
                         message.setFrom(from);
                         message.setTo(to);
+                        message.setUnread(true);
                         Integer id = manage.addMessage(message);
                         if (id != null) {
                             to.setHasUnreadMessages(true);
@@ -138,6 +148,10 @@ public class MessageController {
         ManageUser manageUser = new ManageUser(country);
         User to = manageUser.getUserByUsername(username);
         List<Message> messages = manageMessage.getMessagesBidirectional(fromID, to.getId(), firstResult, maxResult);
+        for(Message m : messages){
+            m.setUnread(false);
+            manageMessage.updateMessage(m);
+        }
         if (messages != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
@@ -160,6 +174,10 @@ public class MessageController {
         ManageUser manageUser = new ManageUser(country);
         User to = manageUser.getUserByUsername(username);
         List<Message> messages = manageMessage.getLatestMessagesBidirectional(fromID, to.getId(),maxResult);
+        for(Message m : messages){
+            m.setUnread(false);
+            manageMessage.updateMessage(m);
+        }
         if (messages != null) {
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
