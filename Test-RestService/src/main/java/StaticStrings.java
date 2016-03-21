@@ -36,6 +36,7 @@ public class StaticStrings {
     public static String GET_ALL_INSTITUTIONS_URI = REST_IP_PORT + "/toppharm/v1/medical/institution/all/{byField}/{ascending}";
     public static String GET_INSTITUTION_URI =      REST_IP_PORT + "/toppharm/v1/medical/institution/{id}";
     public static String CREATE_INSTITUTION_URI =   REST_IP_PORT + "/toppharm/v1/medical/institution/create";
+    public static String CREATE_INSTITUTION_LIST_URI =   REST_IP_PORT + "/toppharm/v1/medical/institution/create/list";
     public static String UPDATE_INSTITUTION_URI =   REST_IP_PORT + "/toppharm/v1/medical/institution/update";
     public static String DELETE_INSTITUTION_URI =   REST_IP_PORT + "/toppharm/v1/medical/institution/delete/{id}";
     public static String GET_INSTITUTIONS_BY_PART_OF_NAME =  REST_IP_PORT + "/toppharm/v1/medical/institution/name/{name}/{byField}/{ascending}";
@@ -49,16 +50,13 @@ public class StaticStrings {
     public static String UPDATE_INSTITUTION_TYPE_URI =   REST_IP_PORT + "/toppharm/v1/medical/institutiontype/update";
     public static String DELETE_INSTITUTION_TYPE_URI =   REST_IP_PORT + "/toppharm/v1/medical/institutiontype/delete/{id}";
 
-    public static String GET_INSTITUTION_ADDRESS_URI =      REST_IP_PORT + "/toppharm/v1/medical/institution/{institutionID}/address/";
-    public static String CREATE_INSTITUTION_ADDRESS_URI =   REST_IP_PORT + "/toppharm/v1/medical/institution/{institutionID}/address/create";
-    public static String UPDATE_INSTITUTION_ADDRESS_URI =   REST_IP_PORT + "/toppharm/v1/medical/institution/{institutionID}/address/update";
-
     public static String GET_ALL_CPC_URI = REST_IP_PORT + "/toppharm/v1/report/cpc/{userID}/{byField}/{ascending}";
     public static String GET_ALL_STATISTICS_URI = REST_IP_PORT + "/toppharm/v1/report/statistics/{byField}/{ascending}";
 
     public static String GET_ALL_DOCTORS_URI = REST_IP_PORT + "/toppharm/v1/medical/doctor/all/{byField}/{ascending}";
     public static String GET_DOCTOR_URI =      REST_IP_PORT + "/toppharm/v1/medical/doctor/{id}";
     public static String CREATE_DOCTOR_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/create";
+    public static String CREATE_DOCTOR_LIST_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/create/list";
     public static String UPDATE_DOCTOR_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/update";
     public static String DELETE_DOCTOR_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/delete/{id}";
     public static String GET_LAST_DATE_DOCTOR_URI =      REST_IP_PORT + "/toppharm/v1/medical/doctor/latestVisit/{doctorID}/{userID}";
@@ -70,11 +68,29 @@ public class StaticStrings {
     public static String ADD_DOCTOR_INSTITUTION_URI =      REST_IP_PORT + "/toppharm/v1/medical/doctor/{doctorID}/institution/add";
     public static String DELETE_DOCTOR_INSTITUTION_URI =   REST_IP_PORT + "/toppharm/v1/medical/doctor/{doctorID}/institution/delete";
 
+    public static String GET_ALL_USER_INSTITUTIONS_URI = REST_IP_PORT + "/toppharm/v1/medical/user/{userID}/institution/all/{byField}/{ascending}";
+    public static String GET_ALL_USER_INSTITUTIONS_BY_TYPE_URI = REST_IP_PORT + "/toppharm/v1/medical/user/{userID}/institution/all/type/{typeID}/{byField}/{ascending}";
+    public static String ADD_USER_INSTITUTION_URI =      REST_IP_PORT + "/toppharm/v1/medical/user/{userID}/institution/add";
+    public static String DELETE_USER_INSTITUTION_URI =   REST_IP_PORT + "/toppharm/v1/medical/user/{userID}/institution/delete";
+    public static String GET_LAST_VISIT_INSTITUTIONS_URI = REST_IP_PORT + "/toppharm/v1/medical/institution/latestVisit/{institutionID}/{userID}";
+
+    public static String GET_ALL_USER_DOCTORS_URI = REST_IP_PORT + "/toppharm/v1/medical/user/{userID}/doctor/all/{byField}/{ascending}";
+    public static String GET_ALL_USER_DOCTORS_BY_TYPE_URI = REST_IP_PORT + "/toppharm/v1/medical/user/{userID}/doctor/all/speciality/{specialityID}/{byField}/{ascending}";
+
+
     public static String GET_ALL_SPECIALITY_URI =  REST_IP_PORT + "/toppharm/v1/medical/speciality/all";
     public static String GET_SPECIALITY_URI =      REST_IP_PORT + "/toppharm/v1/medical/speciality/{id}";
     public static String CREATE_SPECIALITY_URI =   REST_IP_PORT + "/toppharm/v1/medical/speciality/create";
     public static String UPDATE_SPECIALITY_URI =   REST_IP_PORT + "/toppharm/v1/medical/speciality/update";
     public static String DELETE_SPECIALITY_URI =   REST_IP_PORT + "/toppharm/v1/medical/speciality/delete/{id}";
+
+    public static String GET_ALL_STATUS_URI =  REST_IP_PORT + "/toppharm/v1/user/status/all/{byField}/{ascending}";
+    public static String GET_STATUS_URI =      REST_IP_PORT + "/toppharm/v1/user/status/{id}";
+    public static String CREATE_STATUS_URI =   REST_IP_PORT + "/toppharm/v1/user/status/create";
+    public static String UPDATE_STATUS_URI =   REST_IP_PORT + "/toppharm/v1/user/status/update";
+    public static String DELETE_STATUS_URI =   REST_IP_PORT + "/toppharm/v1/user/status/delete/{id}";
+
+    public static String UPDATE_USER_STATUS_URI =   REST_IP_PORT + "/toppharm/v1/user/update/{userID}/status/{statusID}";
 
     public static String GET_ALL_GENERAL_TYPE_URI =  REST_IP_PORT + "/toppharm/v1/medical/generaltype/all";
     public static String GET_GENERAL_TYPE_URI =      REST_IP_PORT + "/toppharm/v1/medical/generaltype/{id}";
@@ -149,6 +165,7 @@ public class StaticStrings {
     public static String GET_INSTITUTION_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/institution/";
 
     public static String ADD_DOCTOR_TASK_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/attendee/add/{doctorID}";
+    public static String ADD_DOCTOR_TASK_LIST_URI =     REST_IP_PORT + "/toppharm/v1/task/{taskID}/attendee/add/list";
     public static String DELETE_DOCTOR_TASK_URI =  REST_IP_PORT + "/toppharm/v1/task/{taskID}/attendee/delete/{doctorID}";
     public static String GET_DOCTORS_TASK_URI =    REST_IP_PORT + "/toppharm/v1/task/{taskID}/attendee/all/{byField}/{ascending}";
 
@@ -162,7 +179,7 @@ public class StaticStrings {
 
     public static String ADD_MESSAGE =              REST_IP_PORT + "/toppharm/v1/message/to/{toID}/add";
     public static String GET_REPRESENTATIVES =      REST_IP_PORT + "/toppharm/v1/message//representative/{byField}/{ascending}";
-    public static String GET_HAS_UNREAD_MESSAGES =  REST_IP_PORT + "/toppharm/v1/message//representative/hasUnreadMessages";
+    public static String GET_HAS_UNREAD_MESSAGES =  REST_IP_PORT + "/toppharm/v1/message//representative/unreadMessages";
     public static String GET_MESSAGES_FROM =        REST_IP_PORT + "/toppharm/v1/message/from/{fromID}/{firstResult}/{maxResult}";
     public static String GET_LATEST_MESSAGES_FROM = REST_IP_PORT + "/toppharm/v1/message/from/{fromID}/latest/{maxResult}";
 

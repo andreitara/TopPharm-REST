@@ -9,24 +9,24 @@ public class PerformanceTest {
 
     public static void getTest() throws JsonProcessingException, InterruptedException {
 
-        Thread[] threads = new Thread[10];
+        Thread[] threads = new Thread[20];
         for (int k = 0; k < threads.length; k++) {
             threads[k] = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    for (int i = 0; i < 100; i++) {
+                    for (int i = 0; i < 30; i++) {
                         System.out.println("Thread " + i);
                         try {
-                            TaskControllerTest.getTaskByAdmin(1);
-                            InstitutionsControllerTest.getInstitutionsByAdmin(4);
-                            InstitutionAddressControllerTest.getInstitutionAddressByAdmin(4);
-                            ProductControllerTest.getProductByAdmin(2);
-                            ProductObjectiveControllerTest.getAllProductObjectivesByAdmin(2);
-                            DoctorControllerTest.getAllDoctorsByAdmin("name", true);
-                            PermissionControllerTest.getAdminMyPermission();
-                            UserControllerTest.getUserByAdmin(3);
-                            DoctorTaskControllerTest.getAllDoctorsTask(2, "name", true);
-                            UserTaskControllerTest.getAllUsersTask(1);
+                            MessageControllerTest.getAllRepresentatives("id", true);
+                            MessageControllerTest.getHasUnreadMessages();
+                            MessageControllerTest.getMessageBiDirectionalFROM(1002, 0, 2);
+                            MessageControllerTest.getLatestMessageBiDirectionalFROM(1002, 1);
+                            MessageControllerTest.getAllRepresentatives("id", true);
+                            MessageControllerTest.getHasUnreadMessages();
+                            MessageControllerTest.getMessageBiDirectionalFROM(1002,0,2);
+                            MessageControllerTest.getLatestMessageBiDirectionalFROM(1002,1);
+                            MessageControllerTest.getAllRepresentatives("id", true);
+                            MessageControllerTest.getHasUnreadMessages();
                         } catch (JsonProcessingException e) {
                             e.printStackTrace();
                         }

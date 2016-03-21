@@ -15,7 +15,7 @@ import java.util.*;
 
 public class UserControllerTest {
 
-    static CreateUser user = new CreateUser("user","user","user", Calendar.getInstance().getTime(),"user4","useruseruser1","user@email.com","+698574","126345987");
+    static CreateUser user = new CreateUser("user","user","user", Calendar.getInstance().getTime(),"user7","useruseruser5","user@email.com","+698574","126345987");
 
     static UpdateUser updateUser = new UpdateUser("user","user","user", Calendar.getInstance().getTime(),"user3","user@email.com","+698574","126345987");
 
@@ -23,6 +23,10 @@ public class UserControllerTest {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(3);
+        user.setInstitutionIds(list);
         HttpEntity entity = new HttpEntity(user, headers);
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.CREATE_USER_URI, HttpMethod.POST, entity, Response.class);
         ObjectMapper mapper = new ObjectMapper();
@@ -40,6 +44,7 @@ public class UserControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
+
 
     public static void getAllUsersByAdmin(String byField, boolean ascending) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();

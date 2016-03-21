@@ -30,7 +30,7 @@ public class SampleControllerTest {
 
     public static void updateDoctorByAdmin(int id) throws JsonProcessingException {
         sample.setId(id);
-        sample.setTitle("Sample Update");
+        sample.setName("Sample Update");
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);

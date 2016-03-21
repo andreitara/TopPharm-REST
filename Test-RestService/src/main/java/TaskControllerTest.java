@@ -34,8 +34,8 @@ public class TaskControllerTest {
         endDate = calendar.getTime();
     }
 
-    public static Task task = new Task("c name", "category 2", null, "repeat", false, false, 3, startDate, endDate,"description");
-    public static TaskCreate taskCreate = new TaskCreate(null, "task name", "category", null, "repeat", true, true, startDate, endDate, "description", "address", 1002, null, null);
+    public static Task task = new Task("test task", "category 2", null, "repeat", false, false, 3, startDate, endDate,"description");
+    public static TaskCreate taskCreate = new TaskCreate(null, "task name", "category", null, "repeat", true, true, startDate, endDate, "description", "address", 1, null, null);
     public static TaskComment taskComment = new TaskComment(Calendar.getInstance().getTime(), "Eu asa vreu si gata");
 
     public static void createTaskByAdmin() throws JsonProcessingException {
@@ -43,12 +43,11 @@ public class TaskControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
         HttpEntity entity = new HttpEntity(taskCreate, headers);
-
         //Map<String,String> params = new HashMap<>();
         //params.put("doctorID",String.valueOf(doctorID));
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.CREATE_TASK_URI, HttpMethod.POST, entity, Response.class);
         ObjectMapper mapper = new ObjectMapper();
-        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entity));
+        //System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entity));
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
 

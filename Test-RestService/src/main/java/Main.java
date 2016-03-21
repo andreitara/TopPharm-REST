@@ -32,22 +32,41 @@ public class Main {
 
         //UserControllerTest.createUserByAdmin();
         //UserControllerTest.updateUserByAdmin(1002);
-        //UserControllerTest.deleteUserByAdmin(2);
+        //UserControllerTest.deleteUserByAdmin(2005);
         //UserControllerTest.getUserByAdmin(1);
         //UserControllerTest.getAllUsersByAdmin("name", true);
+
+        //StatusController.createStatusByAdmin();
+        //StatusController.getAllStatusesByAdmin("name", true);
+        //StatusController.updateStatusByAdmin(2);
+        //StatusController.getStatusByAdmin(2);
+        //StatusController.deleteStatusByAdmin(2);
+        //StatusController.updateUserStatusByAdmin(1,1);
+
         //DoctorUserControllerTest.addDoctorToUser(1,1);
         //DoctorUserControllerTest.deleteDoctorFromUser(4,1);
         //DoctorUserControllerTest.getAllDoctorsFromUser(1, "name", true);
 
         //InstitutionsControllerTest.createInstitutionByAdmin();
-        //InstitutionsControllerTest.getInstitutionsByAdmin(1);
+        //InstitutionsControllerTest.createInstitutionListByAdmin();
+        //InstitutionsControllerTest.getInstitutionsByAdmin(23);
         //InstitutionsControllerTest.getAllInstitutionsByAdmin("longName", false);
-        //InstitutionsControllerTest.updateInstitutionByAdmin(4);
+        //InstitutionsControllerTest.updateInstitutionByAdmin(1);
         //InstitutionsControllerTest.deleteInstitutionByAdmin(1);
         //InstitutionsControllerTest.getAllInstitutionsByCity("rezina", "longName", true);
         //InstitutionsControllerTest.getAllInstitutionsByPartName("name", "longName", false);
         //InstitutionsControllerTest.getAllInstitutionsByType(2, "longName", true);
         //InstitutionsControllerTest.getAllInstitutionsByCityAndType("chisinau", 1, "longName", true);
+
+        //InstitutionsControllerTest.addInstitutionsToDoctor(1, 1, 2);
+        //InstitutionsControllerTest.deleteInstitutionsListToDoctor(1, 1);
+        //InstitutionsControllerTest.getAllInstitutionsFromUser(1, "longName", true);
+        //InstitutionsControllerTest.getAllInstitutionsFromUserByType(1, 1, "longName", true);
+        //InstitutionsControllerTest.getLastVisitInstitutionsFromUser(1, 1);
+
+        //InstitutionsControllerTest.getAllDoctorsFromUser(1, "name", true);
+        //InstitutionsControllerTest.getAllDoctorsFromUserByType(1, 1, "name", true);
+
 
         //InstitutionTypeControllerTest.createDoctorByAdmin();
         //InstitutionTypeControllerTest.getAllDoctorsByAdmin();
@@ -60,20 +79,22 @@ public class Main {
         //InstitutionAddressControllerTest.updateInstitutionAddressByAdmin(5);
 
         //DoctorControllerTest.getAllCPCByAdmin(1, "name", true);
-        //DoctorControllerTest.getAllStatisticsByAdmin("representativeName", true);
+        //DoctorControllerTest.getAllStatisticsByAdmin("id", true);
 
         //DoctorControllerTest.createDoctorByAdmin();
+        //DoctorControllerTest.createDoctorListByAdmin();
         //DoctorControllerTest.updateDoctorByAdmin(1);
-        //DoctorControllerTest.getAllDoctorsByAdmin("name", true);
-        //DoctorControllerTest.getDoctorByAdmin(25);
+        //DoctorControllerTest.getAllDoctorsByAdmin("speciality.name", true);
+        //DoctorControllerTest.getDoctorByAdmin(35);
         //DoctorControllerTest.deleteDoctorByAdmin(25);
-        //DoctorControllerTest.getLastDateDoctorByAdmin(2,1);
+        //DoctorControllerTest.getLastDateDoctorByAdmin(7, 1);
         //DoctorControllerTest.getAllDoctorsBySpecialityByAdmin(2);
         //DoctorControllerTest.getAllDoctorsByGeneralTypeByAdmin(1);
 
         //DoctorControllerTest.addInstitutionsToDoctor(3, 4);
-        //DoctorControllerTest.getAllInstitutionsToDoctor(3);
+        //DoctorControllerTest.getAllInstitutionsToDoctor(54);
         //DoctorControllerTest.deleteInstitutionsListToDoctor(16);
+        //DoctorControllerTest.getAllDoctorsWithInstitutionID(17,"id",true);
 
 
         //SpecialityController.createDoctorByAdmin();
@@ -111,21 +132,21 @@ public class Main {
 
         //TaskControllerTest.createTaskByAdmin();
         //TaskControllerTest.updateTaskByAdmin(13);
-        //TaskControllerTest.getAllTasksByAdmin("name", true);
-        //TaskControllerTest.getTaskByAdmin(21);
+        //TaskControllerTest.getAllTasksByAdmin("speciality.name", true);
+        //TaskControllerTest.getTaskByAdmin(153);
         //TaskControllerTest.deleteTaskByAdmin(1);
 
         //TaskControllerTest.getAllTasksByCategoryByAdmin("category 2", "speciality.name", true);
         //TaskControllerTest.getAllTasksByTypeByAdmin(2, "name", true);
         //TaskControllerTest.getAllTasksIsCapitalByAdmin(false, "name", false);
 
-        //TaskControllerTest.getAllTasksByUserByAdmin(1, "name", true);
+        //TaskControllerTest.getAllTasksByUserByAdmin(1, "speciality.name", true);
         //TaskControllerTest.getAllTasksByUserByCategoryByAdmin(1, "category 2", "name", true);
         //TaskControllerTest.getAllTasksByUserByTypeByAdmin(1, 1, "name", true);
 
-        //TaskControllerTest.addTaskCommentByAdmin(2);
-        //TaskControllerTest.getTaskCommentByAdmin(2);
-        //TaskControllerTest.deleteTaskCommentByAdmin(2,2);
+        //TaskControllerTest.addTaskCommentByAdmin(2009);
+        //TaskControllerTest.getTaskCommentByAdmin(2009);
+        //TaskControllerTest.deleteTaskCommentByAdmin(2009, 1003);
         //TaskControllerTest.getTaskHistoryByAdmin(1);
 
         //TaskAttributesControllerTest.addMemoToTask(1);
@@ -158,8 +179,9 @@ public class Main {
 
 
         //DoctorTaskControllerTest.addDoctorToTask(2,2);
+        //DoctorTaskControllerTest.addDoctorToTaskList(153, 34, 35);
         //DoctorTaskControllerTest.deleteDoctorToTask(2,3);
-        //DoctorTaskControllerTest.getAllDoctorsTask(2,"name", true);
+        //DoctorTaskControllerTest.getAllDoctorsTask(153,"name", true);
 
         //ProductTaskControllerTest.addProductToTask(1009,1005);
         //ProductTaskControllerTest.getAllProductsTask(1009, "priority", true);
@@ -192,7 +214,7 @@ public class Main {
 
     public static void main2(){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(1451250483000l);
+        calendar.setTimeInMillis(1454331600000l);
 
         int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH);

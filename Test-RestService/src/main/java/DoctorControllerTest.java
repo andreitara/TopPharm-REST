@@ -16,7 +16,8 @@ import java.util.*;
  */
 public class DoctorControllerTest {
 
-    public static Doctor doctor = new Doctor("doctor nou", "chisinau", "address", Calendar.getInstance().getTime(), "123", "133", "123", "email@email.md", null, "A", "A1");
+    public static Doctor doctor = new Doctor("doctor 333", "chisinau", "address", Calendar.getInstance().getTime(), "123", "133", "123", "email@email.md", null, "A", "A1");
+    public static Doctor doctor2 = new Doctor("doctor 444", "chisinau", "address", Calendar.getInstance().getTime(), "123", "133", "123", "email@email.md", null, "A", "A1");
 
     public static Speciality speciality = new Speciality();
 
@@ -31,6 +32,29 @@ public class DoctorControllerTest {
         //System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entity.getBody()));
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.CREATE_DOCTOR_URI, HttpMethod.POST, entity, Response.class);
         mapper = new ObjectMapper();
+        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
+    }
+
+    public static void createDoctorListByAdmin() throws JsonProcessingException {
+        //speciality.setId(2);
+        //doctor.setSpeciality(speciality);
+        ObjectMapper mapper = new ObjectMapper();
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
+        List<Integer> ids = new ArrayList<>();
+        ids.add(17);
+        ids.add(18);
+        doctor.setInstitutionIds(ids);
+        doctor2.setInstitutionIds(ids);
+        List<Doctor> list = new ArrayList<>();
+        list.add(doctor);
+        list.add(doctor2);
+        HttpEntity entity = new HttpEntity(list, headers);
+        //System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entity.getBody()));
+        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.CREATE_DOCTOR_LIST_URI, HttpMethod.POST, entity, Response.class);
+        mapper = new ObjectMapper();
+        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entity.getBody()));
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
 
@@ -176,6 +200,20 @@ public class DoctorControllerTest {
         Map<String,String> params = new HashMap<>();
         params.put("doctorID", String.valueOf(doctorID));
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.GET_ALL_DOCTOR_INSTITUTIONS_URI, HttpMethod.GET, entity, Response.class, params);
+        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
+    }
+
+    public static void getAllDoctorsWithInstitutionID(Integer institutionID, String byField, boolean ascending) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
+        HttpEntity entity = new HttpEntity(headers);
+        Map<String,String> params = new HashMap<>();
+        params.put("institutionID", String.valueOf(institutionID));
+        params.put("byField", String.valueOf(byField));
+        params.put("ascending", String.valueOf(ascending));
+        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.GET_DOCTORS_BY_INSTITUTION_URI, HttpMethod.GET, entity, Response.class, params);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }

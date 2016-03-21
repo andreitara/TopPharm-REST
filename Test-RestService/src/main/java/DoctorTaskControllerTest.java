@@ -6,7 +6,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +25,21 @@ public class DoctorTaskControllerTest {
         params.put("doctorID",String.valueOf(doctorID));
         params.put("taskID",String.valueOf(taskID));
         HttpEntity<Response> response = restTemplate.exchange(StaticStrings.ADD_DOCTOR_TASK_URI, HttpMethod.POST, entity, Response.class, params);
+        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
+    }
+
+    public static void addDoctorToTaskList(Integer taskID, Integer id1, Integer id2) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("auth-token", StaticStrings.ADMIN_AUTH_TOKEN);
+        List<Integer> list = new ArrayList<>();
+        list.add(id1);
+        list.add(id2);
+        HttpEntity entity = new HttpEntity(list, headers);
+        Map<String,String> params = new HashMap<>();
+        params.put("taskID",String.valueOf(taskID));
+        HttpEntity<Response> response = restTemplate.exchange(StaticStrings.ADD_DOCTOR_TASK_LIST_URI, HttpMethod.POST, entity, Response.class, params);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }

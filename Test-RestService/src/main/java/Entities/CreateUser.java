@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,6 +35,7 @@ public class CreateUser {
     private String email;
     private String phone1;
     private String phone2;
+    public List<Integer> institutionIds;
     public CreateUser() {
     }
 
@@ -127,5 +129,13 @@ public class CreateUser {
 
     public void setPhone2(String phone2) {
         this.phone2 = phone2;
+    }
+
+    public List<Integer> getInstitutionIds() {
+        return institutionIds;
+    }
+
+    public void setInstitutionIds(List<Integer> institutionIds) {
+        this.institutionIds = institutionIds;
     }
 }
