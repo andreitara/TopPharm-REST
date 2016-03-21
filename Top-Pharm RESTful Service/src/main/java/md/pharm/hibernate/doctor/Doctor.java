@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Set;
 import java.util.Date;
 
@@ -60,6 +61,9 @@ public class Doctor {
     @Email
     @Size(max = 320)
     private String email;
+
+    @Transient
+    public List<Integer> institutionIds;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy="doctors", cascade =
             {
@@ -285,6 +289,14 @@ public class Doctor {
 
     public void setSubType(String subType) {
         this.subType = subType;
+    }
+
+    public List<Integer> getInstitutionIds() {
+        return institutionIds;
+    }
+
+    public void setInstitutionIds(List<Integer> institutionIds) {
+        this.institutionIds = institutionIds;
     }
 
 

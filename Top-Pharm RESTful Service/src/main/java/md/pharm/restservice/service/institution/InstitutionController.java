@@ -1,8 +1,10 @@
 package md.pharm.restservice.service.institution;
 
 import md.pharm.hibernate.common.Address;
+import md.pharm.hibernate.doctor.ManageDoctor;
 import md.pharm.hibernate.institution.Institution;
 import md.pharm.hibernate.institution.ManageInstitution;
+import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.validator.ValidatorUtil;
 import md.pharm.hibernate.validator.Violation;
 import md.pharm.util.Response;
@@ -40,6 +42,25 @@ public class InstitutionController {
             response.setResponseCode(ErrorCodes.InternalError.name);
             response.setResponseMessage(ErrorCodes.InternalError.userMessage);
             return new ResponseEntity<Response<List<Institution>>>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/latestVisit/{institutionID}/{userID}", method = RequestMethod.GET)
+    public ResponseEntity<Response<String>> getLatestVisit(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
+                                                           @PathVariable(value = "institutionID") int institutionID,
+                                                           @PathVariable(value = "userID") int userID) {
+        Response response = new Response();
+        ManageDoctor manageDoctor = new ManageDoctor(country);
+        Object date = manageDoctor.getLatestVisitAtInstitution(userID, institutionID);
+        if (date != null) {
+            response.setResponseCode(ErrorCodes.OK.name);
+            response.setResponseMessage(ErrorCodes.OK.userMessage);
+            response.setObject(date);
+            return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
+        } else {
+            response.setResponseCode(ErrorCodes.ResourceNotExists.name);
+            response.setResponseMessage(ErrorCodes.ResourceNotExists.userMessage);
+            return new ResponseEntity<Response<String>>(response, HttpStatus.OK);
         }
     }
 
@@ -159,6 +180,9 @@ public class InstitutionController {
         ManageInstitution manageInstitution = new ManageInstitution(country);
         Institution institution = manageInstitution.getInstitutionByID(id);
         if (institution != null) {
+            ManageUser manageUser = new ManageUser(country);
+            manageUser.deleteInstitutionUserByInstitutionID(id);
+            manageUser.deleteInstitutionDoctorByInstitutionID(id);
             if (manageInstitution.deleteInstitution(institution)) {
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);

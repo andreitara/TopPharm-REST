@@ -10,11 +10,9 @@ import md.pharm.util.Response;
 import md.pharm.util.ErrorCodes;
 import md.pharm.util.StaticStrings;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.*;
 
 /**
@@ -86,7 +84,7 @@ public class DoctorController {
 
     @RequestMapping(value = "/create/list", method = RequestMethod.POST)
     public ResponseEntity<Response<Map<Integer, Doctor>>> createList(@RequestBody List<Doctor> list,
-                                                              @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
+                                                                     @RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country) {
         Response response = new Response<Integer>();
         Map<Integer, Doctor> map = new HashMap<>();
         Map<Doctor, Set<Violation>> viol = new HashMap<>();
@@ -106,8 +104,20 @@ public class DoctorController {
                 Speciality speciality = doctor.getSpeciality();
                 if (speciality == null || (speciality != null && speciality.getId() != null && manageSpeciality.getByID(speciality.getId()) != null)) {
                     Integer id = manage.addDoctor(doctor);
-                    if (id != null)
+                    if (id != null) {
                         map.put(id, doctor);
+
+                        //Add institutions
+                        List<Integer> ids = doctor.institutionIds;
+                        if(ids!=null) {
+                            System.out.println("################# InstitutionIDS not null");
+                            for (Integer institutionID : ids) {
+                                manage.addInstitutionDoctor(institutionID, id);
+                            }
+                        }else{
+                            System.out.println("################# InstitutionIDS not null");
+                        }
+                    }
                 }
             }
             response.setResponseCode(ErrorCodes.Created.name);

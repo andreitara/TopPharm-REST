@@ -1,5 +1,7 @@
 package md.pharm.restservice.service.user;
 
+import md.pharm.hibernate.doctor.ManageDoctor;
+import md.pharm.hibernate.institution.Institution;
 import md.pharm.hibernate.user.ManageUser;
 import md.pharm.hibernate.user.User;
 import md.pharm.hibernate.user.attributes.ManageStatus;
@@ -13,8 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Andrei on 9/7/2015.
@@ -31,6 +32,19 @@ public class UserController {
         ManageUser manageUser = new ManageUser(country);
         List<User> list = manageUser.getUsers(byField, ascending);
         if(list!=null){
+            ManageDoctor manageDoctor = new ManageDoctor(country);
+            for(int i=0 ; i<list.size() ; i++){
+                User user = list.get(i);
+                List<Institution> institutions = manageDoctor.getInstitutionsByUserID(user.getId());
+                List<Integer> ids = new ArrayList<>();
+                Map<Integer, String> map = new HashMap<>();
+                for(Institution institution : institutions){
+                    ids.add(institution.getId());
+                    map.put(institution.getId(), institution.getLongName());
+                }
+                user.setInstitutionIds(ids);
+                user.setInstitutionIdsNames(map);
+            }
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(list);
@@ -59,6 +73,10 @@ public class UserController {
                 manageUser = new ManageUser(country);
                 Integer id = manageUser.addUser(user);
                 if (id != null) {
+                    ManageDoctor manageDoctor = new ManageDoctor(country);
+                    for(Integer institutionID : user.getInstitutionIds()){
+                        manageDoctor.addInstitutionUser(institutionID, id);
+                    }
                     response.setResponseCode(ErrorCodes.Created.name);
                     response.setResponseMessage(ErrorCodes.Created.userMessage);
                     response.setObject(id);
@@ -83,16 +101,27 @@ public class UserController {
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     public ResponseEntity<Response<User>> getUser(@RequestHeader(value = StaticStrings.HEADER_COUNTRY) String country,
-                                                  @PathVariable(value = "id") Integer id){
+                                                  @PathVariable(value = "id") Integer id) {
         Response response = new Response();
         ManageUser manageUser = new ManageUser(country);
         User user = manageUser.getUserByID(id);
-        if(user!=null) {
+        if (user != null) {
+            ManageDoctor manageDoctor = new ManageDoctor(country);
+            List<Institution> institutions = manageDoctor.getInstitutionsByUserID(user.getId());
+            List<Integer> ids = new ArrayList<>();
+            Map<Integer, String> map = new HashMap<>();
+            for (Institution institution : institutions) {
+                ids.add(institution.getId());
+                map.put(institution.getId(), institution.getLongName());
+            }
+            user.setInstitutionIds(ids);
+            user.setInstitutionIdsNames(map);
+
             response.setResponseCode(ErrorCodes.OK.name);
             response.setResponseMessage(ErrorCodes.OK.userMessage);
             response.setObject(user);
             return new ResponseEntity<Response<User>>(response, HttpStatus.OK);
-        }else{
+        } else {
             response.setResponseCode(ErrorCodes.ResourceNotFound.name);
             response.setResponseMessage(ErrorCodes.ResourceNotFound.userMessage);
             return new ResponseEntity<Response<User>>(response, HttpStatus.OK);
@@ -142,6 +171,7 @@ public class UserController {
         ManageUser manageUser = new ManageUser(country);
         User user = manageUser.getUserByID(id);
         if (user != null) {
+            manageUser.deleteInstitutionUserByUserID(user.getId());
             if (manageUser.deleteUser(user)) {
                 response.setResponseCode(ErrorCodes.OK.name);
                 response.setResponseMessage(ErrorCodes.OK.userMessage);

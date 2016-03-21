@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import md.pharm.hibernate.connection.Connection;
 import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.hibernate.doctor.attributes.Speciality;
+import md.pharm.hibernate.institution.Institution;
 import md.pharm.hibernate.message.Message;
 import md.pharm.hibernate.task.Task;
 import md.pharm.hibernate.user.attributes.Status;
@@ -15,6 +16,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -96,13 +99,30 @@ public class User{
     private Set<Message> receivedMessages;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name="UserDoctor", joinColumns=@JoinColumn(name="userID"), inverseJoinColumns=@JoinColumn(name="doctorID"))
+    @JoinTable(name="UserInstitutions", joinColumns=@JoinColumn(name="userID"), inverseJoinColumns=@JoinColumn(name="doctorID"))
     @JsonIgnore
     private Set<Doctor> doctors;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "statusID")
     private Status status;
+
+    @Transient
+    public List<Integer> institutionIds;
+
+    @Transient
+    public Map<Integer, String> institutionIdsNames;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy="users", cascade =
+            {
+                    CascadeType.DETACH,
+                    CascadeType.MERGE,
+                    CascadeType.REFRESH,
+                    CascadeType.PERSIST
+            })
+    @JsonIgnore
+    private Set<Institution> institutions;
+
 
     public User() {
     }
@@ -266,8 +286,32 @@ public class User{
         return status;
     }
 
+    public List<Integer> getInstitutionIds() {
+        return institutionIds;
+    }
+
+    public void setInstitutionIds(List<Integer> institutionIds) {
+        this.institutionIds = institutionIds;
+    }
+
+    public Set<Institution> getInstitutions() {
+        return institutions;
+    }
+
+    public void setInstitutions(Set<Institution> institutions) {
+        this.institutions = institutions;
+    }
+
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Map<Integer, String> getInstitutionIdsNames() {
+        return institutionIdsNames;
+    }
+
+    public void setInstitutionIdsNames(Map<Integer, String> institutionIdsNames) {
+        this.institutionIdsNames = institutionIdsNames;
     }
 
     @Override
@@ -281,7 +325,6 @@ public class User{
         if (rights != null ? !rights.equals(user.rights) : user.rights != null) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         return !(username != null ? !username.equals(user.username) : user.username != null);
-
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import md.pharm.hibernate.common.Address;
 import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.hibernate.institution.attributes.InstitutionType;
+import md.pharm.hibernate.user.User;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -60,6 +61,11 @@ public class Institution {
     @JoinTable(name="InstitutionDoctor", joinColumns=@JoinColumn(name="institutionID"), inverseJoinColumns=@JoinColumn(name="doctorID"))
     @JsonIgnore
     private Set<Doctor> doctors;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name="InstitutionUser", joinColumns=@JoinColumn(name="institutionID"), inverseJoinColumns=@JoinColumn(name="userID"))
+    @JsonIgnore
+    private Set<User> users;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "institution", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -169,6 +175,14 @@ public class Institution {
 
     public void setInstitutionHistories(Set<InstitutionHistory> institutionHistories) {
         this.institutionHistories = institutionHistories;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override

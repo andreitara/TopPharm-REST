@@ -3,6 +3,7 @@ package md.pharm.hibernate.institution;
 import md.pharm.hibernate.common.Address;
 import md.pharm.hibernate.doctor.Doctor;
 import md.pharm.hibernate.task.Task;
+import md.pharm.hibernate.user.User;
 import md.pharm.util.Country;
 import md.pharm.util.HibernateUtil;
 import org.hibernate.*;
@@ -175,11 +176,13 @@ public class ManageInstitution {
         Transaction tx = null;
         Transaction tx2 = null;
         Set<Doctor> doctorSet = null;
+        Set<User> userSet = null;
 
         try{
             tx = session.beginTransaction();
             Institution instDB = (Institution)session.get(Institution.class, institution.getId());
             doctorSet = instDB.getDoctors();
+            userSet = instDB.getUsers();
             tx.commit();
             flag = true;
         }catch(HibernateException e){
@@ -193,6 +196,7 @@ public class ManageInstitution {
             try {
                 tx2 = session.beginTransaction();
                 institution.setDoctors(doctorSet);
+                institution.setUsers(userSet);
                 session.update(institution);
                 tx2.commit();
                 flag = true;

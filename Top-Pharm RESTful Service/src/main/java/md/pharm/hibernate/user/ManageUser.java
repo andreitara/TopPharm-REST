@@ -213,6 +213,63 @@ public class ManageUser {
         return flag;
     }
 
+    public boolean deleteInstitutionUserByUserID(Integer userID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            Query query = session.createSQLQuery("delete from InstitutionUser where userID = " + userID );
+            int result = query.executeUpdate();
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
+    public boolean deleteInstitutionUserByInstitutionID(Integer institutionID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            Query query = session.createSQLQuery("delete from InstitutionUser where institutionID = " + institutionID );
+            int result = query.executeUpdate();
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
+    public boolean deleteInstitutionDoctorByInstitutionID(Integer institutionID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            Query query = session.createSQLQuery("delete from InstitutionDoctor where institutionID = " + institutionID );
+            int result = query.executeUpdate();
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
 
 
 }

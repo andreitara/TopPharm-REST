@@ -54,6 +54,34 @@ public class ManageDoctor {
         return list;
     }
 
+    public List<Institution> getInstitutionsByUserID(Integer userID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<Institution> list = null;
+        try{
+            tx = session.beginTransaction();
+
+            //Order order = null;
+            //if(ascending) order = Order.asc(field);
+            //else order = Order.desc(field);
+
+            Criteria criteria = session.createCriteria(Institution.class)
+                    .createAlias("users", "user")
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .setFetchMode("childFiles", FetchMode.SELECT)
+                    .add(Restrictions.eq("user.id", userID))
+                    //.addOrder(order);
+                    ;
+            list = criteria.list();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return list;
+    }
+
     public List<Doctor> getDoctors(String field, boolean ascending){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
@@ -79,6 +107,178 @@ public class ManageDoctor {
         }
         return list;
     }
+
+    public List<CPCCustomer> getInstitutionsByUserIDWithLastVisitDate(Integer userID, String field, boolean ascending){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<CPCCustomer> list = null;
+        try{
+            tx = session.beginTransaction();
+
+            String ASC;
+            if(ascending) ASC = "ASC";
+            else ASC = "DESC";
+
+            Query query = session.createSQLQuery(
+                    "select i.id, i.longName, i.shortName, i.city, i.street, i.phone1, i.phone2, \n" +
+                            "\t\ti.institutionTypeID, iType.name as institutionTypeName, lastDate.lastVisitDate\n" +
+                            "from Institution as i\n" +
+                            "\tinner join InstitutionUser as iu on i.id=iu.institutionID \n" +
+                            "\tleft join InstitutionType as iType\n" +
+                            "\ton i.institutionTypeID=iType.id\n" +
+                            "\tleft join \n" +
+                            "\t\t(select i.id, max(t.startDate) as lastVisitDate\n" +
+                            "\t\tfrom User as u, Task as t, Institution as i\n" +
+                            "\t\twhere i.id = t.institutionID and  t.userID="+userID+" and u.id="+userID+" \n" +
+                            "\t\tgroup by u.id, i.id) as lastDate\n" +
+                            "\ton i.id=lastDate.id\n" +
+                            "where iu.userID="+userID+"\n" +
+                            "order by " + field + " " + ASC)
+                    .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                    //.addEntity(CPCCustomer.class)
+                    ;
+
+            list = query.list();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return list;
+    }
+
+    public List<CPCCustomer> getInstitutionsByUserIDWithLastVisitDateByType(Integer userID, Integer institutionTypeID, String field, boolean ascending){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<CPCCustomer> list = null;
+        try{
+            tx = session.beginTransaction();
+
+            String ASC;
+            if(ascending) ASC = "ASC";
+            else ASC = "DESC";
+
+            Query query = session.createSQLQuery(
+                    "select i.id, i.longName, i.shortName, i.city, i.street, i.phone1, i.phone2, \n" +
+                            "\t\ti.institutionTypeID, iType.name as institutionTypeName, lastDate.lastVisitDate\n" +
+                            "from Institution as i\n" +
+                            "\tinner join InstitutionUser as iu on i.id=iu.institutionID \n" +
+                            "\tleft join InstitutionType as iType\n" +
+                            "\ton i.institutionTypeID=iType.id\n" +
+                            "\tleft join \n" +
+                            "\t\t(select i.id, max(t.startDate) as lastVisitDate\n" +
+                            "\t\tfrom User as u, Task as t, Institution as i\n" +
+                            "\t\twhere i.id = t.institutionID and  t.userID="+userID+" and u.id="+userID+" \n" +
+                            "\t\tgroup by u.id, i.id) as lastDate\n" +
+                            "\ton i.id=lastDate.id\n" +
+                            "where iu.userID="+userID+" and i.institutionTypeID="+institutionTypeID+"\n"+
+                            "order by " + field + " " + ASC)
+                    .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                    //.addEntity(CPCCustomer.class)
+                    ;
+
+            list = query.list();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return list;
+    }
+
+    public List<CPCCustomer> getAllDoctorsByUserID(Integer userID, String field, boolean ascending){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<CPCCustomer> list = null;
+        try{
+            tx = session.beginTransaction();
+
+            String ASC;
+            if(ascending) ASC = "ASC";
+            else ASC = "DESC";
+
+            Query query = session.createSQLQuery(
+                    "select d.id, d.name, d.email, d.city, d.address, d.birthDate, \n" +
+                            "\t\td.officePhone, d.phone1, d.phone2, d.subType, d.type,\n" +
+                            "\t\td.specialityID, s.name as specialityName,\n" +
+                            "\t\tlastDate.lastVisitDate\n" +
+                            "from Doctor as d\n" +
+                            "inner join \n" +
+                            "    (select id.doctorID from InstitutionDoctor as id\n" +
+                            "\tinner join\n" +
+                            "\t\t(select institutionID from InstitutionUser where userID="+userID+") as i\n" +
+                            "\t\ton id.institutionID=i.institutionID) as userD\n" +
+                            "on d.id=userD.doctorID\n" +
+                            "left join Speciality as s on s.id=d.specialityID\n" +
+                            "left join\n" +
+                            "\t\t(select d.id, max(t.startDate) as lastVisitDate\n" +
+                            "\t\tfrom User as u, Task as t, Doctor as d\n" +
+                            "\t\twhere d.id = t.customerID and  t.userID="+userID+" and u.id="+userID+" \n" +
+                            "\t\tgroup by u.id, d.id) as lastDate\n" +
+                            "\t\ton lastDate.id=d.id\n" +
+                            "order by " + field + " " + ASC)
+                    .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                    //.addEntity(CPCCustomer.class)
+                    ;
+
+            list = query.list();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return list;
+    }
+
+    public List<CPCCustomer> getAllDoctorsByUserIDandSpecialityID(Integer userID, Integer specialityID, String field, boolean ascending){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        List<CPCCustomer> list = null;
+        try{
+            tx = session.beginTransaction();
+
+            String ASC;
+            if(ascending) ASC = "ASC";
+            else ASC = "DESC";
+
+            Query query = session.createSQLQuery(
+                    "select d.id, d.name, d.email, d.city, d.address, d.birthDate, \n" +
+                            "\t\td.officePhone, d.phone1, d.phone2, d.subType, d.type,\n" +
+                            "\t\td.specialityID, s.name as specialityName,\n" +
+                            "\t\tlastDate.lastVisitDate\n" +
+                            "from Doctor as d\n" +
+                            "inner join \n" +
+                            "    (select id.doctorID from InstitutionDoctor as id\n" +
+                            "\tinner join\n" +
+                            "\t\t(select institutionID from InstitutionUser where userID="+userID+") as i\n" +
+                            "\t\ton id.institutionID=i.institutionID) as userD\n" +
+                            "on d.id=userD.doctorID\n" +
+                            "left join Speciality as s on s.id=d.specialityID\n" +
+                            "left join\n" +
+                            "\t\t(select d.id, max(t.startDate) as lastVisitDate\n" +
+                            "\t\tfrom User as u, Task as t, Doctor as d\n" +
+                            "\t\twhere d.id = t.customerID and  t.userID="+userID+" and u.id="+userID+" \n" +
+                            "\t\tgroup by u.id, d.id) as lastDate\n" +
+                            "\t\ton lastDate.id=d.id\n" +
+                            "\t\twhere specialityID="+specialityID+"\n"+
+                            "order by " + field + " " + ASC)
+                    .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                    //.addEntity(CPCCustomer.class)
+                    ;
+
+            list = query.list();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return list;
+    }
+
 
     public List<CPCCustomer> getCPC(Integer userID, String field, boolean ascending){
         session = HibernateUtil.getSession(country);
@@ -414,6 +614,29 @@ public class ManageDoctor {
         return list;
     }
 
+    public Object getLatestVisitAtInstitution(Integer userID, Integer institutionID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        Object list = null;
+        try{
+            tx = session.beginTransaction();
+            Query query = session.createSQLQuery(
+                    "select max(t.startDate) as lastDate\n" +
+                            "from Institution as i, User as u, Task as t\n" +
+                            "where t.institutionID=i.id and t.userID=u.id and u.id="+userID+" and i.id="+institutionID+"\n" +
+                            "group by u.id, i.id \n" )
+                    ;
+
+            list = query.uniqueResult();
+            tx.commit();
+        }catch (HibernateException e){
+            if(tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+        }
+        return list;
+    }
+
     public boolean deleteInstitutionDoctor(Integer institutionID, Integer doctorID){
         session = HibernateUtil.getSession(country);
         Transaction tx = null;
@@ -422,6 +645,26 @@ public class ManageDoctor {
             tx = session.beginTransaction();
             //session.delete(task);
             Query query = session.createSQLQuery("delete from InstitutionDoctor where institutionID = " + institutionID + " and doctorID = " + doctorID);
+            int result = query.executeUpdate();
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
+    public boolean deleteInstitutionUser(Integer institutionID, Integer userID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            //session.delete(task);
+            Query query = session.createSQLQuery("delete from InstitutionUser where institutionID = " + institutionID + " and userID = " + userID);
             int result = query.executeUpdate();
             tx.commit();
             flag = true;
@@ -462,6 +705,26 @@ public class ManageDoctor {
             tx = session.beginTransaction();
             //session.delete(task);
             Query query = session.createSQLQuery("insert into InstitutionDoctor(institutionID, doctorID) values ("+institutionID+","+doctorID+")");
+            int result = query.executeUpdate();
+            tx.commit();
+            flag = true;
+        }catch(HibernateException e){
+            if(tx!=null)tx.rollback();
+            e.printStackTrace();
+            flag = false;
+        }finally {
+        }
+        return flag;
+    }
+
+    public boolean addInstitutionUser(Integer institutionID, Integer userID){
+        session = HibernateUtil.getSession(country);
+        Transaction tx = null;
+        boolean flag = false;
+        try{
+            tx = session.beginTransaction();
+            //session.delete(task);
+            Query query = session.createSQLQuery("insert into InstitutionUser(institutionID, userID) values ("+institutionID+","+userID+")");
             int result = query.executeUpdate();
             tx.commit();
             flag = true;
